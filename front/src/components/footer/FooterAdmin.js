@@ -38,60 +38,25 @@ export default function Footer() {
         {" "}
         &copy; {1900 + new Date().getYear()}
         <Text as='span' fontWeight='500' ms='4px'>
-          Horizon UI. All Rights Reserved. Made with love by
+          AdSpaces. All Rights Reserved. Made with love by
           <Link
             mx='3px'
             color={textColor}
-            href='https://www.simmmple.com'
+            href='https://ethglobal.com/showcase/adspaces-vn1bg'
             target='_blank'
             fontWeight='700'>
-            Simmmple!
+            4D
           </Link>
         </Text>
       </Text>
       <List display='flex'>
-        <ListItem
-          me={{
-            base: "20px",
-            md: "44px",
-          }}>
-          <Link
-            fontWeight='500'
-            color={textColor}
-            href='mailto:hello@simmmple.com'>
-            Support
-          </Link>
-        </ListItem>
-        <ListItem
-          me={{
-            base: "20px",
-            md: "44px",
-          }}>
-          <Link
-            fontWeight='500'
-            color={textColor}
-            href='https://www.simmmple.com/licenses'>
-            License
-          </Link>
-        </ListItem>
-        <ListItem
-          me={{
-            base: "20px",
-            md: "44px",
-          }}>
-          <Link
-            fontWeight='500'
-            color={textColor}
-            href='https://simmmple.com/terms-of-service'>
-            Terms of Use
-          </Link>
-        </ListItem>
         <ListItem>
           <Link
             fontWeight='500'
             color={textColor}
-            href='https://www.blog.simmmple.com/'>
-            Blog
+            target='_blank'
+            href='https://www.notion.so/AdSpaces-9db1b62ab599480a9cef8c6cab633592'>
+            Notion
           </Link>
         </ListItem>
       </List>
