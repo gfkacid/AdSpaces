@@ -1,6 +1,6 @@
 {
-  "homepage": "localhost:3000",
-  "name": "horizon-ui-chakra",
+  "homepage": "https://adspaces.com/",
+  "name": "adspaces",
   "version": "1.0.1",
   "private": true,
   "dependencies": {
