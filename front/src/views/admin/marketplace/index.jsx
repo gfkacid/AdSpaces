@@ -36,9 +36,9 @@ import {
 
 // Custom components
 import Banner from "views/admin/marketplace/components/Banner";
-import TableTopCreators from "views/admin/marketplace/components/TableTopCreators";
+import TableTopAdSpaces from "views/admin/marketplace/components/TableTopAdSpaces";
 import HistoryItem from "views/admin/marketplace/components/HistoryItem";
-import NFT from "components/card/NFT";
+import ComplexTable from "./components/ComplexTable"
 import Card from "components/card/Card.js";
 
 // Assets
@@ -52,8 +52,10 @@ import Avatar1 from "assets/img/avatars/avatar1.png";
 import Avatar2 from "assets/img/avatars/avatar2.png";
 import Avatar3 from "assets/img/avatars/avatar3.png";
 import Avatar4 from "assets/img/avatars/avatar4.png";
-import tableDataTopCreators from "views/admin/marketplace/variables/tableDataTopCreators.json";
-import { tableColumnsTopCreators } from "views/admin/marketplace/variables/tableColumnsTopCreators";
+import tableDataTopAdSpaces from "views/admin/marketplace/variables/tableDataTopAdSpaces.json";
+import { tableColumnsTopAdSpaces } from "views/admin/marketplace/variables/tableColumnsTopAdSpaces";
+import {columnsDataBrowseAdSpaces} from "./variables/columnsData"
+import tableDataBrowseAdSpaces from "./variables/tableDataBrowseAdSpaces.json";
 
 export default function Marketplace() {
   // Chakra Color Mode
@@ -79,166 +81,22 @@ export default function Marketplace() {
               direction={{ base: "column", md: "row" }}
               align={{ base: "start", md: "center" }}>
               <Text color={textColor} fontSize='2xl' ms='24px' fontWeight='700'>
-                Trending NFTs
+                Browse AdSpaces
               </Text>
-              <Flex
-                align='center'
-                me='20px'
-                ms={{ base: "24px", md: "0px" }}
-                mt={{ base: "20px", md: "0px" }}>
-                <Link
-                  color={textColorBrand}
-                  fontWeight='500'
-                  me={{ base: "34px", md: "44px" }}
-                  to='#art'>
-                  Art
-                </Link>
-                <Link
-                  color={textColorBrand}
-                  fontWeight='500'
-                  me={{ base: "34px", md: "44px" }}
-                  to='#music'>
-                  Music
-                </Link>
-                <Link
-                  color={textColorBrand}
-                  fontWeight='500'
-                  me={{ base: "34px", md: "44px" }}
-                  to='#collectibles'>
-                  Collectibles
-                </Link>
-                <Link color={textColorBrand} fontWeight='500' to='#sports'>
-                  Sports
-                </Link>
-              </Flex>
             </Flex>
-            <SimpleGrid columns={{ base: 1, md: 3 }} gap='20px'>
-              <NFT
-                name='Abstract Colors'
-                author='By Esthera Jackson'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft1}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-              <NFT
-                name='ETH AI Brain'
-                author='By Nick Wilson'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft2}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-              <NFT
-                name='Mesh Gradients '
-                author='By Will Smith'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft3}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-            </SimpleGrid>
-            <Text
-              mt='45px'
-              mb='36px'
-              color={textColor}
-              fontSize='2xl'
-              ms='24px'
-              fontWeight='700'>
-              Recently Added
-            </Text>
-            <SimpleGrid
-              columns={{ base: 1, md: 3 }}
-              gap='20px'
-              mb={{ base: "20px", xl: "0px" }}>
-              <NFT
-                name='Swipe Circles'
-                author='By Peter Will'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft4}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-              <NFT
-                name='Colorful Heaven'
-                author='By Mark Benjamin'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft5}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-              <NFT
-                name='3D Cubes Art'
-                author='By Manny Gates'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft6}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-            </SimpleGrid>
+            <ComplexTable
+              columnsData={columnsDataBrowseAdSpaces}
+              tableData={tableDataBrowseAdSpaces}
+            />
           </Flex>
         </Flex>
         <Flex
           flexDirection='column'
           gridArea={{ xl: "1 / 3 / 2 / 4", "2xl": "1 / 2 / 2 / 3" }}>
           <Card px='0px' mb='20px'>
-            <TableTopCreators
-              tableData={tableDataTopCreators}
-              columnsData={tableColumnsTopCreators}
+            <TableTopAdSpaces
+              tableData={tableDataTopAdSpaces}
+              columnsData={tableColumnsTopAdSpaces}
             />
           </Card>
           <Card p='0px'>
@@ -249,49 +107,49 @@ export default function Marketplace() {
               px='22px'
               py='18px'>
               <Text color={textColor} fontSize='xl' fontWeight='600'>
-                History
+                Latest Deals
               </Text>
               <Button variant='action'>See all</Button>
             </Flex>
 
             <HistoryItem
               name='Colorful Heaven'
-              author='By Mark Benjamin'
+              author='By 0xa14..cb2a'
               date='30s ago'
               image={Nft5}
               price='0.91 ETH'
             />
             <HistoryItem
               name='Abstract Colors'
-              author='By Esthera Jackson'
+              author='By 0xa14..cb2a'
               date='58s ago'
               image={Nft1}
               price='0.91 ETH'
             />
             <HistoryItem
               name='ETH AI Brain'
-              author='By Nick Wilson'
+              author='By 0xa14..cb2a'
               date='1m ago'
               image={Nft2}
               price='0.91 ETH'
             />
             <HistoryItem
               name='Swipe Circles'
-              author='By Peter Will'
+              author='By 0xa14..cb2a'
               date='1m ago'
               image={Nft4}
               price='0.91 ETH'
             />
             <HistoryItem
               name='Mesh Gradients '
-              author='By Will Smith'
+              author='By 0xa14..cb2a'
               date='2m ago'
               image={Nft3}
               price='0.91 ETH'
             />
             <HistoryItem
               name='3D Cubes Art'
-              author='By Manny Gates'
+              author='By 0xa14..cb2a'
               date='3m ago'
               image={Nft6}
               price='0.91 ETH'
@@ -299,7 +157,6 @@ export default function Marketplace() {
           </Card>
         </Flex>
       </Grid>
-      {/* Delete Product */}
     </Box>
   );
 }

@@ -130,7 +130,7 @@ export default function HeaderLinks(props) {
               px='0'
               borderRadius='8px'
               mb='10px'>
-              <ItemContent info='Horizon UI Dashboard PRO' aName='Alicia' />
+              <ItemContent title='Your AdSpace listing just got a match!' text='blha blah' />
             </MenuItem>
             <MenuItem
               _hover={{ bg: "none" }}
@@ -138,10 +138,7 @@ export default function HeaderLinks(props) {
               px='0'
               borderRadius='8px'
               mb='10px'>
-              <ItemContent
-                info='Horizon Design System Free'
-                aName='Josh Henry'
-              />
+              <ItemContent title='Your AdSpace is now verified!' text='Head over to your dashboard and list it on the marketplace!' />
             </MenuItem>
           </Flex>
         </MenuList>
@@ -187,7 +184,7 @@ export default function HeaderLinks(props) {
               _focus={{ bg: "none" }}
               borderRadius='8px'
               px='14px'>
-              <Text fontSize='sm'>Profile Settings</Text>
+              <Text fontSize='sm'><a href="/#/admin/profile">Profile Settings</a></Text>
             </MenuItem>
             <MenuItem
               _hover={{ bg: "none" }}

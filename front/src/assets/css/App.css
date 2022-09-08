@@ -6,3 +6,24 @@ body {
 option {
   color: black;
 }
+
+.size-box{
+  background-color: #777;
+  border: 1px solid #444;
+  display: inline-block;
+}
+
+.size-box.size-box-wide{
+  width: 1.5em;
+  height: 0.75em;
+}
+
+.size-box.size-box-square{
+  width: 1em;
+  height: 1em;
+}
+
+.size-box.size-box-skyscraper{
+  height: 1.5em;
+  width: 0.75em;
+}
