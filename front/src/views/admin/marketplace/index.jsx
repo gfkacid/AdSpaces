@@ -38,7 +38,7 @@ import {
 import Banner from "views/admin/marketplace/components/Banner";
 import TableTopAdSpaces from "views/admin/marketplace/components/TableTopAdSpaces";
 import HistoryItem from "views/admin/marketplace/components/HistoryItem";
-import ComplexTable from "./components/ComplexTable"
+import ComplexTable from "./components/ComplexTable";
 import Card from "components/card/Card.js";
 
 // Assets
@@ -54,8 +54,15 @@ import Avatar3 from "assets/img/avatars/avatar3.png";
 import Avatar4 from "assets/img/avatars/avatar4.png";
 import tableDataTopAdSpaces from "views/admin/marketplace/variables/tableDataTopAdSpaces.json";
 import { tableColumnsTopAdSpaces } from "views/admin/marketplace/variables/tableColumnsTopAdSpaces";
-import {columnsDataBrowseAdSpaces} from "./variables/columnsData"
+import { columnsDataBrowseAdSpaces } from "./variables/columnsData";
 import tableDataBrowseAdSpaces from "./variables/tableDataBrowseAdSpaces.json";
+
+//import { fetchTablelandTable } from "./components/TablelandFetch.js";
+
+//const { rows: rowsBrowseAdSpace, columns: columnsBrowseAdSpace } =
+//  await fetchTablelandTable({ tablePrefix: "AdSpace" }).then((result) => {
+//    return result;
+//  });
 
 export default function Marketplace() {
   // Chakra Color Mode
@@ -65,22 +72,25 @@ export default function Marketplace() {
     <Box pt={{ base: "180px", md: "80px", xl: "80px" }}>
       {/* Main Fields */}
       <Grid
-        mb='20px'
+        mb="20px"
         gridTemplateColumns={{ xl: "repeat(3, 1fr)", "2xl": "1fr 0.46fr" }}
         gap={{ base: "20px", xl: "20px" }}
-        display={{ base: "block", xl: "grid" }}>
+        display={{ base: "block", xl: "grid" }}
+      >
         <Flex
-          flexDirection='column'
-          gridArea={{ xl: "1 / 1 / 2 / 3", "2xl": "1 / 1 / 2 / 2" }}>
+          flexDirection="column"
+          gridArea={{ xl: "1 / 1 / 2 / 3", "2xl": "1 / 1 / 2 / 2" }}
+        >
           <Banner />
-          <Flex direction='column'>
+          <Flex direction="column">
             <Flex
-              mt='45px'
-              mb='20px'
-              justifyContent='space-between'
+              mt="45px"
+              mb="20px"
+              justifyContent="space-between"
               direction={{ base: "column", md: "row" }}
-              align={{ base: "start", md: "center" }}>
-              <Text color={textColor} fontSize='2xl' ms='24px' fontWeight='700'>
+              align={{ base: "start", md: "center" }}
+            >
+              <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
                 Browse AdSpaces
               </Text>
             </Flex>
@@ -91,68 +101,70 @@ export default function Marketplace() {
           </Flex>
         </Flex>
         <Flex
-          flexDirection='column'
-          gridArea={{ xl: "1 / 3 / 2 / 4", "2xl": "1 / 2 / 2 / 3" }}>
-          <Card px='0px' mb='20px'>
+          flexDirection="column"
+          gridArea={{ xl: "1 / 3 / 2 / 4", "2xl": "1 / 2 / 2 / 3" }}
+        >
+          <Card px="0px" mb="20px">
             <TableTopAdSpaces
               tableData={tableDataTopAdSpaces}
               columnsData={tableColumnsTopAdSpaces}
             />
           </Card>
-          <Card p='0px'>
+          <Card p="0px">
             <Flex
               align={{ sm: "flex-start", lg: "center" }}
-              justify='space-between'
-              w='100%'
-              px='22px'
-              py='18px'>
-              <Text color={textColor} fontSize='xl' fontWeight='600'>
+              justify="space-between"
+              w="100%"
+              px="22px"
+              py="18px"
+            >
+              <Text color={textColor} fontSize="xl" fontWeight="600">
                 Latest Deals
               </Text>
-              <Button variant='action'>See all</Button>
+              <Button variant="action">See all</Button>
             </Flex>
 
             <HistoryItem
-              name='Colorful Heaven'
-              author='By 0xa14..cb2a'
-              date='30s ago'
+              name="Colorful Heaven"
+              author="By 0xa14..cb2a"
+              date="30s ago"
               image={Nft5}
-              price='0.91 ETH'
+              price="0.91 ETH"
             />
             <HistoryItem
-              name='Abstract Colors'
-              author='By 0xa14..cb2a'
-              date='58s ago'
+              name="Abstract Colors"
+              author="By 0xa14..cb2a"
+              date="58s ago"
               image={Nft1}
-              price='0.91 ETH'
+              price="0.91 ETH"
             />
             <HistoryItem
-              name='ETH AI Brain'
-              author='By 0xa14..cb2a'
-              date='1m ago'
+              name="ETH AI Brain"
+              author="By 0xa14..cb2a"
+              date="1m ago"
               image={Nft2}
-              price='0.91 ETH'
+              price="0.91 ETH"
             />
             <HistoryItem
-              name='Swipe Circles'
-              author='By 0xa14..cb2a'
-              date='1m ago'
+              name="Swipe Circles"
+              author="By 0xa14..cb2a"
+              date="1m ago"
               image={Nft4}
-              price='0.91 ETH'
+              price="0.91 ETH"
             />
             <HistoryItem
-              name='Mesh Gradients '
-              author='By 0xa14..cb2a'
-              date='2m ago'
+              name="Mesh Gradients "
+              author="By 0xa14..cb2a"
+              date="2m ago"
               image={Nft3}
-              price='0.91 ETH'
+              price="0.91 ETH"
             />
             <HistoryItem
-              name='3D Cubes Art'
-              author='By 0xa14..cb2a'
-              date='3m ago'
+              name="3D Cubes Art"
+              author="By 0xa14..cb2a"
+              date="3m ago"
               image={Nft6}
-              price='0.91 ETH'
+              price="0.91 ETH"
             />
           </Card>
         </Flex>

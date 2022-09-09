@@ -3,7 +3,7 @@
     "id": 1,
     "status": "Available",
     "size": "skyscraper",
-    "price": 5  ,
+    "price": 5,
     "website": "https://hypedblog.com",
     "owner": "0x12...ac3"
   },
@@ -11,7 +11,7 @@
     "id": 2,
     "status": "Running Ads",
     "size": "wide",
-    "price": 3.5  ,
+    "price": 3.5,
     "website": "https://mysite.xyz",
     "owner": "0x12...ac3"
   },
@@ -19,7 +19,7 @@
     "id": 3,
     "status": "Available",
     "size": "square",
-    "price": 10  ,
+    "price": 10,
     "website": "https://adhere.com",
     "owner": "0x12...ac3"
   },
@@ -27,7 +27,7 @@
     "id": 4,
     "status": "Running Ads",
     "size": "square",
-    "price": 8  ,
+    "price": 8,
     "website": "https://hypedblog.com",
     "owner": "0x12...ac3"
   }
