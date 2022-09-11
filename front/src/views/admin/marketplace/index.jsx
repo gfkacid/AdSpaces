@@ -57,12 +57,7 @@ import { tableColumnsTopAdSpaces } from "views/admin/marketplace/variables/table
 import { columnsDataBrowseAdSpaces } from "./variables/columnsData";
 import tableDataBrowseAdSpaces from "./variables/tableDataBrowseAdSpaces.json";
 
-//import { fetchTablelandTable } from "./components/TablelandFetch.js";
-
-//const { rows: rowsBrowseAdSpace, columns: columnsBrowseAdSpace } =
-//  await fetchTablelandTable({ tablePrefix: "AdSpace" }).then((result) => {
-//    return result;
-//  });
+import TablelandTable from "./components/TablelandTable";
 
 export default function Marketplace() {
   // Chakra Color Mode
@@ -94,10 +89,11 @@ export default function Marketplace() {
                 Browse AdSpaces
               </Text>
             </Flex>
-            <ComplexTable
+            {/*<ComplexTable
               columnsData={columnsDataBrowseAdSpaces}
               tableData={tableDataBrowseAdSpaces}
-            />
+            />*/}
+            <TablelandTable tablePrefix="AdSpace" />
           </Flex>
         </Flex>
         <Flex
