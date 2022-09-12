@@ -7,19 +7,56 @@ import AdminLayout from "layouts/admin";
 import { ChakraProvider } from "@chakra-ui/react";
 import theme from "theme/theme";
 import { ThemeEditorProvider } from "@hypertheme-editor/chakra-ui";
+import "@rainbow-me/rainbowkit/styles.css";
+import {
+  getDefaultWallets,
+  RainbowKitProvider,
+  lightTheme,
+} from "@rainbow-me/rainbowkit";
+import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
+import { publicProvider } from "wagmi/providers/public";
+import CustomAvatar from "./components/_custom/CustomAvatar";
+
+const { chains, provider } = configureChains(
+  [
+    chain.goerli,
+    chain.optimism,
+    chain.optimismGoerli,
+    chain.polygon,
+    chain.localhost,
+  ],
+  [publicProvider()]
+);
+const { connectors } = getDefaultWallets({
+  appName: "AdSpaces",
+  chains,
+});
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors,
+  provider,
+});
 
 ReactDOM.render(
-  <ChakraProvider theme={theme}>
-    <React.StrictMode>
-      <ThemeEditorProvider>
-        <HashRouter>
-          <Switch>
-            <Route path={`/admin`} component={AdminLayout} />
-            <Redirect from="/" to="/admin" />
-          </Switch>
-        </HashRouter>
-      </ThemeEditorProvider>
-    </React.StrictMode>
-  </ChakraProvider>,
+  <WagmiConfig client={wagmiClient}>
+    <RainbowKitProvider
+      chains={chains}
+      avatar={CustomAvatar}
+      theme={lightTheme({ ...lightTheme.accentColors.purple })}
+    >
+      <ChakraProvider theme={theme}>
+        <React.StrictMode>
+          <ThemeEditorProvider>
+            <HashRouter>
+              <Switch>
+                <Route path={`/admin`} component={AdminLayout} />
+                <Redirect from="/" to="/admin" />
+              </Switch>
+            </HashRouter>
+          </ThemeEditorProvider>
+        </React.StrictMode>
+      </ChakraProvider>
+    </RainbowKitProvider>
+  </WagmiConfig>,
   document.getElementById("root")
 );
