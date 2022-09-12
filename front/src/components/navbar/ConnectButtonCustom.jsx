@@ -49,7 +49,15 @@ export default function ConnectCustomButton() {
               }
 
               if (chain.unsupported) {
-                return <Button onClick={openChainModal}>Wrong network</Button>;
+                return (
+                  <Button
+                    onClick={openChainModal}
+                    variant={"solid"}
+                    colorScheme={"brand"}
+                  >
+                    Wrong network
+                  </Button>
+                );
               }
 
               return (
@@ -57,6 +65,8 @@ export default function ConnectCustomButton() {
                   <Button
                     onClick={openChainModal}
                     style={{ display: "flex", alignItems: "center" }}
+                    variant={"outline"}
+                    colorScheme={"brand"}
                   >
                     {chain.hasIcon && (
                       <div
@@ -81,7 +91,11 @@ export default function ConnectCustomButton() {
                     {chain.name}
                   </Button>
 
-                  <Button onClick={openAccountModal}>
+                  <Button
+                    onClick={openAccountModal}
+                    variant={"outline"}
+                    colorScheme={"brand"}
+                  >
                     {account.displayName}
                     {account.displayBalance
                       ? ` (${account.displayBalance})`
