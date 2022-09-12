@@ -25,6 +25,7 @@ import {
 import Card from "components/card/Card";
 import Menu from "components/menu/MainMenu";
 import deployedTables from "../variables/deployedTables.json";
+import { connect, resultsToObjects } from "@tableland/sdk";
 
 // Assets
 import { MdCheckCircle, MdOutlineError } from "react-icons/md";
@@ -33,7 +34,7 @@ export default function ColumnsTable(props) {
   const { tablePrefix } = props;
   const [tableData, setTableData] = useState([]);
   const [tableColumns, setTableColumns] = useState([]);
-  const tableland = require("@tableland/sdk");
+  //const tableland = require("@tableland/sdk");
   const networkConfig = {
     testnet: "testnet",
     chain: "optimism-goerli",
@@ -45,11 +46,9 @@ export default function ColumnsTable(props) {
   ).name;
 
   async function fetchTablelandTable(tableToRead) {
-    console.log(tableToRead);
-
-    const tablelandConnection = await tableland.connect({
-      network: "testnet",
-      chain: "optimism-kovan",
+    const tablelandConnection = await connect({
+      network: networkConfig.testnet,
+      chain: networkConfig.chain,
     });
 
     const readQueryResult = await tablelandConnection.read(
@@ -57,7 +56,7 @@ export default function ColumnsTable(props) {
     );
 
     console.log(readQueryResult);
-    const data = await tableland.resultsToObjects(readQueryResult);
+    const data = await resultsToObjects(readQueryResult);
 
     const columnsFixed = readQueryResult.columns.map((elem) => {
       return { Header: elem.name, accessor: elem.name };
