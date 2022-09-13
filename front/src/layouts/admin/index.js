@@ -93,7 +93,7 @@ export default function Dashboard(props) {
       if (prop.layout === "/admin") {
         return (
           <Route
-            path={prop.layout + prop.path}
+            path={prop.layout + prop.path + (prop.urlparam ? '/'+prop.urlparam : '')}
             component={prop.component}
             key={key}
           />
@@ -111,6 +111,7 @@ export default function Dashboard(props) {
   };
   document.documentElement.dir = "ltr";
   const { onOpen } = useDisclosure();
+  console.log(routes)
   return (
     <Box>
       <SidebarContext.Provider
