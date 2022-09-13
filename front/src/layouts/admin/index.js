@@ -111,7 +111,6 @@ export default function Dashboard(props) {
   };
   document.documentElement.dir = "ltr";
   const { onOpen } = useDisclosure();
-  console.log(routes)
   return (
     <Box>
       <SidebarContext.Provider

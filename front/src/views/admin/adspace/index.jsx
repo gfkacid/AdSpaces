@@ -30,7 +30,6 @@ export default function AdSpaceListing() {
         "unset"
     );
     useEffect(() => {
-        console.log(adspaceId);
         if(adspaceId == 3){
             setAdSpace({
                 'id': 3,

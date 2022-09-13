@@ -99,7 +99,6 @@ import {
                   {row.cells.map((cell, index) => {
                     let data = "";
                     if (cell.column.id === "name") {
-                        console.log(row.cells)
                       data = (
                         <Text color={textColor} fontSize='sm' fontWeight='700'>
                           <Link
