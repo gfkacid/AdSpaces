@@ -15,7 +15,6 @@ contract AdSpaceFactory is ITablelandTables {
 
     constructor(address tablelandAddress) {
         _tableland = ITablelandTables(TABLELANDCONTRACT);
-
         _adspacetableid = _createTable("CREATE ADSPACE STATEMENT");
         _campaigntableid = _createTable("CREATE CAMPAIGN STATEMENT");
         _dealtableid = _createTable("CREATE DEAL STATEMENT");
@@ -35,11 +34,8 @@ contract AdSpaceFactory is ITablelandTables {
             _adspaceOwner,
             _numNFTs
         );
-        _tableland.runSQL(
-            address(this),
-            _adspacetableid,
-            "SQL statement commin..."
-        );
+        private string memory sqlStatement = "CREATE TABLE AdSpaces (adspace_id AUTOINCREMENT PRIMARY KEY UNIQUE,name TEXT, website TEXT, verified INTEGER, status TEXT, owner TEXT, contract TEXT, asking_price INTEGER)"
+        _runSQL(address(this), _adspacetableid, sqlStatement);
         return address(_adspace);
     }
 
