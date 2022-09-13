@@ -48,14 +48,8 @@ import Nft3 from "assets/img/nfts/Nft3.png";
 import Nft4 from "assets/img/nfts/Nft4.png";
 import Nft5 from "assets/img/nfts/Nft5.png";
 import Nft6 from "assets/img/nfts/Nft6.png";
-import Avatar1 from "assets/img/avatars/avatar1.png";
-import Avatar2 from "assets/img/avatars/avatar2.png";
-import Avatar3 from "assets/img/avatars/avatar3.png";
-import Avatar4 from "assets/img/avatars/avatar4.png";
 import tableDataTopAdSpaces from "views/admin/home/variables/tableDataTopAdSpaces.json";
 import { tableColumnsTopAdSpaces } from "views/admin/home/variables/tableColumnsTopAdSpaces";
-import { columnsDataBrowseAdSpaces } from "./variables/columnsData";
-import tableDataBrowseAdSpaces from "./variables/tableDataBrowseAdSpaces.json";
 
 import TablelandTable from "./components/TablelandTable";
 
@@ -89,10 +83,6 @@ export default function Home() {
                 Browse AdSpaces
               </Text>
             </Flex>
-            <BrowseAdSpaces
-              columnsData={columnsDataBrowseAdSpaces}
-              tableData={tableDataBrowseAdSpaces}
-            />
             <TablelandTable tablePrefix="AdSpace" />
           </Flex>
         </Flex>
