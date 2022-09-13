@@ -38,7 +38,7 @@ import {
 import Banner from "views/admin/home/components/Banner";
 import TableTopAdSpaces from "views/admin/home/components/TableTopAdSpaces";
 import HistoryItem from "views/admin/home/components/HistoryItem";
-import ComplexTable from "./components/ComplexTable";
+import BrowseAdSpaces from "./components/BrowseAdSpaces";
 import Card from "components/card/Card.js";
 
 // Assets
@@ -89,10 +89,10 @@ export default function Home() {
                 Browse AdSpaces
               </Text>
             </Flex>
-            {/*<ComplexTable
+            <BrowseAdSpaces
               columnsData={columnsDataBrowseAdSpaces}
               tableData={tableDataBrowseAdSpaces}
-            />*/}
+            />
             <TablelandTable tablePrefix="AdSpace" />
           </Flex>
         </Flex>
