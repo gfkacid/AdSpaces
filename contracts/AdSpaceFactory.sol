@@ -52,6 +52,14 @@ contract AdSpaceFactory is ITablelandTables {
     }
 
     function runSQL(uint256 tableId, string memory statement)
+        external
+        payable
+        override
+    {
+        _runSQL(address(this), tableId, statement);
+    }
+
+    function _runSQL(uint256 tableId, string memory statement)
         internal
         override
     {
