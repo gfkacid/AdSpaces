@@ -27,3 +27,8 @@ option {
   height: 1.5em;
   width: 0.75em;
 }
+
+img.table-image{
+  max-height: 3em;
+  max-width: 4em;
+}

@@ -22,19 +22,13 @@
 
 // Chakra imports
 import {
-  Avatar,
   Box,
-  Flex,
-  FormLabel,
   Icon,
-  Select,
   SimpleGrid,
   useColorModeValue,
 } from "@chakra-ui/react";
 // Assets
-import Usa from "assets/img/dashboards/usa.png";
 // Custom components
-import MiniCalendar from "components/calendar/MiniCalendar";
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
 import React from "react";
@@ -44,19 +38,11 @@ import {
   MdBarChart,
   MdFileCopy,
 } from "react-icons/md";
-import CheckTable from "views/admin/default/components/CheckTable";
-import ComplexTable from "views/admin/default/components/ComplexTable";
-import DailyTraffic from "views/admin/default/components/DailyTraffic";
-import PieCard from "views/admin/default/components/PieCard";
-import Tasks from "views/admin/default/components/Tasks";
-import TotalSpent from "views/admin/default/components/TotalSpent";
-import WeeklyRevenue from "views/admin/default/components/WeeklyRevenue";
-import {
-  columnsDataCheck,
-  columnsDataComplex,
-} from "views/admin/default/variables/columnsData";
-import tableDataCheck from "views/admin/default/variables/tableDataCheck.json";
-import tableDataComplex from "views/admin/default/variables/tableDataComplex.json";
+import {userCampaignsColumns, userAdSpacesColumns} from "views/admin/default/variables/userDashboardColumns"
+import tableDataUserCampaigns from "views/admin/default/variables/tableDataUserCampaigns.json";
+import tableDataUserAdSpaces from "views/admin/default/variables/tableDataUserAdSpaces.json";
+import UserCampaigns from "./components/UserCampaigns";
+import UserAdSpaces from "./components/UserAdSpaces";
 
 export default function UserReports() {
   // Chakra Color Mode
@@ -79,7 +65,7 @@ export default function UserReports() {
               }
             />
           }
-          name='Earnings'
+          name='Total Ad Revenue'
           value='$350.4'
         />
         <MiniStatistics
@@ -93,30 +79,21 @@ export default function UserReports() {
               }
             />
           }
-          name='Spend this month'
+          name='Spent on Ads'
           value='$642.39'
         />
         <MiniStatistics growth='+23%' name='Sales' value='$574.34' />
         <MiniStatistics
-          endContent={
-            <Flex me='-16px' mt='10px'>
-              <FormLabel htmlFor='balance'>
-                <Avatar src={Usa} />
-              </FormLabel>
-              <Select
-                id='balance'
-                variant='mini'
-                mt='5px'
-                me='0px'
-                defaultValue='usd'>
-                <option value='usd'>USD</option>
-                <option value='eur'>EUR</option>
-                <option value='gba'>GBA</option>
-              </Select>
-            </Flex>
+          startContent={
+            <IconBox
+              w='56px'
+              h='56px'
+              bg='linear-gradient(90deg, #4481EB 0%, #04BEFE 100%)'
+              icon={<Icon w='28px' h='28px' as={MdAddTask} color='white' />}
+            />
           }
-          name='Your balance'
-          value='$1,000'
+          name='Your Deals'
+          value='154'
         />
         <MiniStatistics
           startContent={
@@ -127,7 +104,7 @@ export default function UserReports() {
               icon={<Icon w='28px' h='28px' as={MdAddTask} color='white' />}
             />
           }
-          name='New Tasks'
+          name='Your AdSpaces'
           value='154'
         />
         <MiniStatistics
@@ -141,31 +118,20 @@ export default function UserReports() {
               }
             />
           }
-          name='Total Projects'
+          name='Your Campaigns'
           value='2935'
         />
       </SimpleGrid>
 
       <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px' mb='20px'>
-        <TotalSpent />
-        <WeeklyRevenue />
-      </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap='20px' mb='20px'>
-        <CheckTable columnsData={columnsDataCheck} tableData={tableDataCheck} />
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px'>
-          <DailyTraffic />
-          <PieCard />
-        </SimpleGrid>
-      </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap='20px' mb='20px'>
-        <ComplexTable
-          columnsData={columnsDataComplex}
-          tableData={tableDataComplex}
+        <UserAdSpaces 
+          columnsData={userAdSpacesColumns}
+          tableData ={tableDataUserAdSpaces}
         />
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px'>
-          <Tasks />
-          <MiniCalendar h='100%' minW='100%' selectRange={false} />
-        </SimpleGrid>
+        <UserCampaigns 
+          columnsData={userCampaignsColumns}
+          tableData ={tableDataUserCampaigns}
+        />
       </SimpleGrid>
     </Box>
   );

@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name":"Home | banner top",
+    "size": "wide",
+    "price": 2.5,
+    "website": "https://uniswap.org/"  ,
+    "status": "Available",
+    "verified": true
+  },
+  {
+    "id": 2,
+    "name":"post | aside",
+    "size": "skyscraper",
+    "price": 3,
+    "website": "https://www.coindesk.com/",
+    "status": "Available",
+    "verified": true
+  },
+  {
+    "id": 3,
+    "name":"Footer",
+    "size": "wide",
+    "price": 2,
+    "website": "https://www.coindesk.com/",
+    "status": "Available",
+    "verified": true
+  },
+  {
+    "id": 4,
+    "name":"Footer II",
+    "size": "square",
+    "price": 2,
+    "website": "https://www.coindesk.com/",
+    "status": "Pending Verification",
+    "verified": false
+  }
+]

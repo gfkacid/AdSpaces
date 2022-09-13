@@ -38,7 +38,6 @@ import {
 import Banner from "views/admin/home/components/Banner";
 import TableTopAdSpaces from "views/admin/home/components/TableTopAdSpaces";
 import HistoryItem from "views/admin/home/components/HistoryItem";
-import BrowseAdSpaces from "./components/BrowseAdSpaces";
 import Card from "components/card/Card.js";
 
 // Assets

@@ -25,7 +25,7 @@ import Card from "components/card/Card";
 import Menu from "components/menu/MainMenu";
 
 // Assets
-import { MdCheckCircle, MdCancel, MdOutlineError } from "react-icons/md";
+import AdSpaceStatus from "components/domain/AdSpaceStatus";
 export default function ColumnsTable(props) {
   const { columnsData, tableData } = props;
 
@@ -119,30 +119,7 @@ export default function ColumnsTable(props) {
                     );
                   } else if (cell.column.id === "status") {
                     data = (
-                      <Flex align='center'>
-                        <Icon
-                          w='24px'
-                          h='24px'
-                          me='5px'
-                          color={
-                            cell.value === "Available"
-                              ? "green.500"
-                              : cell.value === "Running Ads"
-                              ? "orange.500"
-                              : null
-                          }
-                          as={
-                            cell.value === "Available"
-                              ? MdCheckCircle
-                              : cell.value === "Running Ads"
-                              ? MdOutlineError
-                              : null
-                          }
-                        />
-                        <Text color={textColor} fontSize='sm' fontWeight='700'>
-                          {cell.value}
-                        </Text>
-                      </Flex>
+                      <AdSpaceStatus status={cell.value} textColor={textColor} />
                     );
                   } else if (cell.column.id === "size") {
                     data = (
