@@ -38,7 +38,7 @@ import {
 import Banner from "views/admin/marketplace/components/Banner";
 import TableTopAdSpaces from "views/admin/marketplace/components/TableTopAdSpaces";
 import HistoryItem from "views/admin/marketplace/components/HistoryItem";
-import ComplexTable from "./components/ComplexTable";
+import BrowseAdSpaces from "./components/BrowseAdSpaces";
 import Card from "components/card/Card.js";
 
 // Assets
@@ -94,7 +94,7 @@ export default function Marketplace() {
                 Browse AdSpaces
               </Text>
             </Flex>
-            <ComplexTable
+            <BrowseAdSpaces
               columnsData={columnsDataBrowseAdSpaces}
               tableData={tableDataBrowseAdSpaces}
             />

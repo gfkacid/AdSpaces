@@ -14,6 +14,7 @@ import MainDashboard from "views/admin/default";
 import NFTMarketplace from "views/admin/marketplace";
 import Profile from "views/admin/profile";
 import DataTables from "views/admin/dataTables";
+import AdSpace from "views/admin/adspace"
 
 const routes = [
   {
@@ -51,6 +52,13 @@ const routes = [
     path: "/profile",
     icon: <Icon as={MdPerson} width='20px' height='20px' color='inherit' />,
     component: Profile,
+  },
+  {
+    name: "AdSpace",
+    layout: "/admin",
+    path: "/adspace/:adspaceId",
+    icon: <Icon as={MdPerson} width='20px' height='20px' color='inherit' />,
+    component: AdSpace,
   }
 ];
 

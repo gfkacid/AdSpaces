@@ -10,6 +10,7 @@ import {
   Thead,
   Tr,
   useColorModeValue,
+  Button,
 } from "@chakra-ui/react";
 import React, { useMemo } from "react";
 import {
@@ -107,9 +108,14 @@ export default function ColumnsTable(props) {
                   let align = 'left';
                   if (cell.column.id === "id") {
                     data = (
-                      <Text color={textColor} fontSize='sm' fontWeight='700'>
-                        <a href="#">#{cell.value}</a>
-                      </Text>
+
+                      <Flex align='justify'>
+                        <Text color={textColor} fontSize='sm' fontWeight='700'>
+                          <a href={"/admin/adspace/"+cell.value}>#{cell.value}</a>
+                        </Text>
+                        <Button>View</Button>
+                      </Flex>
+                      
                     );
                   } else if (cell.column.id === "status") {
                     data = (
