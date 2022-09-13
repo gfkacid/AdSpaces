@@ -75,6 +75,7 @@ pragma solidity >=0.8.7 <0.9.0;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./AdSpaceFactory.sol";
 
 contract AdSpace is ERC721Enumerable, Ownable, ERC2981ContractWideRoyalties {
   using Strings for uint256;
@@ -87,6 +88,9 @@ contract AdSpace is ERC721Enumerable, Ownable, ERC2981ContractWideRoyalties {
 
   address public platformAddress;
 
+  address public constant _factoryAddress;
+  AdSpaceFactory public constant _factory;
+
   constructor(
     string memory _name,
     string memory _symbol,
@@ -97,6 +101,10 @@ contract AdSpace is ERC721Enumerable, Ownable, ERC2981ContractWideRoyalties {
     
     adspaceId = _adspaceId;
     adspaceOwner = _adspaceOwner;
+
+    factoryAddress = msg.sender;
+    _factory = AdSpaceFactory(factoryAddress);
+
 
     // set royalties
     _setRoyalties(msg.sender, 1000);
@@ -158,7 +166,7 @@ contract AdSpace is ERC721Enumerable, Ownable, ERC2981ContractWideRoyalties {
   function createDeal(uint216 _amountPerSec, uint40 _end, uint campaignId) public {
     // secure funds
     //transfer (amountPerSec * duration) from caller to this contract
-    
+
     // call internal function
     _createDeal(amountPerSec,end,campaignId);
   }
@@ -166,7 +174,11 @@ contract AdSpace is ERC721Enumerable, Ownable, ERC2981ContractWideRoyalties {
   function _createDeal(uint216 _amountPerSec, uint40 _end, uint _campaignId,) internal {
     // update TableLand:
     // - adspaces table -> UPDATE status = occupied WHERE contract = address(this)
+    _factory.runSQL(_factoryAddress,_factory.getAdSpaceTableId,"SQL commin...");    
+
     // - DEALS table -> INSERT INTO deals (campaign_id, adspace_id, end, price, started_at)
+            _factory.runSQL(_factoryAddress,_factory.getDealTableId,"SQL commin...");    
+
     //    VALUES (_campaignId, adspaceId, _end, ...);
   }
 
