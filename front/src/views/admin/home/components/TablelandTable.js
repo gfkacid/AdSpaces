@@ -24,55 +24,50 @@ import {
 // Custom components
 import Card from "components/card/Card";
 import Menu from "components/menu/MainMenu";
+import deployedTables from "../variables/deployedTables.json";
+import { connect, resultsToObjects } from "@tableland/sdk";
 
 // Assets
 import { MdCheckCircle, MdOutlineError } from "react-icons/md";
 
 export default function ColumnsTable(props) {
-  const { tableName } = props;
+  const { tablePrefix } = props;
+  const [tableData, setTableData] = useState([]);
+  const [tableColumns, setTableColumns] = useState([]);
+  //const tableland = require("@tableland/sdk");
+  const networkConfig = {
+    testnet: "testnet",
+    chain: "optimism-goerli",
+    chainId: "420",
+  };
 
-  async function fetchTablelandTable(tablePrefix) {
-    const tableland = require("@tableland/sdk");
-    const fs = require("fs");
+  const tableName = deployedTables[0][networkConfig.chainId].find(
+    (elem) => elem.prefix === tablePrefix
+  ).name;
 
-    const tableDirectory = JSON.parse(
-      fs.readFileSync("constants/deployedTables.json")
-    );
-
-    const networkConfig = {
-      testnet: "testnet",
-      chain: "optimism-goerli",
-      chainId: "420",
-    };
-
-    const tableToRead = tableDirectory[networkConfig.chainId].find(
-      (elem) => elem.prefix === tablePrefix
-    ).name;
-
-    console.log(tableToRead);
-
-    const tablelandConnection = await tableland.connect({
-      network: "testnet",
-      chain: "optimism-kovan",
+  async function fetchTablelandTable(tableToRead) {
+    const tablelandConnection = await connect({
+      network: networkConfig.testnet,
+      chain: networkConfig.chain,
     });
 
-    const { columns, rows } = await tablelandConnection.read(
+    const readQueryResult = await tablelandConnection.read(
       `SELECT * FROM ${tableToRead};`
     );
 
-    const columnsFixed = columns.map((elem) => {
-      return { name: elem.name, accessor: elem.name };
-    });
-    return { columnsFixed, rows };
-  }
+    console.log(readQueryResult);
+    const data = await resultsToObjects(readQueryResult);
 
-  const [getTableRows, setTableRows] = useState([]);
-  const [getTableColumns, setTableColumns] = useState([]);
+    const columnsFixed = readQueryResult.columns.map((elem) => {
+      return { Header: elem.name, accessor: elem.name };
+    });
+    return { columnsFixed, data };
+  }
 
   useEffect(() => {
     fetchTablelandTable(tableName)
       .then((res) => {
-        setTableRows(res.rows);
+        setTableData(res.data);
         setTableColumns(res.columnsFixed);
       })
       .catch((e) => {
@@ -82,8 +77,8 @@ export default function ColumnsTable(props) {
 
   const tableInstance = useTable(
     {
-      getTableColumns,
-      getTableRows,
+      columns: tableColumns,
+      data: tableData,
     },
     useGlobalFilter,
     useSortBy,
@@ -113,7 +108,7 @@ export default function ColumnsTable(props) {
       direction="column"
       w="100%"
       px="0px"
-      overflowX={{ sm: "scroll", lg: "hidden" }}
+      overflowX={{ sm: "scroll", lg: "scroll" }}
     >
       <Flex px="25px" justify="space-between" mb="20px" align="center">
         <Text

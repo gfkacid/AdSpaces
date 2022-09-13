@@ -12,6 +12,7 @@
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@hypertheme-editor/chakra-ui": "^0.1.5",
+    "@rainbow-me/rainbowkit": "^0.5.1",
     "@tableland/sdk": "^3.1.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
@@ -21,8 +22,11 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "babel-register": "^6.26.0",
+    "buffer": "^6.0.3",
+    "ethers": "^5.7.0",
     "framer-motion": "^4.1.17",
     "fs": "^0.0.1-security",
+    "keccak": "^3.0.2",
     "react": "17.0.2",
     "react-apexcharts": "^1.4.0",
     "react-calendar": "^3.7.0",
@@ -36,6 +40,7 @@
     "react-table": "^7.7.0",
     "stylis": "^4.1.1",
     "stylis-plugin-rtl": "2.0.2",
+    "wagmi": "^0.6.5",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
