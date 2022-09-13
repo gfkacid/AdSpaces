@@ -11,7 +11,7 @@ import {
 
 // Admin Imports
 import MainDashboard from "views/admin/default";
-import NFTMarketplace from "views/admin/marketplace";
+import Home from "views/admin/home";
 import Profile from "views/admin/profile";
 import DataTables from "views/admin/dataTables";
 
@@ -20,8 +20,8 @@ const routes = [
     name: "Home",
     layout: "/admin",
     path: "/home",
-    icon: <Icon as={MdHome} width='20px' height='20px' color='inherit' />,
-    component: NFTMarketplace,
+    icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
+    component: Home,
   },
   {
     name: "Ad Marketplace",
@@ -30,9 +30,9 @@ const routes = [
     icon: (
       <Icon
         as={MdOutlineShoppingCart}
-        width='20px'
-        height='20px'
-        color='inherit'
+        width="20px"
+        height="20px"
+        color="inherit"
       />
     ),
     component: DataTables,
@@ -41,7 +41,7 @@ const routes = [
   {
     name: "My Dashboard",
     layout: "/admin",
-    icon: <Icon as={MdBarChart} width='20px' height='20px' color='inherit' />,
+    icon: <Icon as={MdBarChart} width="20px" height="20px" color="inherit" />,
     path: "/dashboard",
     component: MainDashboard,
   },
@@ -49,9 +49,9 @@ const routes = [
     name: "Profile",
     layout: "/admin",
     path: "/profile",
-    icon: <Icon as={MdPerson} width='20px' height='20px' color='inherit' />,
+    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
     component: Profile,
-  }
+  },
 ];
 
 export default routes;

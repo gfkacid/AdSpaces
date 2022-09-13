@@ -35,9 +35,9 @@ import {
 } from "@chakra-ui/react";
 
 // Custom components
-import Banner from "views/admin/marketplace/components/Banner";
-import TableTopAdSpaces from "views/admin/marketplace/components/TableTopAdSpaces";
-import HistoryItem from "views/admin/marketplace/components/HistoryItem";
+import Banner from "views/admin/home/components/Banner";
+import TableTopAdSpaces from "views/admin/home/components/TableTopAdSpaces";
+import HistoryItem from "views/admin/home/components/HistoryItem";
 import ComplexTable from "./components/ComplexTable";
 import Card from "components/card/Card.js";
 
@@ -52,14 +52,14 @@ import Avatar1 from "assets/img/avatars/avatar1.png";
 import Avatar2 from "assets/img/avatars/avatar2.png";
 import Avatar3 from "assets/img/avatars/avatar3.png";
 import Avatar4 from "assets/img/avatars/avatar4.png";
-import tableDataTopAdSpaces from "views/admin/marketplace/variables/tableDataTopAdSpaces.json";
-import { tableColumnsTopAdSpaces } from "views/admin/marketplace/variables/tableColumnsTopAdSpaces";
+import tableDataTopAdSpaces from "views/admin/home/variables/tableDataTopAdSpaces.json";
+import { tableColumnsTopAdSpaces } from "views/admin/home/variables/tableColumnsTopAdSpaces";
 import { columnsDataBrowseAdSpaces } from "./variables/columnsData";
 import tableDataBrowseAdSpaces from "./variables/tableDataBrowseAdSpaces.json";
 
 import TablelandTable from "./components/TablelandTable";
 
-export default function Marketplace() {
+export default function Home() {
   // Chakra Color Mode
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const textColorBrand = useColorModeValue("brand.500", "white");
