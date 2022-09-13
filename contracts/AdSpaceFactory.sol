@@ -15,14 +15,18 @@ contract AdSpaceFactory is ITablelandTables {
 
     constructor(address tablelandAddress) {
         _tableland = ITablelandTables(TABLELANDCONTRACT);
-        _adspacetableid = _createTable("CREATE ADSPACE STATEMENT");
+        _adspacetableid = _createTable(
+            "CREATE TABLE AdSpaces (adspace_id INTEGER PRIMARY KEY UNIQUE,name TEXT, website TEXT, verified INTEGER, status TEXT, owner TEXT, contract TEXT, asking_price INTEGER);"
+        );
         _campaigntableid = _createTable("CREATE CAMPAIGN STATEMENT");
         _dealtableid = _createTable("CREATE DEAL STATEMENT");
     }
 
     function createAdSpace(
         string _name,
+        string _website,
         string _symbol,
+        uint256  _asking_price,
         uint256 _adspaceId,
         address _adspaceOwner,
         uint8 _numNFTs
@@ -34,7 +38,19 @@ contract AdSpaceFactory is ITablelandTables {
             _adspaceOwner,
             _numNFTs
         );
-        private string memory sqlStatement = "CREATE TABLE AdSpaces (adspace_id AUTOINCREMENT PRIMARY KEY UNIQUE,name TEXT, website TEXT, verified INTEGER, status TEXT, owner TEXT, contract TEXT, asking_price INTEGER)"
+        private string memory sqlStatement = "INSERT INTO "+_adspacetableid+" (name,website,verified,status,owner,contract,asking_price) VALUES ("
+        +_name,
+        +','
+        +_website
+        +','
+        +0
+        +','
+        +'Pending Verification'
+        +','
+        +AdSpace.address
+        +','
+        +_asking_price
+        +');'
         _runSQL(address(this), _adspacetableid, sqlStatement);
         return address(_adspace);
     }
