@@ -1,5 +1,16 @@
 // Chakra imports
 import { Box, Button, SimpleGrid , Text,
+    FormControl,
+    FormLabel,
+    FormErrorMessage,
+    FormHelperText,
+    Input,
+    Select,
+    NumberInput,
+    NumberInputField,
+    NumberInputStepper,
+    NumberIncrementStepper,
+    NumberDecrementStepper,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -33,7 +44,12 @@ export default function AdSpaceListing() {
         if(adspaceId == 3){
             setAdSpace({
                 'id': 3,
-                'website': 'dummy.com'
+                'name': 'dummy.com home page vertical',
+                'website': 'dummy.com',
+                'size': 'wide',
+                'price': 10,
+                'status': 'Available',
+                'owner': '0xe21EFe617Bd3cf0bD22A2EAa5749c5d6938CB645'
             })
         }
         // query TableLand for AdSpace by id
@@ -41,6 +57,9 @@ export default function AdSpaceListing() {
         
         // else
     },[adspaceId]);
+
+    // New Deal form
+    const [newDealDuration, setNewDealDuration] = React.useState('1')
 
 return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
@@ -53,7 +72,7 @@ return (
           fontSize='2xl'
           mt='10px'
           mb='4px'>
-          AdSpace {adspaceId}
+          {AdSpace.name}
         </Text>
         <SimpleGrid columns='2' gap='20px'>
           <Information
@@ -82,7 +101,11 @@ return (
             value={AdSpace.status}
           />
           {(AdSpace?.status == "Available") && (
-            <Button onClick={onOpen}>Advertise here</Button>
+            <Button colorScheme="brand" variant="solid" onClick={onOpen} 
+              style={{boxSizing: 'content-box',lineHeight: '2em', padding: '20px'}}
+            >
+              Advertise here
+            </Button>
           )}
           
 
@@ -90,16 +113,44 @@ return (
         <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>New Deal</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            -- load [Create Deal] component --
+            <FormControl isRequired>
+              <FormLabel>Duration (hours)</FormLabel>
+              <NumberInput
+                onChange={(valueString) => setNewDealDuration(valueString)}
+                value={newDealDuration}
+                step={1}
+                min={1}
+                max={240}
+              >
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            </FormControl>
+            <FormControl isRequired mt={4}>
+              <FormLabel>Campaign</FormLabel>
+              <Select placeholder='Select campaign'>
+                <option value='1'>Campaign 1</option>
+                <option value='2'>Campaign 2</option>
+                <option value='3'>Campaign 3</option>
+              </Select>
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel>Total cost</FormLabel>
+              <Text>{newDealDuration * AdSpace.price}</Text>
+              <Text fontSize='sm' as='i'>total cost = [duration] * [asking price]</Text>
+            </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="brand" mr={3} onClick={onClose}>
+            <Button mr={3} onClick={onClose}>
               Close
             </Button>
-            <Button variant="ghost">Secondary Action</Button>
+            <Button colorScheme="brand" variant="solid">Seal the Deal</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

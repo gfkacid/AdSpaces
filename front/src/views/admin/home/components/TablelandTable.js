@@ -52,7 +52,7 @@ export default function ColumnsTable(props) {
     });
 
     const readQueryResult = await tablelandConnection.read(
-      `SELECT * FROM ${tableToRead};`
+      `SELECT * FROM ${tableToRead} WHERE verified  = 1;`
     );
 
     console.log(readQueryResult);

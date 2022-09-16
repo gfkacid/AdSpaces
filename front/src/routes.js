@@ -47,7 +47,8 @@ const routes = [
     path: "/adspace/:adspaceId",
     icon: <Icon as={MdPerson} width='20px' height='20px' color='inherit' />,
     component: AdSpace,
-    display: false
+    display: false,
+    withParams: true
   }
 ];
 

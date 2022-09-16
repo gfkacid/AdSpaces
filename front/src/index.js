@@ -19,12 +19,8 @@ import CustomAvatar from "./components/_custom/CustomAvatar";
 
 const { chains, provider } = configureChains(
   [
-    chain.goerli,
-    chain.optimism,
     chain.optimismGoerli,
-    chain.polygon,
-    chain.localhost,
-  ],
+    ],
   [publicProvider()]
 );
 const { connectors } = getDefaultWallets({

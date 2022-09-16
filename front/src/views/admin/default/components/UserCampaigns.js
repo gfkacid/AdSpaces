@@ -9,8 +9,25 @@ import {
     Th,
     Thead,
     Tr,
-    useColorModeValue,
     Button,
+    FormControl,
+    FormLabel,
+    FormErrorMessage,
+    FormHelperText,
+    Input,
+    Select,
+    NumberInput,
+    NumberInputField,
+    NumberInputStepper,
+    NumberIncrementStepper,
+    NumberDecrementStepper,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton, useColorModeValue, useDisclosure
   } from "@chakra-ui/react";
   import React, { useMemo } from "react";
   import {
@@ -53,6 +70,10 @@ import {
   
     const textColor = useColorModeValue("secondaryGray.900", "white");
     const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
+
+    // modal
+    const { isOpen, onOpen, onClose } = useDisclosure()
+
     return (
       <Card
         direction='column'
@@ -67,7 +88,7 @@ import {
             lineHeight='100%'>
             My Campaigns
           </Text>
-          <Button>+ NEW</Button>
+          <Button colorScheme="brand" variant="solid" onClick={onOpen}>+ NEW</Button>
         </Flex>
         <Table {...getTableProps()} variant='simple' color='gray.500' mb='24px'>
           <Thead>
@@ -151,6 +172,37 @@ import {
             })}
           </Tbody>
         </Table>
+        <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>New Campaign</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+          <FormControl isRequired>
+              <FormLabel>Banner Size</FormLabel>
+              <Select placeholder='Select size'>
+                <option value='wide'>Wide | 728 x 90 px</option>
+                <option value='skyscraper'>Skyscraper | 160 x 600 px</option>
+                <option value='square'>Campaign 3 | 200 x 200 px</option>
+              </Select>
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel>Target link</FormLabel>
+                <Input type='url' placeholder='https://myshop.com'></Input>
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel>Banner file CID</FormLabel>
+                <Input placeholder='IPFS CID'></Input>
+            </FormControl>
+          </ModalBody>
+          <ModalFooter>
+            <Button mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button colorScheme="brand" variant="solid">Create Campaign</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       </Card>
     );
   }
