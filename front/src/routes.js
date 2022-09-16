@@ -18,26 +18,12 @@ import AdSpace from "views/admin/adspace"
 
 const routes = [
   {
-    name: "Home",
+    name: "Browse AdSpaces",
     layout: "/admin",
     path: "/home",
     icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
     component: Home,
-  },
-  {
-    name: "Ad Marketplace",
-    layout: "/admin",
-    path: "/ad-marketplace",
-    icon: (
-      <Icon
-        as={MdOutlineShoppingCart}
-        width="20px"
-        height="20px"
-        color="inherit"
-      />
-    ),
-    component: DataTables,
-    secondary: true,
+    display: true
   },
   {
     name: "My Dashboard",
@@ -45,6 +31,7 @@ const routes = [
     icon: <Icon as={MdBarChart} width="20px" height="20px" color="inherit" />,
     path: "/dashboard",
     component: MainDashboard,
+    display: true
   },
   {
     name: "Profile",
@@ -52,6 +39,7 @@ const routes = [
     path: "/profile",
     icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
     component: Profile,
+    display: true
   },
   {
     name: "AdSpace",
@@ -59,6 +47,7 @@ const routes = [
     path: "/adspace/:adspaceId",
     icon: <Icon as={MdPerson} width='20px' height='20px' color='inherit' />,
     component: AdSpace,
+    display: false
   }
 ];
 
