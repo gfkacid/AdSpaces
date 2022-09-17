@@ -3,10 +3,11 @@ pragma solidity ^0.8.10;
 import "./ITablelandTables.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "./AdSpace.sol";
 
-contract AdSpaceFactory is ERC721Holder {
+contract AdSpaceFactory is ERC721Holder, Ownable {
     ITablelandTables private _tableland;
 
     uint256 private _adspacetableid;
@@ -25,9 +26,14 @@ contract AdSpaceFactory is ERC721Holder {
     constructor(address tablelandAddress) {
         _tableland = ITablelandTables(tablelandAddress);
 
-        _adspacetableid = _createTable(
-            "CREATE TABLE AdSpaces (adspace_id AUTOINCREMENT PRIMARY KEY UNIQUE,name TEXT, website TEXT, verified INTEGER, status TEXT, owner TEXT, contract TEXT, asking_price INTEGER, size TEXT);"
+        /// @notice creates AdSpace Table in Tableland
+        string memory sqlAdSpace = string.concat(
+            "CREATE TABLE AdSpaces",
+            "_",
+            Strings.toString(block.chainid),
+            " (adspace_id INTEGER PRIMARY KEY,name TEXT, website TEXT, verified INTEGER, status TEXT, owner TEXT, contract TEXT, asking_price INTEGER, size TEXT);"
         );
+        _adspacetableid = _createTable(sqlAdSpace);
         _adSpaceTable = string.concat(
             "AdSpaces",
             "_",
@@ -36,9 +42,14 @@ contract AdSpaceFactory is ERC721Holder {
             Strings.toString(_adspacetableid)
         );
 
-        _campaigntableid = _createTable(
-            "CREATE TABLE Campaigns (deal_id AUTOINCREMENT PRIMARY KEY UNIQUE, campaign_id_fk INTEGER, adspace_id_fk INTEGER, duration_deal INTEGER, price INTEGER, started_at INTEGER);"
+        /// @notice creates Campaign Table in Tableland
+        string memory sqlCampaign = string.concat(
+            "CREATE TABLE Campaigns",
+            "_",
+            Strings.toString(block.chainid),
+            " (campaign_id INTEGER PRIMARY KEY, cid TEXT, size TEXT, link TEXT);"
         );
+        _campaigntableid = _createTable(sqlCampaign);
         _campaignTable = string.concat(
             "Campaigns",
             "_",
@@ -47,9 +58,14 @@ contract AdSpaceFactory is ERC721Holder {
             Strings.toString(_campaigntableid)
         );
 
-        _dealtableid = _createTable(
-            "CREATE TABLE Deals (campaign_id AUTOINCREMENT PRIMARY KEY UNIQUE, cid TEXT, size TEXT, link TEXT)"
+        /// @notice creates Deal Table in Tableland
+        string memory sqlDeal = string.concat(
+            "CREATE TABLE Deals",
+            "_",
+            Strings.toString(block.chainid),
+            " (deal_id INTEGER PRIMARY KEY, campaign_id_fk INTEGER, adspace_id_fk INTEGER, duration_deal INTEGER, price INTEGER, started_at INTEGER);"
         );
+        _dealtableid = _createTable(sqlDeal);
         _dealTable = string.concat(
             "Deals",
             "_",
@@ -59,6 +75,7 @@ contract AdSpaceFactory is ERC721Holder {
         );
     }
 
+    /// @notice create new AdSpace contract
     function createAdSpace(
         string memory _name,
         string memory _website,
@@ -116,28 +133,26 @@ contract AdSpaceFactory is ERC721Holder {
         _tableland.runSQL(address(this), tableId, statement);
     }
 
-    // onlyOwnerx
-    function setController(uint256 tableId, address controller) external {
+    function setController(uint256 tableId, address controller)
+        external
+        onlyOwner
+    {
         _tableland.setController(address(this), tableId, controller);
     }
 
-    // onlyOwner
-    function lockController(uint256 tableId) external {
+    function lockController(uint256 tableId) external onlyOwner {
         _tableland.lockController(address(this), tableId);
     }
 
-    // onlyOwner
-    function setBaseURI(string memory baseURI) external {
+    function setBaseURI(string memory baseURI) external onlyOwner {
         _tableland.setBaseURI(baseURI);
     }
 
-    // onlyOwner
-    function pause() external {
+    function pause() external onlyOwner {
         _tableland.pause();
     }
 
-    // onlyOwner
-    function unpause() external {
+    function unpause() external onlyOwner {
         _tableland.unpause();
     }
 
