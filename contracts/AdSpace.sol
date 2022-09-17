@@ -9,16 +9,22 @@ import "./Interfaces/ERC2981ContractWideRoyalties.sol";
 contract AdSpace is ERC721Enumerable, Ownable, ERC2981ContractWideRoyalties {
     using Strings for uint256;
 
+    // todo @acid: pinata pin
     string public baseURI = "https://adspaces.xyz/adspace.json";
     uint256 public maxSupply = 20;
     bool public paused = false;
-    address public adspaceOwner;
+
+    // owner on AdSpace open to discussion
+    //address public adspaceOwner;
     uint public adspaceId;
 
-    address public platformAddress;
+    address public revenueAddress = 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4;
 
-    address private _factoryAddress;
-    AdSpaceFactory private _factory;
+    // @Riki integrate the percentage in withdrawal
+    uint8 public revenuePercentage = 1;
+
+    address public _factoryAddress;
+    AdSpaceFactory public _factory;
 
     constructor(
         string memory _name,
@@ -28,13 +34,14 @@ contract AdSpace is ERC721Enumerable, Ownable, ERC2981ContractWideRoyalties {
         uint8 _numNFTs
     ) ERC721(_name, _symbol) {
         adspaceId = _adspaceId;
-        adspaceOwner = _adspaceOwner;
+        //adspaceOwner = _adspaceOwner;
 
         _factoryAddress = msg.sender;
         _factory = AdSpaceFactory(_factoryAddress);
 
         // set royalties
         _setRoyalties(msg.sender, 1000);
+        require(_numNFTs > 0);
         maxSupply = maxSupply > _numNFTs ? _numNFTs : maxSupply;
         // mint NFTs
         for (uint256 m = 1; m <= maxSupply; m++) {
@@ -58,8 +65,10 @@ contract AdSpace is ERC721Enumerable, Ownable, ERC2981ContractWideRoyalties {
         return baseURI;
     }
 
-    // public
+    // this function is returning the token ids of the passed address
+    // e.g. [5,7,8]
 
+    // @Riki check for array variations on sending tokens
     function walletOfOwner(address _owner)
         public
         view
@@ -105,6 +114,8 @@ contract AdSpace is ERC721Enumerable, Ownable, ERC2981ContractWideRoyalties {
         uint40 _end,
         uint _campaignId
     ) internal {
+        // @mme add call on tableland for insert
+        //AdSpaceFactory.runSQL()
         // update TableLand:
         // - adspaces table -> UPDATE status = occupied WHERE contract = address(this)
         //_factory.runSQL(_factoryAddress,_factory.getAdSpaceTableId,"SQL commin...");
@@ -113,6 +124,7 @@ contract AdSpace is ERC721Enumerable, Ownable, ERC2981ContractWideRoyalties {
         //    VALUES (_campaignId, adspaceId, _end, ...);
     }
 
+    // @Riki cleanup withdraw :)
     // distribute revenue to NFT holders
     //function withdraw(uint maxSupply) public payable /*onlyHolder*/ {
     //  // validate Deal has ended by reading TableLand data and comparing timestamp?
@@ -133,11 +145,8 @@ contract AdSpace is ERC721Enumerable, Ownable, ERC2981ContractWideRoyalties {
         baseURI = _newBaseURI;
     }
 
-    function setPlatformAddress(address _newPlatformAddress)
-        public
-        onlyPlatform
-    {
-        platformAddress = _newPlatformAddress;
+    function setrevenueAddress(address _newrevenueAddress) public onlyPlatform {
+        revenueAddress = _newrevenueAddress;
     }
 
     function pause(bool _state) public onlyPlatform {
@@ -167,7 +176,7 @@ contract AdSpace is ERC721Enumerable, Ownable, ERC2981ContractWideRoyalties {
 
     // only the team can call this function
     modifier onlyPlatform() {
-        require(msg.sender == platformAddress);
+        require(msg.sender == revenueAddress);
         _;
     }
 }

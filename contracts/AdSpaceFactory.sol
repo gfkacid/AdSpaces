@@ -2,10 +2,11 @@
 pragma solidity ^0.8.10;
 import "./ITablelandTables.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
 
 import "./AdSpace.sol";
 
-contract AdSpaceFactory {
+contract AdSpaceFactory is ERC721Holder {
     ITablelandTables private _tableland;
 
     uint256 private _adspacetableid;
@@ -100,6 +101,7 @@ contract AdSpaceFactory {
 
         _runSQL(_adspacetableid, sqlStatement);
         Adspaces.push(address(_adspace));
+        _counter_adspaces++;
     }
 
     function _createTable(string memory statement) internal returns (uint256) {
@@ -176,5 +178,9 @@ contract AdSpaceFactory {
 
     function getAdSpaceAddress(uint256 i) external view returns (address) {
         return Adspaces[i];
+    }
+
+    function getCounterAdSpaces() external view returns (uint256) {
+        return _counter_adspaces;
     }
 }
