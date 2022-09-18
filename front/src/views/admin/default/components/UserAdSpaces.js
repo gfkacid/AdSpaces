@@ -145,15 +145,6 @@ import VerifiedStatusIcon from "components/domain/VerifiedStatusIcon";
                           ${cell.value}
                         </Text>
                       );
-                    } else if (cell.column.id === "file") {
-                      data = (
-                        <Link
-                            href={'https://gateway.pinata.cloud/ipfs/' + cell.value}
-                            target='_blank'
-                            >
-                            <Image className='table-image' src={'https://gateway.pinata.cloud/ipfs/' + cell.value} />
-                        </Link>
-                      );
                     } else if (cell.column.id === "website") {
                       data = (
                         <Text color={textColor} fontSize='sm' fontWeight='700'>

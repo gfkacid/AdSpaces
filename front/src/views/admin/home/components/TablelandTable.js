@@ -4,7 +4,7 @@
 import {
   Flex,
   Table,
-  Icon,
+  Link,
   Tbody,
   Td,
   Text,
@@ -24,6 +24,8 @@ import {
 // Custom components
 import Card from "components/card/Card";
 import Menu from "components/menu/MainMenu";
+import SizeIcon from "components/domain/SizeIcon";
+import AdSpaceStatus from "components/domain/AdSpaceStatus";
 import deployedTables from "../variables/deployedTables.json";
 import { connect, resultsToObjects } from "@tableland/sdk";
 
@@ -52,15 +54,37 @@ export default function ColumnsTable(props) {
     });
 
     const readQueryResult = await tablelandConnection.read(
-      `SELECT * FROM ${tableToRead} WHERE verified  = 1;`
+      `SELECT * FROM ${tableToRead} WHERE verified  = 1 ORDER BY adspace_id DESC;`
     );
 
     console.log(readQueryResult);
     const data = await resultsToObjects(readQueryResult);
 
-    const columnsFixed = readQueryResult.columns.map((elem) => {
-      return { Header: elem.name, accessor: elem.name };
-    });
+    const columnsFixed = [
+      {
+        Header: "Name",
+        accessor: "name",
+      },
+      {
+        Header: "Size",
+        accessor: "size",
+      },
+      {
+        Header: "Asking Price",
+        accessor: "price",
+      },
+      {
+        Header: "Website",
+        accessor: "website",
+      },
+      {
+         Header: "Status",
+        accessor: "status",
+      },
+    ]
+    // readQueryResult.columns.map((elem) => {
+    //   return { Header: elem.name, accessor: elem.name };
+    // });
     return { columnsFixed, data };
   }
 
@@ -153,66 +177,41 @@ export default function ColumnsTable(props) {
                 {row.cells.map((cell, index) => {
                   let data = "";
                   let align = "left";
-                  if (cell.column.id === "id") {
+                  if (cell.column.id === "name") {
                     data = (
-                      <Text color={textColor} fontSize="sm" fontWeight="700">
-                        <a href="#">#{cell.value}</a>
-                      </Text>
-                    );
-                  } else if (cell.column.id === "status") {
-                    data = (
-                      <Flex align="center">
-                        <Icon
-                          w="24px"
-                          h="24px"
-                          me="5px"
-                          color={
-                            cell.value === "Available"
-                              ? "green.500"
-                              : cell.value === "Running Ads"
-                              ? "orange.500"
-                              : null
-                          }
-                          as={
-                            cell.value === "Available"
-                              ? MdCheckCircle
-                              : cell.value === "Running Ads"
-                              ? MdOutlineError
-                              : null
-                          }
-                        />
-                        <Text color={textColor} fontSize="sm" fontWeight="700">
+                      <Text color={textColor} fontSize='sm' fontWeight='700'>
+                        <Link
+                          href={'/#/admin/adspace/'+row.original.id}
+                          >
                           {cell.value}
-                        </Text>
-                      </Flex>
+                        </Link>
+                      </Text>
                     );
                   } else if (cell.column.id === "size") {
                     data = (
-                      <span
-                        className={"size-box size-box-" + cell.value}
-                      ></span>
+                      <SizeIcon size={cell.value} />
                     );
-                    align = "center";
                   } else if (cell.column.id === "price") {
                     data = (
-                      <Text color={textColor} fontSize="sm" fontWeight="700">
+                      <Text color={textColor} fontSize='sm' fontWeight='700'>
                         ${cell.value}
                       </Text>
                     );
                   } else if (cell.column.id === "website") {
                     data = (
-                      <Text color={textColor} fontSize="sm" fontWeight="700">
-                        <a href={cell.value} target="_blank">
-                          {getDomainFromURL(cell.value)}
-                        </a>
+                      <Text color={textColor} fontSize='sm' fontWeight='700'>
+                        <Link
+                          href={cell.value}
+                          target='_blank'
+                          >
+                          {cell.value}
+                        </Link>
                       </Text>
                     );
-                  } else {
-                    data = (
-                      <Text color={textColor} fontSize="sm" fontWeight="700">
-                        {cell.value}
-                      </Text>
-                    );
+                  }else if(cell.column.id === "status") {
+                      data = (
+                        <AdSpaceStatus status={cell.value}  textColor={textColor}/>
+                      );
                   }
                   return (
                     <Td
