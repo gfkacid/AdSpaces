@@ -7,7 +7,29 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "./AdSpace.sol";
 
+/**
+ * @notice This contract is the controller of all Tableland interactions
+ * @notice and deployer of all the AdSpace contracts
+ * @dev when deploying make sure to get the right Tableland contract for desired chain
+ * @dev upon deployment this contract creates three Tableland Tables:
+ * @dev AdSpaces_{chain}_{tableID}, Campaigns_{chain}_{tableID}, Deals_{chain}_{tableID}
+ * @dev Custom errors need to be added...
+ */
 contract AdSpaceFactory is ERC721Holder, Ownable {
+    /* Errors */
+    /* tba */
+
+    /* Events */
+    event AdSpaceCreated(address indexed contractAddress);
+    event CampaignCreated(uint256 indexed CampaignId);
+    event DealCreated(
+        uint256 indexed DealId,
+        uint256 indexed CampaignId,
+        uint256 indexed AdSpaceId
+    );
+    event AdSpaceUpdated(uint256 indexed AdSpaceId);
+
+    /* Variables */
     ITablelandTables private _tableland;
 
     uint256 private _adspacetableid;
@@ -20,9 +42,12 @@ contract AdSpaceFactory is ERC721Holder, Ownable {
     string private _dealTable;
 
     uint256 private _counter_adspaces = 0;
+    uint256 private _counter_campaigns = 0;
+    uint256 private _counter_deals = 0;
 
     address[] private Adspaces;
 
+    /// @param tablelandAddress see docs.tableland.xyz for contracts on chains
     constructor(address tablelandAddress) {
         _tableland = ITablelandTables(tablelandAddress);
 
@@ -47,7 +72,7 @@ contract AdSpaceFactory is ERC721Holder, Ownable {
             "CREATE TABLE Campaigns",
             "_",
             Strings.toString(block.chainid),
-            " (campaign_id INTEGER PRIMARY KEY, cid TEXT, size TEXT, link TEXT);"
+            " (campaign_id INTEGER PRIMARY KEY, cid TEXT, size TEXT, link TEXT, owner TEXT);"
         );
         _campaigntableid = _createTable(sqlCampaign);
         _campaignTable = string.concat(
@@ -75,7 +100,16 @@ contract AdSpaceFactory is ERC721Holder, Ownable {
         );
     }
 
-    /// @notice create new AdSpace contract
+    /**
+     * @notice create new AdSpace contract
+     * @param _name name of new creating Adspace
+     * @param _website website where the AdSpace will be located
+     * @param _symbol symbol short of new creating Adspace
+     * @param _asking_price price of new creating Adspace
+     * @param _numNFTs amount of NFTs to mint to msg.sender of creation
+     * @param _size size of the AdSpaces: wide | small | scyscraper
+     * @dev id and owner will be set automatically
+     */
     function createAdSpace(
         string memory _name,
         string memory _website,
@@ -97,104 +131,153 @@ contract AdSpaceFactory is ERC721Holder, Ownable {
         string memory sqlStatement = string.concat(
             "INSERT INTO ",
             _adSpaceTable,
-            " (name,website,verified,status,owner,contract,asking_price,size) VALUES (",
+            " (name,website,verified,status,owner,contract,asking_price,size) VALUES ('",
             _name,
-            ",",
+            "','",
             _website,
-            ",",
+            "','",
             "0", //verified
-            ",",
+            "','",
             "Pending Verification", // status
-            ",",
+            "','",
             Strings.toHexString(uint256(uint160(address(msg.sender))), 20), // owner
-            ",",
+            "','",
             Strings.toHexString(uint256(uint160(address(_adspace))), 20), // contract
-            ",",
+            "','",
             _asking_price,
-            ",",
+            "','",
             _size,
-            ");"
+            "');"
         );
 
         _runSQL(_adspacetableid, sqlStatement);
-        Adspaces.push(address(_adspace));
         _counter_adspaces++;
+        emit AdSpaceCreated(address(_adspace));
     }
 
+    /**
+     * @notice Creating Deal and inserting row on Tableland
+     * @notice after creating the deal, the Adspace Table will update on the affected row
+     * @param _adspaceId id of the affected AdSpace
+     * @param _price negotiated price for the deal
+     * @param _end ending timestamp (UNIX)
+     * @param campaignId id of the affected campaign
+     */
+    function createDeal(
+        uint256 _adspaceId,
+        uint256 _price,
+        uint40 _end,
+        uint256 campaignId
+    ) external payable {
+        string memory sqlCreateDeal = string.concat(
+            "INSERT INTO ",
+            _dealTable,
+            " (campaign_id_fk, adspace_id_fk, duration_deal, price, started_at) VALUES ('",
+            Strings.toString(campaignId),
+            "','",
+            Strings.toString(_adspaceId),
+            "','",
+            Strings.toString(_end),
+            "','",
+            Strings.toString(_price),
+            "','",
+            Strings.toString(block.timestamp),
+            "');"
+        );
+
+        _runSQL(_campaigntableid, sqlCreateDeal);
+        _counter_deals++;
+        emit DealCreated(_counter_deals, _counter_campaigns, _counter_adspaces);
+
+        ///@notice update the Adspace Tableland table
+        string memory sqlUpdateAdspace = string.concat(
+            "UPDATE ",
+            _adSpaceTable,
+            " SET status ='Running Ads' WHERE adspace_id = '",
+            Strings.toString(_adspaceId),
+            "';"
+        );
+        _runSQL(_adspacetableid, sqlUpdateAdspace);
+        emit AdSpaceUpdated(_adspaceId);
+    }
+
+    /**
+     * @notice Creating a Campaign and inserting row on Tableland
+     * @param cid id of the affected AdSpace
+     * @param size negotiated price for the deal
+     * @param link ending timestamp (UNIX)
+     * @dev owner will be auto assigned to msg.sender
+     */
+    function createCampaign(
+        string memory cid,
+        string memory size,
+        string memory link
+    ) external payable {
+        string memory sqlCreateCampagin = string.concat(
+            "INSERT INTO ",
+            _campaignTable,
+            " (cid, size, link, owner) VALUES ('",
+            cid,
+            "','",
+            size,
+            "','",
+            link,
+            "','",
+            Strings.toHexString(uint256(uint160(address(msg.sender))), 20),
+            "');"
+        );
+        _runSQL(_campaigntableid, sqlCreateCampagin);
+        _counter_campaigns++;
+        emit CampaignCreated(_counter_campaigns);
+    }
+
+    ///@dev internal function to be only called by this Factory
     function _createTable(string memory statement) internal returns (uint256) {
         return _tableland.createTable(address(this), statement);
     }
 
-    function runSQL(uint256 tableId, string memory statement) external payable {
-        _runSQL(tableId, statement);
-    }
-
+    ///@dev internal function to be only called by this Factory
     function _runSQL(uint256 tableId, string memory statement) internal {
         _tableland.runSQL(address(this), tableId, statement);
     }
 
-    function setController(uint256 tableId, address controller)
-        external
-        onlyOwner
-    {
-        _tableland.setController(address(this), tableId, controller);
-    }
-
-    function lockController(uint256 tableId) external onlyOwner {
-        _tableland.lockController(address(this), tableId);
-    }
-
-    function setBaseURI(string memory baseURI) external onlyOwner {
-        _tableland.setBaseURI(baseURI);
-    }
-
-    function pause() external onlyOwner {
-        _tableland.pause();
-    }
-
-    function unpause() external onlyOwner {
-        _tableland.unpause();
-    }
-
-    // getter
-    function getController(uint256 tableId)
-        external
-        returns (
-            //override
-            address
-        )
-    {
-        return _tableland.getController(tableId);
-    }
-
+    ///@return uint256 the id of the current AdSpace Table of this AdSpaceFactory
     function getAdSpaceTableId() external view returns (uint256) {
         return _adspacetableid;
     }
 
+    ///@return uint256 the id of the current Campaign Table of this AdSpaceFactory
     function getCampaignTableId() external view returns (uint256) {
         return _campaigntableid;
     }
 
+    ///@return uint256 the id of the current Deal Table of this AdSpaceFactory
     function getDealTableId() external view returns (uint256) {
         return _dealtableid;
     }
 
+    ///@return uint256 the full name of the current AdSpace Table of this AdSpaceFactory
     function getAdSpaceTable() external view returns (string memory) {
         return _adSpaceTable;
     }
 
+    ///@return uint256 the full name of the current Campaign Table of this AdSpaceFactory
     function getCampaignTable() external view returns (string memory) {
         return _campaignTable;
     }
 
+    ///@return uint256 he full name of the current Deal Table of this AdSpaceFactory
     function getDealTable() external view returns (string memory) {
         return _dealTable;
     }
 
+    ///@param i the identifier (number) of the Adspace interested in
+    ///@return address the addess of the AdSpace Contract with identifier i
     function getAdSpaceAddress(uint256 i) external view returns (address) {
         return Adspaces[i];
     }
 
+    ///@return uint256 the current amount of Adspaces created by this Factory
     function getCounterAdSpaces() external view returns (uint256) {
         return _counter_adspaces;
     }
