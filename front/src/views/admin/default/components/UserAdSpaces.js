@@ -36,12 +36,15 @@ import {
     useSortBy,
     useTable,
   } from "react-table";
+
+  import { useForm } from "react-hook-form";
   
   // Custom components
   import Card from "components/card/Card";
   import SizeIcon from "components/domain/SizeIcon"
   import AdSpaceStatus from "components/domain/AdSpaceStatus";
-import VerifiedStatusIcon from "components/domain/VerifiedStatusIcon";
+  import VerifiedStatusIcon from "components/domain/VerifiedStatusIcon";
+import { isNotNumber, isNumeric } from "@chakra-ui/utils";
   
   // Assets
   export default function UserAdSpaces(props) {
@@ -77,9 +80,14 @@ import VerifiedStatusIcon from "components/domain/VerifiedStatusIcon";
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     // New AdSpace form
-    const [NumNFTs, setNumNFTs] = React.useState('1')
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const [NumNFTs, setNumNFTs] = React.useState('10')
     const [price, setPrice] = React.useState('0.55')
-
+    const onSubmit = data => console.log(data);
+    const validateNumNFTs = num => {
+      if(!isNumeric(num))return 1;
+      return (num >= 1 && num <= 20) ? num : NumNFTs;
+    }
     return (
       <Card
         direction='column'
@@ -188,18 +196,19 @@ import VerifiedStatusIcon from "components/domain/VerifiedStatusIcon";
           <ModalContent>
             <ModalHeader>New AdSpace</ModalHeader>
             <ModalCloseButton />
+            <form>
             <ModalBody>
               <FormControl isRequired>
                 <FormLabel>Name</FormLabel>
-                  <Input placeholder='mysite.com | footer'></Input>
+                  <Input placeholder='mysite.com | footer' {...register('name')}></Input>
               </FormControl>
               <FormControl isRequired mt={4}>
                 <FormLabel>Website</FormLabel>
-                  <Input type='url' placeholder='https://myshop.com'></Input>
+                  <Input type='url' placeholder='https://myshop.com' {...register('website')}></Input>
               </FormControl>
               <FormControl isRequired mt={4}>
                 <FormLabel>Banner Size</FormLabel>
-                <Select placeholder='Select size'>
+                <Select placeholder='Select size' {...register('size')}>
                   <option value='wide'>Wide | 728 x 90 px</option>
                   <option value='skyscraper'>Skyscraper | 160 x 600 px</option>
                   <option value='square'>Campaign 3 | 200 x 200 px</option>
@@ -208,6 +217,7 @@ import VerifiedStatusIcon from "components/domain/VerifiedStatusIcon";
               <FormControl isRequired mt={4}>
                 <FormLabel>Asking Price / hour - $USDC</FormLabel>
                 <NumberInput
+                  {...register('price')}
                   onChange={(valueString) => setPrice(valueString)}
                   value={price}
                   step={0.01}
@@ -225,7 +235,8 @@ import VerifiedStatusIcon from "components/domain/VerifiedStatusIcon";
               <FormControl isRequired mt={4}>
                 <FormLabel>Revenue Share NFTs</FormLabel>
                 <NumberInput
-                  onChange={(valueString) => setNumNFTs(valueString)}
+                 {...register('numNFTs')}
+                  onChange={(valueString) => setNumNFTs(validateNumNFTs(valueString))}
                   value={NumNFTs}
                   step={1}
                   min={1}
@@ -244,8 +255,9 @@ import VerifiedStatusIcon from "components/domain/VerifiedStatusIcon";
               <Button mr={3} onClick={onClose}>
                 Close
               </Button>
-              <Button colorScheme="brand" variant="solid">Submit AdSpace</Button>
+              <Button onClick={handleSubmit(onSubmit)} colorScheme="brand" variant="solid">Submit AdSpace</Button>
             </ModalFooter>
+            </form>
           </ModalContent>
         </Modal>
       </Card>

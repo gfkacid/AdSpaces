@@ -39,6 +39,8 @@ export default function ColumnsTable(props) {
   //const tableland = require("@tableland/sdk");
   const networkConfig = {
     testnet: "testnet",
+    // chain: "goerli",
+    // chainId: "5",
     chain: "optimism-goerli",
     chainId: "420",
   };
