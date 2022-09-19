@@ -94,9 +94,6 @@ export default function UserAdSpaces(props) {
   } = useForm();
   const [NumNFTs, setNumNFTs] = React.useState("10");
   const [price, setPrice] = React.useState("0.55");
-  const [website, setWebsite] = React.useState("0");
-  const [name, setName] = React.useState("0");
-  const [size, setSize] = React.useState("0");
 
   //wagmi/web3 stuff
   const contractABI = abi.abi;
@@ -107,11 +104,11 @@ export default function UserAdSpaces(props) {
     contractInterface: contractABI,
     functionName: "createAdSpace",
     args: [
-      name,
-      website,
-      parseInt(price).toString(),
+      "name-not-set",
+      "website-not-set",
+      parseInt("0.00").toString(),
       BigNumber.from(NumNFTs),
-      size,
+      "size-not-set",
     ],
   });
   const {
