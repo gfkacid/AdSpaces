@@ -145,7 +145,6 @@ export default function ColumnsTable(props) {
         >
           Browse AdSpaces
         </Text>
-        <Menu />
       </Flex>
       <Table {...getTableProps()} variant="simple" color="gray.500" mb="24px">
         <Thead>

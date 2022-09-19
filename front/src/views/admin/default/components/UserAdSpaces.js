@@ -1,93 +1,129 @@
+/* eslint-disable no-unused-vars */
 import {
-    Flex,
-    Table,
-    Image,
-    Link,
-    Tbody,
-    Td,
-    Text,
-    Th,
-    Thead,
-    Tr,
-    Button,
-    FormControl,
-    FormLabel,
-    FormErrorMessage,
-    FormHelperText,
-    Input,
-    Select,
-    NumberInput,
-    NumberInputField,
-    NumberInputStepper,
-    NumberIncrementStepper,
-    NumberDecrementStepper,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton, useColorModeValue, useDisclosure
-  } from "@chakra-ui/react";
-  import React, { useMemo } from "react";
-  import {
-    useGlobalFilter,
-    usePagination,
-    useSortBy,
-    useTable,
-  } from "react-table";
+  Flex,
+  Table,
+  Image,
+  Link,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  Button,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  FormHelperText,
+  Input,
+  Select,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useColorModeValue,
+  useDisclosure,
+} from "@chakra-ui/react";
+import React, { useMemo, useState } from "react";
+import {
+  useGlobalFilter,
+  usePagination,
+  useSortBy,
+  useTable,
+} from "react-table";
+import { BigNumber } from "ethers";
 
-  import { useForm } from "react-hook-form";
+
+import { useForm } from "react-hook-form";
   
-  // Custom components
-  import Card from "components/card/Card";
-  import SizeIcon from "components/domain/SizeIcon"
-  import AdSpaceStatus from "components/domain/AdSpaceStatus";
-  import VerifiedStatusIcon from "components/domain/VerifiedStatusIcon";
-import { isNotNumber, isNumeric } from "@chakra-ui/utils";
+// Custom components
+import { isNumeric } from "@chakra-ui/utils";
+
+// Custom components
+import Card from "components/card/Card";
+import SizeIcon from "components/domain/SizeIcon";
+import AdSpaceStatus from "components/domain/AdSpaceStatus";
+import VerifiedStatusIcon from "components/domain/VerifiedStatusIcon";
+import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
+//import { InjectedConnector } from "wagmi/connectors/injected";
+import abi from "../variables/AdSpaceFactory.json";
+
+// Assets
+export default function UserAdSpaces(props) {
+  const { columnsData, tableData } = props;
+
+  //wagmi stuff
+  const contractABI = abi.abi;
+  const contractAddress = abi.address;
   
-  // Assets
-  export default function UserAdSpaces(props) {
-    const { columnsData, tableData } = props;
-  
-    const columns = useMemo(() => columnsData, [columnsData]);
-    const data = useMemo(() => tableData, [tableData]);
-  
-    const tableInstance = useTable(
-      {
-        columns,
-        data,
-      },
-      useGlobalFilter,
-      useSortBy,
-      usePagination
-    );
-  
-    const {
-      getTableProps,
-      getTableBodyProps,
-      headerGroups,
-      page,
-      prepareRow,
-      initialState,
-    } = tableInstance;
-    initialState.pageSize = 5;
+  const columns = useMemo(() => columnsData, [columnsData]);
+  const data = useMemo(() => tableData, [tableData]);
+
+  const tableInstance = useTable(
+    {
+      columns,
+      data,
+    },
+    useGlobalFilter,
+    useSortBy,
+  usePagination)
+
   
     const textColor = useColorModeValue("secondaryGray.900", "white");
     const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
 
-    // modal
-    const { isOpen, onOpen, onClose } = useDisclosure()
-
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    page,
+    prepareRow,
+    initialState,
+  } = tableInstance;
+  initialState.pageSize = 5;
+  // modal
+    const { isOpen, onOpen, onClose } = useDisclosure();
     // New AdSpace form
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [NumNFTs, setNumNFTs] = React.useState('10')
     const [price, setPrice] = React.useState('0.55')
-    const onSubmit = data => console.log(data);
+    
+    // submit New AdSpace Form
+    const onSubmit = data => {
+      console.log(data);
+// AdSpaceFactory on Optimism Goerli
+const { config: newAdSpaceConfig } = usePrepareContractWrite({
+  addressOrName: contractAddress,
+  contractInterface: contractABI,
+  functionName: "createAdSpace",
+  args: [data.name, data.website,data.price, BigNumber.from(data.numNFTs), data.size],
+});
+
+const {
+  data: writeData,
+  isLoading,
+  isSuccess,
+  write: newAdSpace,
+} = useContractWrite(newAdSpaceConfig);
+    }
+
     const validateNumNFTs = num => {
       if(!isNumeric(num))return 1;
       return (num >= 1 && num <= 20) ? num : NumNFTs;
     }
+
+    const { address: userAddress, isConnected } = useAccount();
+
+
+  
     return (
       <Card
         direction='column'
@@ -263,4 +299,3 @@ import { isNotNumber, isNumeric } from "@chakra-ui/utils";
       </Card>
     );
   }
-  
