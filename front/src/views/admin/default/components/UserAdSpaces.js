@@ -38,6 +38,7 @@ import {
   useSortBy,
   useTable,
 } from "react-table";
+import { BigNumber } from "ethers";
 
 // Custom components
 import Card from "components/card/Card";
@@ -57,7 +58,7 @@ export default function UserAdSpaces(props) {
   const [website, setWebsite] = useState("0");
   const [size, setSize] = useState("0");
   const [NumNFTs, setNumNFTs] = useState("1");
-  const [price, setPrice] = useState("55");
+  const [price, setPrice] = useState("0.55");
 
   //wagmi stuff
   const contractABI = abi.abi;
@@ -68,10 +69,9 @@ export default function UserAdSpaces(props) {
     addressOrName: contractAddress,
     contractInterface: contractABI,
     functionName: "createAdSpace",
-    args: [name, website, "ADSPACE", size, price, NumNFTs],
+    args: [name, website, price, BigNumber.from(NumNFTs), size],
   });
 
-  console.log(newAdSpaceConfig);
   const {
     data: writeData,
     isLoading,
