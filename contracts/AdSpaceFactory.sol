@@ -72,7 +72,7 @@ contract AdSpaceFactory is ERC721Holder, Ownable {
             "CREATE TABLE Campaigns",
             "_",
             Strings.toString(block.chainid),
-            " (campaign_id INTEGER PRIMARY KEY, cid TEXT, size TEXT, link TEXT, owner TEXT);"
+            " (campaign_id INTEGER PRIMARY KEY,name TEXT, cid TEXT, size TEXT, link TEXT, owner TEXT);"
         );
         _campaigntableid = _createTable(sqlCampaign);
         _campaignTable = string.concat(
@@ -104,7 +104,6 @@ contract AdSpaceFactory is ERC721Holder, Ownable {
      * @notice create new AdSpace contract
      * @param _name name of new creating Adspace
      * @param _website website where the AdSpace will be located
-     * @param _symbol symbol short of new creating Adspace
      * @param _asking_price price of new creating Adspace
      * @param _numNFTs amount of NFTs to mint to msg.sender of creation
      * @param _size size of the AdSpaces: wide | small | scyscraper
@@ -113,16 +112,13 @@ contract AdSpaceFactory is ERC721Holder, Ownable {
     function createAdSpace(
         string memory _name,
         string memory _website,
-        string memory _symbol,
         string memory _asking_price,
-        //uint256 _adspaceId,
-        //address _adspaceOwner,
         uint8 _numNFTs,
         string memory _size
     ) external payable {
         AdSpace _adspace = new AdSpace(
             _name,
-            _symbol,
+            "$ADSPACE",
             _counter_adspaces,
             msg.sender,
             //_adspaceOwner,
@@ -209,6 +205,7 @@ contract AdSpaceFactory is ERC721Holder, Ownable {
      * @dev owner will be auto assigned to msg.sender
      */
     function createCampaign(
+        string memory name,
         string memory cid,
         string memory size,
         string memory link
@@ -216,7 +213,9 @@ contract AdSpaceFactory is ERC721Holder, Ownable {
         string memory sqlCreateCampagin = string.concat(
             "INSERT INTO ",
             _campaignTable,
-            " (cid, size, link, owner) VALUES ('",
+            " (name, cid, size, link, owner) VALUES ('",
+            name,
+            "','",
             cid,
             "','",
             size,

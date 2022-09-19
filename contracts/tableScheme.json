@@ -1,87 +1,117 @@
 {
   "tablesToCreate": [
     {
-      "prefix": "AdSpace",
-      "schema": "adspace_id INTEGER PRIMARY KEY UNIQUE,name TEXT, website TEXT, verified INTEGER, status TEXT, owner TEXT, contract TEXT, asking_price INTEGER",
-      "schema_short": "adspace_id, name,  website, verified, status, owner, contract, asking_price",
+      "prefix": "AdSpaces",
+      "schema": "adspace_id INTEGER PRIMARY KEY,name TEXT, website TEXT, verified INTEGER, status TEXT, owner TEXT, contract TEXT, asking_price INTEGER, size TEXT",
+      "schema_short": "name,  website, verified, status, owner, contract, asking_price, size",
       "fieldCount": 8,
       "data": [
         [
-          1,
           "Lorem Ipsum 1",
           "https://loremipsum1.org",
           1,
           "Available",
           "0x0wner01",
           "0xContract01",
-          100
+          100,
+          "wide"
         ],
         [
-          2,
           "Lorem Ipsum 2",
           "https://loremipsum2.org",
           1,
           "Running Ads",
           "0x0wner01",
           "0xContract02",
-          200
+          200,
+          "wide"
         ],
         [
-          3,
           "Lorem Ipsum 3",
           "https://loremipsum3.org",
           0,
           "Available",
           "0x0wner02",
           "0xContract03",
-          3000
+          3000,
+          "wide"
         ],
         [
-          4,
           "Lorem Ipsum 4",
           "https://loremipsum4.org",
           0,
           "Available",
           "0x0wner03",
           "0xContract04",
-          40
+          40,
+          "wide"
         ],
         [
-          5,
           "Lorem Ipsum 5",
           "https://loremipsum5.org",
           1,
           "Running Ads",
           "0x0wner04",
           "0xContract05",
-          50
+          50,
+          "wide"
         ]
       ]
     },
     {
-      "prefix": "Deal",
-      "schema": "deal_id INTEGER PRIMARY KEY UNIQUE, campaign_id_fk INTEGER, adspace_id_fk INTEGER, duration_deal INTEGER, price INTEGER, started_at INTEGER",
-      "schema_short": "deal_id, campaign_id_fk, adspace_id_fk, duration_deal, price, started_at",
+      "prefix": "Deals",
+      "schema": "deal_id INTEGER PRIMARY KEY, campaign_id_fk INTEGER, adspace_id_fk INTEGER, duration_deal INTEGER, price INTEGER, started_at INTEGER",
+      "schema_short": "campaign_id_fk, adspace_id_fk, duration_deal, price, started_at",
       "fieldCount": 5,
       "data": [
-        [1, 1, 1, 100, 1662890401000],
-        [2, 1, 2, 200, 1662894020000],
-        [3, 1, 5, 300, 1662897780000],
-        [4, 1, 1, 400, 1662902040000],
-        [5, 1, 2, 500, 1662907800000]
+        [1, 1, 100, 123, 1662890401000],
+        [1, 2, 200, 456, 1662894020000],
+        [1, 5, 300, 789, 1662897780000],
+        [1, 1, 400, 123, 1662902040000],
+        [1, 2, 500, 345, 1662907800000]
       ]
     },
     {
-      "prefix": "Campaign",
-      "schema": "campaign_id INTEGER PRIMARY KEY UNIQUE, cid TEXT, size TEXT, link TEXT",
-      "schema_short": "campaign_id, cid, size, link",
-      "fieldCount": 2,
+      "prefix": "Campaigns",
+      "schema": "campaign_id INTEGER PRIMARY KEY,name TEXT, cid TEXT, size TEXT, link TEXT, owner TEXT",
+      "schema_short": "name cid, size, link, owner",
+      "fieldCount": 5,
       "data": [
-        [1, "0xCid01", "wide", "https://01adspaces.testlink"],
-        [2, "0xCid02", "square", "https://02adspaces.testlink"],
-        [3, "0xCid03", "skyscraper", "https://03adspaces.testlink"],
-        [4, "0xCid04", "wide", "https://04adspaces.testlink"],
-        [5, "0xCid05", "skyscraper", "https://05adspaces.testlink"]
+        [
+          "CampaignName1",
+          "0xCid01",
+          "wide",
+          "https://01adspaces.testlink",
+          "0x0"
+        ],
+        [
+          "CampaignName2",
+          "0xCid02",
+          "square",
+          "https://02adspaces.testlink",
+          "0x0"
+        ],
+        [
+          "CampaignName3",
+          "0xCid03",
+          "skyscraper",
+          "https://03adspaces.testlink",
+          "0x0"
+        ],
+        [
+          "CampaignName4",
+          "0xCid04",
+          "wide",
+          "https://04adspaces.testlink",
+          "0x0"
+        ],
+        [
+          "CampaignName5",
+          "0xCid05",
+          "skyscraper",
+          "https://05adspaces.testlink",
+          "0x0"
+        ]
       ]
     }
   ]
