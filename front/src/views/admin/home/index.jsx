@@ -73,16 +73,9 @@ export default function Home() {
           <Flex direction="column">
             <Flex
               mt="45px"
-              mb="20px"
-              justifyContent="space-between"
-              direction={{ base: "column", md: "row" }}
-              align={{ base: "start", md: "center" }}
-            >
-              <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700">
-                Browse AdSpaces
-              </Text>
+             >
             </Flex>
-            <TablelandTable tablePrefix="AdSpace" />
+            <TablelandTable mt="45px" tablePrefix="AdSpace" />
           </Flex>
         </Flex>
         <Flex

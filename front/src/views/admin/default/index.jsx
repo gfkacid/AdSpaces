@@ -43,6 +43,12 @@ import tableDataUserCampaigns from "views/admin/default/variables/tableDataUserC
 import tableDataUserAdSpaces from "views/admin/default/variables/tableDataUserAdSpaces.json";
 import UserCampaigns from "./components/UserCampaigns";
 import UserAdSpaces from "./components/UserAdSpaces";
+import UserTotalRevenue from "components/domain/UserTotalRevenue";
+import UserAdspacesTotalRevenue from "components/domain/UserAdspacesTotalRevenue";
+import SpentOnAds from "components/domain/SpentOnAds";
+import MyDeals from "components/domain/MyDeals";
+import MyAdSpaces from "components/domain/MyAdSpaces";
+import MyCampaigns from "components/domain/MyCampaigns";
 
 export default function UserReports() {
   // Chakra Color Mode
@@ -54,73 +60,12 @@ export default function UserReports() {
         columns={{ base: 1, md: 2, lg: 3, "2xl": 6 }}
         gap='20px'
         mb='20px'>
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w='56px'
-              h='56px'
-              bg={boxBg}
-              icon={
-                <Icon w='32px' h='32px' as={MdBarChart} color={brandColor} />
-              }
-            />
-          }
-          name='Total Ad Revenue'
-          value='$350.4'
-        />
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w='56px'
-              h='56px'
-              bg={boxBg}
-              icon={
-                <Icon w='32px' h='32px' as={MdAttachMoney} color={brandColor} />
-              }
-            />
-          }
-          name='Spent on Ads'
-          value='$642.39'
-        />
-        <MiniStatistics growth='+23%' name='Sales' value='$574.34' />
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w='56px'
-              h='56px'
-              bg='linear-gradient(90deg, #4481EB 0%, #04BEFE 100%)'
-              icon={<Icon w='28px' h='28px' as={MdAddTask} color='white' />}
-            />
-          }
-          name='Your Deals'
-          value='154'
-        />
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w='56px'
-              h='56px'
-              bg='linear-gradient(90deg, #4481EB 0%, #04BEFE 100%)'
-              icon={<Icon w='28px' h='28px' as={MdAddTask} color='white' />}
-            />
-          }
-          name='Your AdSpaces'
-          value='154'
-        />
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w='56px'
-              h='56px'
-              bg={boxBg}
-              icon={
-                <Icon w='32px' h='32px' as={MdFileCopy} color={brandColor} />
-              }
-            />
-          }
-          name='Your Campaigns'
-          value='2935'
-        />
+        <UserAdspacesTotalRevenue brandColor={brandColor} boxBg={boxBg} />
+        <UserTotalRevenue brandColor={brandColor} boxBg={boxBg} />
+        <SpentOnAds brandColor={brandColor} boxBg={boxBg} />
+        <MyDeals />
+        <MyAdSpaces />
+        <MyCampaigns brandColor={brandColor} boxBg={boxBg} />
       </SimpleGrid>
 
       <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px' mb='20px'>

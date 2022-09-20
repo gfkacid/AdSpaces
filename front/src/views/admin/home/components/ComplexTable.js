@@ -72,7 +72,7 @@ export default function ColumnsTable(props) {
           fontSize='22px'
           fontWeight='700'
           lineHeight='100%'>
-          Browse AdSpaces
+          AdSpaces / web3 native ad marketplace
         </Text>
         <Menu />
       </Flex>

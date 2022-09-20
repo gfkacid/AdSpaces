@@ -21,18 +21,16 @@ import {
   useTable,
 } from "react-table";
 
+import { SearchIcon } from "@chakra-ui/icons";
 // Custom components
 import Card from "components/card/Card";
-import Menu from "components/menu/MainMenu";
+import DAIicon from "../../../../assets/img/dai.png";
 import SizeIcon from "components/domain/SizeIcon";
 import AdSpaceStatus from "components/domain/AdSpaceStatus";
 import deployedTables from "../variables/deployedTables.json";
 import { connect, resultsToObjects } from "@tableland/sdk";
 
-// Assets
-import { MdCheckCircle, MdOutlineError } from "react-icons/md";
-
-export default function ColumnsTable(props) {
+export default function TablelandTable(props) {
   const { tablePrefix } = props;
   const [tableData, setTableData] = useState([]);
   const [tableColumns, setTableColumns] = useState([]);
@@ -73,7 +71,7 @@ export default function ColumnsTable(props) {
       },
       {
         Header: "Asking Price",
-        accessor: "price",
+        accessor: "asking_price",
       },
       {
         Header: "Website",
@@ -84,9 +82,6 @@ export default function ColumnsTable(props) {
         accessor: "status",
       },
     ]
-    // readQueryResult.columns.map((elem) => {
-    //   return { Header: elem.name, accessor: elem.name };
-    // });
     return { columnsFixed, data };
   }
 
@@ -182,8 +177,9 @@ export default function ColumnsTable(props) {
                     data = (
                       <Text color={textColor} fontSize='sm' fontWeight='700'>
                         <Link
-                          href={'/#/admin/adspace/'+row.original.id}
+                          href={'/#/admin/adspace/'+row.original.adspace_id}
                           >
+                            <SearchIcon/>
                           {cell.value}
                         </Link>
                       </Text>
@@ -192,10 +188,10 @@ export default function ColumnsTable(props) {
                     data = (
                       <SizeIcon size={cell.value} />
                     );
-                  } else if (cell.column.id === "price") {
+                  } else if (cell.column.id === "asking_price") {
                     data = (
                       <Text color={textColor} fontSize='sm' fontWeight='700'>
-                        ${cell.value}
+                        <img className="coin-icon" src={DAIicon}></img> {cell.value} / hr
                       </Text>
                     );
                   } else if (cell.column.id === "website") {
