@@ -71,11 +71,8 @@ export default function Home() {
         >
           <Banner />
           <Flex direction="column">
-            <Flex
-              mt="45px"
-             >
-            </Flex>
-            <TablelandTable mt="45px" tablePrefix="AdSpace" />
+            <Flex mt="45px"></Flex>
+            <TablelandTable mt="45px" tablePrefix="AdSpaces" />
           </Flex>
         </Flex>
         <Flex
