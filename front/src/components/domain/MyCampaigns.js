@@ -34,7 +34,7 @@ export default function MyCampaigns(props) {
       const totalCampaignsQuery = await tablelandConnection.read(
         `SELECT COUNT(id) as total_adspaces FROM ${campaignTable} WHERE ${campaignTable}.owner = '${address}';`
       );
-      console.log(totalCampaignsQuery);
+      console.log('total campaigns: '+totalCampaignsQuery);
       const result = await resultsToObjects(totalCampaignsQuery);
 
       return {result};

@@ -31,8 +31,9 @@ export default function MyAdSpaces() {
       });
   
       const totalAdSpacesQuery = await tablelandConnection.read(
-        `SELECT adspace_id as total_adspaces FROM ${adspaceTable} WHERE ${adspaceTable}.owner = '${address}';`
+        `SELECT COUNT(adspace_id) as total_adspaces FROM ${adspaceTable} WHERE ${adspaceTable}.owner = '${address}';`
       );
+      console.log('totalAdSpacesQuery');
       console.log(totalAdSpacesQuery);
       const result = await resultsToObjects(totalAdSpacesQuery);
         console.log(result)

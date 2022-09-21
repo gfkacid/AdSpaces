@@ -31,6 +31,9 @@ import Information from "views/admin/profile/components/Information";
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import deployedTables from "../home/variables/deployedTables.json"
+import { connect, resultsToObjects } from "@tableland/sdk";
+
 
 export default function AdSpaceListing() {
   // AdSpace
@@ -47,22 +50,39 @@ export default function AdSpaceListing() {
     "0px 18px 40px rgba(112, 144, 176, 0.12)",
     "unset"
   );
-  useEffect(() => {
-    if (adspaceId == 3) {
-      setAdSpace({
-        id: 3,
-        name: "dummy.com home page vertical",
-        website: "dummy.com",
-        size: "wide",
-        price: 10,
-        status: "Available",
-        owner: "0xe21EFe617Bd3cf0bD22A2EAa5749c5d6938CB645",
-      });
-    }
-    // query TableLand for AdSpace by id
-    // if AdSpace exists
 
-    // else
+  // TableLand
+  const networkConfig = {
+    testnet: "testnet",
+    chain: "optimism-goerli",
+    chainId: "420",
+  };
+
+  const adspaceTable = deployedTables[0][networkConfig.chainId].find(
+    (elem) => elem.prefix === 'AdSpace'
+  ).name;
+
+  async function fetchAdSpace() {
+    const tablelandConnection = await connect({
+      network: networkConfig.testnet,
+      chain: networkConfig.chain,
+    });
+
+    const fetchAdSpaceQuery = await tablelandConnection.read(
+      `SELECT * FROM ${adspaceTable} WHERE ${adspaceTable}.id = ${adspaceId};`
+    );
+    console.log(fetchAdSpaceQuery);
+    const result = await resultsToObjects(fetchAdSpaceQuery);
+      console.log(result)
+    return {result};
+  }
+  useEffect(() => {
+    fetchAdSpace().then((res) => {
+      setAdSpace(res.result)
+    })
+    .catch((e) => {
+      console.log(e.message);
+    });
   }, [adspaceId]);
 
   // New Deal form

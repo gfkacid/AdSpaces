@@ -40,13 +40,13 @@ export default function MyDeals() {
       });
   
       const outgoingDealsQuery = await tablelandConnection.read(
-        `SELECT COUNT(${dealTable}.id) as total_deals FROM ${dealTable} INNER JOIN ${campaignTable} WHERE ${campaignTable}.id = ${dealTable}.campaign_id AND ${campaignTable}.owner = '${address}';`
+        `SELECT COUNT(${dealTable}.id) as total_deals, ${campaignTable}.id as campaign_id FROM ${dealTable} INNER JOIN ${campaignTable} WHERE ${campaignTable}.id = ${dealTable}.campaign_id AND ${campaignTable}.owner = '${address}' GROUP BY campaign_id;`
       );
       console.log(outgoingDealsQuery);
       const outgoingDeals = await resultsToObjects(outgoingDealsQuery);
 
       const incomingDealsQuery = await tablelandConnection.read(
-        `SELECT COUNT(${dealTable}.id) as total_deals FROM ${dealTable} INNER JOIN ${adspaceTable} WHERE ${adspaceTable}.id = ${dealTable}.campaign_id AND ${adspaceTable}.owner = '${address}';`
+        `SELECT COUNT(${dealTable}.id) as total_deals, ${adspaceTable}.id as adspace_id FROM ${dealTable} INNER JOIN ${adspaceTable} WHERE ${adspaceTable}.id = ${dealTable}.campaign_id AND ${adspaceTable}.owner = '${address}' GROUP BY adspace_id;`
       );
       console.log(incomingDealsQuery);
       

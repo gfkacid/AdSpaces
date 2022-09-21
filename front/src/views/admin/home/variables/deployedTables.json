@@ -167,8 +167,8 @@
         ]
       },
       {
-        "prefix": "Campaign",
-        "name": "Campaign_420_66",
+        "prefix": "Campaigns",
+        "name": "Campaigns_420_89",
         "chainId": 420,
         "txnHash": "0x4b32687bb64af8ac37de8ee8c844b1636d9ae7e992e3293d68808790a95e85cf",
         "schema": "campaign_id INTEGER PRIMARY KEY UNIQUE, cid TEXT, size TEXT, link TEXT",
