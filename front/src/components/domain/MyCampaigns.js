@@ -20,28 +20,25 @@ export default function MyCampaigns(props) {
   };
 
   const campaignTable = "Campaigns_420_89";
-  
+
   async function getTotalCampaigns() {
     const tablelandConnection = await connect({
       network: networkConfig.testnet,
       chain: networkConfig.chain,
     });
-    console.log(campaignTable);
-
+    
     const totalCampaignsQuery = await tablelandConnection.read(
-      // WHERE ${campaignTable}.owner = '${address}'
-      `SELECT count(campaign_id) as total_adspaces FROM ${campaignTable};`
+      `SELECT count(campaign_id) as total_campaigns FROM ${campaignTable} WHERE ${campaignTable}.owner = '${address}';`
     );
-    console.log(totalCampaignsQuery);
+    
     const result = await resultsToObjects(totalCampaignsQuery);
-    console.log(result);
-    return result[0];
+    return result[0].total_campaigns;
   }
 
   useEffect(() => {
     getTotalCampaigns()
       .then((res) => {
-        setTotalCampaigns(res.result);
+        setTotalCampaigns(res);
       })
       .catch((e) => {
         console.log(e.message);

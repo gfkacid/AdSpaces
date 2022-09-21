@@ -28,18 +28,18 @@ export default function MyAdSpaces() {
     });
 
     const totalAdSpacesQuery = await tablelandConnection.read(
-      `SELECT adspace_id as total_adspaces FROM ${adspaceTable} WHERE ${adspaceTable}.owner = '${address}';`
+      `SELECT count(adspace_id) as total_adspaces FROM ${adspaceTable} WHERE ${adspaceTable}.owner = '${address}';`
     );
     console.log(totalAdSpacesQuery);
     const result = await resultsToObjects(totalAdSpacesQuery);
     console.log(result);
-    return { result };
+    return result[0].total_adspaces;
   }
 
   useEffect(() => {
     getTotalAdSpaces()
       .then((res) => {
-        setTotalAdSpaces(res.result);
+        setTotalAdSpaces(res);
       })
       .catch((e) => {
         console.log(e.message);

@@ -59,7 +59,7 @@ export default function AdSpaceListing() {
   };
 
   const adspaceTable = deployedTables[0][networkConfig.chainId].find(
-    (elem) => elem.prefix === 'AdSpace'
+    (elem) => elem.prefix === 'AdSpaces'
   ).name;
 
   async function fetchAdSpace() {
@@ -69,16 +69,17 @@ export default function AdSpaceListing() {
     });
 
     const fetchAdSpaceQuery = await tablelandConnection.read(
-      `SELECT * FROM ${adspaceTable} WHERE ${adspaceTable}.id = ${adspaceId};`
+      `SELECT * FROM ${adspaceTable} WHERE ${adspaceTable}.adspace_id = ${adspaceId};`
     );
     console.log(fetchAdSpaceQuery);
     const result = await resultsToObjects(fetchAdSpaceQuery);
-      console.log(result)
-    return {result};
+      console.log(result[0])
+    return result[0];
   }
   useEffect(() => {
     fetchAdSpace().then((res) => {
-      setAdSpace(res.result)
+      console.log(res)
+      setAdSpace(res)
     })
     .catch((e) => {
       console.log(e.message);
@@ -120,7 +121,7 @@ export default function AdSpaceListing() {
             <Information
               boxShadow={cardShadow}
               title="Hourly Rate"
-              value={"$" + AdSpace.price}
+              value={"$" + AdSpace.asking_price}
             />
             <Information
               boxShadow={cardShadow}

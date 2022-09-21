@@ -5,10 +5,12 @@ import IconBox from "components/icons/IconBox";
 import { useState, useEffect } from "react";
 import deployedTables from "../../views/admin/home/variables/deployedTables.json";
 import { connect, resultsToObjects } from "@tableland/sdk";
+import { useAccount } from "wagmi";
 
 export default function UserAdspacesTotalRevenue(props) {
   const { brandColor, boxBg } = props;
   const [totalRevenue, setTotalRevenue] = useState(0);
+  const { address } = useAccount();
 
   // query TableLand for all deals made with adspaces owned by the user, with end date <= now, and sum their price
   const networkConfig = {
@@ -32,18 +34,21 @@ export default function UserAdspacesTotalRevenue(props) {
     });
 
     const queryResult = await tablelandConnection.read(
-      `SELECT SUM(${dealTable}.price) as total_spent FROM ${dealTable} INNER JOIN ${adspaceTable} WHERE ${adspaceTable}.id = ${dealTable}.adspace_id AND ${dealTable}.end <= '${Date.now()}';`
+      // AND ${dealTable}.end <= '${Date.now()}'
+      `SELECT sum(${dealTable}.price) as total_spent FROM ${dealTable}
+       INNER JOIN ${adspaceTable} 
+       WHERE ${adspaceTable}.adspace_id = ${dealTable}.adspace_id_fk 
+        AND ${adspaceTable}.owner = '${address}';`
     );
 
-    console.log(queryResult);
     const data = await resultsToObjects(queryResult);
-    return { data };
+    return data[0]?.total_spent ;
   }
 
   useEffect(() => {
     getTotalSpent()
       .then((res) => {
-        setTotalRevenue(res.data);
+        setTotalRevenue(res === null ? 0 : res);
       })
       .catch((e) => {
         console.log(e.message);

@@ -37,18 +37,16 @@ export default function MyDeals() {
     });
 
     const outgoingDealsQuery = await tablelandConnection.read(
-      `SELECT COUNT(${dealTable}.id) as total_deals FROM ${dealTable} INNER JOIN ${campaignTable} WHERE ${campaignTable}.campaign_id = ${dealTable}.campaign_id_fk AND ${campaignTable}.owner = '${address}';`
+      `SELECT count(${dealTable}.deal_id) as outgoing_deals FROM ${dealTable} INNER JOIN ${campaignTable} WHERE ${campaignTable}.campaign_id = ${dealTable}.campaign_id_fk AND ${campaignTable}.owner = '${address}';`
     );
-    console.log(outgoingDealsQuery);
     const outgoingDeals = await resultsToObjects(outgoingDealsQuery);
 
     const incomingDealsQuery = await tablelandConnection.read(
-      `SELECT COUNT(${dealTable}.id) as total_deals FROM ${dealTable} INNER JOIN ${adspaceTable} WHERE ${adspaceTable}.id = ${dealTable}.campaign_id AND ${adspaceTable}.owner = '${address}';`
+      `SELECT count(${dealTable}.deal_id) as incoming_deals FROM ${dealTable} INNER JOIN ${adspaceTable} WHERE ${adspaceTable}.adspace_id = ${dealTable}.campaign_id_fk AND ${adspaceTable}.owner = '${address}';`
     );
-    console.log(incomingDealsQuery);
-
+    
     const incomingDeals = await resultsToObjects(incomingDealsQuery);
-    return { incomingDeals, outgoingDeals };
+    return {incomingDeals: incomingDeals[0].incoming_deals , outgoingDeals:  outgoingDeals[0].outgoing_deals };
   }
 
   useEffect(() => {
