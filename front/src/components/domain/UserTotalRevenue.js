@@ -13,7 +13,7 @@ export default function UserAdspacesTotalRevenue(props) {
   useEffect(() => {
     getTotalAdSpaceRevenue()
       .then((res) => {
-        setTotalRevenue(res.data);
+        // setTotalRevenue(res.data);
       })
       .catch((e) => {
         console.log(e.message);

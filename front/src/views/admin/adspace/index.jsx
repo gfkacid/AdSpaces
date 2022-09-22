@@ -35,6 +35,8 @@ import deployedTables from "../home/variables/deployedTables.json"
 import { connect, resultsToObjects } from "@tableland/sdk";
 import { ethers, BigNumber } from "ethers";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
+import DAIicon from "components/domain/DAIicon";
+
 
 export default function AdSpaceListing() {
   // Wagmi
@@ -193,7 +195,8 @@ export default function AdSpaceListing() {
             <Information
               boxShadow={cardShadow}
               title="Hourly Rate"
-              value={"$" + AdSpace.asking_price}
+              value={AdSpace.asking_price}
+              prependDAI={true}
             />
             <Information
               boxShadow={cardShadow}
@@ -247,7 +250,9 @@ export default function AdSpaceListing() {
                 </FormControl>
                 <FormControl mt={4}>
                   <FormLabel>Total cost</FormLabel>
-                  <Text>{newDealDuration * AdSpace.price}</Text>
+                  <Text>
+                    <DAIicon/> {newDealDuration * AdSpace.asking_price}
+                  </Text>
                   <Text fontSize="sm" as="i">
                     total cost = [duration] * [asking price]
                   </Text>
