@@ -2,6 +2,7 @@
 import { Box, Text, useColorModeValue } from "@chakra-ui/react";
 // Custom components
 import Card from "components/card/Card.js";
+import DAIicon from "components/domain/DAIicon";
 import React from "react";
 
 export default function Information(props) {
@@ -17,7 +18,10 @@ export default function Information(props) {
           {title}
         </Text>
         <Text color={textColorPrimary} fontWeight='500' fontSize='md'>
-          {value}
+        {rest.prependDAI && (
+          <DAIicon/>
+        )}
+           {value}
         </Text>
       </Box>
     </Card>

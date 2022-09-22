@@ -36,5 +36,5 @@ img.table-image{
 .coin-icon{
   max-width: 1.2em;
   display: inline-block;
-  vertical-align: middle;
+  vertical-align: text-top;
 }

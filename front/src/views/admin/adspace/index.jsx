@@ -33,6 +33,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import deployedTables from "../home/variables/deployedTables.json"
 import { connect, resultsToObjects } from "@tableland/sdk";
+import DAIicon from "components/domain/DAIicon";
 
 
 export default function AdSpaceListing() {
@@ -121,14 +122,15 @@ export default function AdSpaceListing() {
             <Information
               boxShadow={cardShadow}
               title="Hourly Rate"
-              value={"$" + AdSpace.asking_price}
+              value={AdSpace.asking_price}
+              prependDAI={true}
             />
             <Information
               boxShadow={cardShadow}
               title="Status"
               value={AdSpace.status}
             />
-            {AdSpace?.status == "Available" && (
+            {/* {AdSpace?.status == "Available" && ( */}
               <Button
                 colorScheme="brand"
                 variant="solid"
@@ -141,7 +143,7 @@ export default function AdSpaceListing() {
               >
                 Advertise here
               </Button>
-            )}
+            {/* )} */}
           </SimpleGrid>
           <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
@@ -175,7 +177,9 @@ export default function AdSpaceListing() {
                 </FormControl>
                 <FormControl mt={4}>
                   <FormLabel>Total cost</FormLabel>
-                  <Text>{newDealDuration * AdSpace.price}</Text>
+                  <Text>
+                    <DAIicon/> {newDealDuration * AdSpace.asking_price}
+                  </Text>
                   <Text fontSize="sm" as="i">
                     total cost = [duration] * [asking price]
                   </Text>

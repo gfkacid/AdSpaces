@@ -54,6 +54,7 @@ import VerifiedStatusIcon from "components/domain/VerifiedStatusIcon";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 //import { InjectedConnector } from "wagmi/connectors/injected";
 import abi from "../variables/AdSpaceFactory.json";
+import DAIicon from "components/domain/DAIicon";
 
 // Assets
 export default function UserAdSpaces(props) {
@@ -271,7 +272,7 @@ export default function UserAdSpaces(props) {
                 </Select>
               </FormControl>
               <FormControl isRequired mt={4}>
-                <FormLabel>Asking Price / hour - $USDC</FormLabel>
+                <FormLabel>Asking Price / hour - $ <DAIicon/> </FormLabel>
                 <NumberInput
                   {...register("price")}
                   onChange={(valueString) => setPrice(valueString)}

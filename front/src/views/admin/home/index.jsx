@@ -51,6 +51,7 @@ import tableDataTopAdSpaces from "views/admin/home/variables/tableDataTopAdSpace
 import { tableColumnsTopAdSpaces } from "views/admin/home/variables/tableColumnsTopAdSpaces";
 
 import TablelandTable from "./components/TablelandTable";
+import LatestDeals from "components/domain/LatestDeals";
 
 export default function Home() {
   // Chakra Color Mode
@@ -85,63 +86,7 @@ export default function Home() {
               columnsData={tableColumnsTopAdSpaces}
             />
           </Card>
-          <Card p="0px">
-            <Flex
-              align={{ sm: "flex-start", lg: "center" }}
-              justify="space-between"
-              w="100%"
-              px="22px"
-              py="18px"
-            >
-              <Text color={textColor} fontSize="xl" fontWeight="600">
-                Latest Deals
-              </Text>
-              <Button variant="action">See all</Button>
-            </Flex>
-
-            <HistoryItem
-              name="Colorful Heaven"
-              author="By 0xa14..cb2a"
-              date="30s ago"
-              image={Nft5}
-              price="0.91 ETH"
-            />
-            <HistoryItem
-              name="Abstract Colors"
-              author="By 0xa14..cb2a"
-              date="58s ago"
-              image={Nft1}
-              price="0.91 ETH"
-            />
-            <HistoryItem
-              name="ETH AI Brain"
-              author="By 0xa14..cb2a"
-              date="1m ago"
-              image={Nft2}
-              price="0.91 ETH"
-            />
-            <HistoryItem
-              name="Swipe Circles"
-              author="By 0xa14..cb2a"
-              date="1m ago"
-              image={Nft4}
-              price="0.91 ETH"
-            />
-            <HistoryItem
-              name="Mesh Gradients "
-              author="By 0xa14..cb2a"
-              date="2m ago"
-              image={Nft3}
-              price="0.91 ETH"
-            />
-            <HistoryItem
-              name="3D Cubes Art"
-              author="By 0xa14..cb2a"
-              date="3m ago"
-              image={Nft6}
-              price="0.91 ETH"
-            />
-          </Card>
+          <LatestDeals textColor={textColor} title="Latest Deals"/>
         </Flex>
       </Grid>
     </Box>

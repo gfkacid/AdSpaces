@@ -20,8 +20,8 @@ contract AdSpaceFactory is ERC721Holder, Ownable {
     /* tba */
 
     /* Events */
-    event AdSpaceCreated(address indexed contractAddress);
-    event CampaignCreated(uint256 indexed CampaignId);
+    event AdSpaceCreated(address indexed contractAddress, address indexed owner);
+    event CampaignCreated(uint256 indexed CampaignId, address indexed owner);
     event DealCreated(
         uint256 indexed DealId,
         uint256 indexed CampaignId,
