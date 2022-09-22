@@ -33,13 +33,50 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import deployedTables from "../home/variables/deployedTables.json"
 import { connect, resultsToObjects } from "@tableland/sdk";
-
+import { ethers, BigNumber } from "ethers";
+import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 
 export default function AdSpaceListing() {
+  // Wagmi
+  const contractABI = [
+    {
+      constant: false,
+      inputs: [
+        { internalType: "address", name: "spender", type: "address" },
+        { internalType: "uint256", name: "value", type: "uint256" }
+      ],
+      name: "approve",
+      outputs: [{ "internalType": "bool", "name": "", "type": "bool"  }],
+      payable: false,
+      stateMutability: "nonpayable",
+      type: "function",
+    }];
+  const contractAddress = "0xA4D1cE55dEEfb9372B306Ad614B151dB14D4F605"; // adSpacecontract
+  const { address: userAddress, isConnected } = useAccount();
+  const { config: newAdSpaceConfig } = usePrepareContractWrite({
+    addressOrName: "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
+    contractInterface: contractABI,
+    functionName: "approve",
+    args: [
+      contractAddress,
+      ethers.utils.parseEther("1000"),
+    ],
+  });
+  const {
+    data: writeData,
+    isLoading,
+    isSuccess,
+    write: approveDai,
+  } = useContractWrite(newAdSpaceConfig);
+  // console.log(isConnected);
+  // console.log(isSuccess);
+
+
   // AdSpace
   const { adspaceId } = useParams();
   const [AdSpace, setAdSpace] = useState(null);
-
+  const [isAllowed, setIsAllowed] = useState(false); 
+  const adSpaceContract = "0xA4D1cE55dEEfb9372B306Ad614B151dB14D4F605";
   // modal
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -50,6 +87,39 @@ export default function AdSpaceListing() {
     "0px 18px 40px rgba(112, 144, 176, 0.12)",
     "unset"
   );
+
+  // QuickNode Approve Dai function call
+
+  // const approve = async () => {
+  //     const abi = [
+  //       {
+  //         constant: false,
+  //         inputs: [
+  //           { internalType: "address", name: "spender", type: "address" },
+  //           { internalType: "uint256", name: "value", type: "uint256" }
+  //         ],
+  //         name: "approve",
+  //         outputs: [{ "internalType": "bool", "name": "", "type": "bool"  }],
+  //         payable: false,
+  //         stateMutability: "nonpayable",
+  //         type: "function",
+  //       }];
+  //       console.log(abi);
+  //     const provider = new ethers.providers.JsonRpcProvider("https://damp-tiniest-night.optimism-goerli.discover.quiknode.pro/7635709edb15d49d5a4d5bdf19649792a8805f41/");
+  //     console.log(provider);
+  //     const account = new ethers.Wallet("", provider);
+  //     console.log(account);
+  //     const contract = new ethers.Contract(
+  //       "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
+  //       abi,
+  //       account
+  //     );
+  //     console.log(contract);
+  //     const response = await contract.functions.approve(
+  //       adSpaceContract, ethers.utils.parseEther("1000")
+  //     );
+  //     console.log(response);
+  // }
 
   // TableLand
   const networkConfig = {
@@ -80,6 +150,8 @@ export default function AdSpaceListing() {
     fetchAdSpace().then((res) => {
       console.log(res)
       setAdSpace(res)
+      //Here we can read DAI contract whether the user has allowed the DAI already or not for AdSpace contract
+      // If the allowance is set we can set the variable to true for example
     })
     .catch((e) => {
       console.log(e.message);
@@ -128,7 +200,7 @@ export default function AdSpaceListing() {
               title="Status"
               value={AdSpace.status}
             />
-            {AdSpace?.status == "Available" && (
+            {/* {AdSpace?.status == "Available" && ( */}
               <Button
                 colorScheme="brand"
                 variant="solid"
@@ -141,7 +213,7 @@ export default function AdSpaceListing() {
               >
                 Advertise here
               </Button>
-            )}
+            {/* )} */}
           </SimpleGrid>
           <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
@@ -185,8 +257,8 @@ export default function AdSpaceListing() {
                 <Button mr={3} onClick={onClose}>
                   Close
                 </Button>
-                <Button colorScheme="brand" variant="solid">
-                  Seal the Deal
+                <Button colorScheme="brand" variant="solid" onClick={() => approveDai?.()}>
+                  Approve DAI 
                 </Button>
               </ModalFooter>
             </ModalContent>

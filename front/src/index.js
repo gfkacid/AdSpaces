@@ -16,12 +16,18 @@ import {
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 import CustomAvatar from "./components/_custom/CustomAvatar";
+import { jsonRpcProvider} from "wagmi/providers/jsonRpc";
 
 const { chains, provider } = configureChains(
+  [chain.optimismGoerli],
   [
-    chain.optimismGoerli,
-    ],
-  [publicProvider()]
+    jsonRpcProvider({
+      rpc: (chain) => ({
+        http: `https://flashy-omniscient-slug.optimism-goerli.discover.quiknode.pro/7a2fdffa24bf4fd891bd9c77fdaa6325b0041dbb/`,
+      }),
+    }),
+    publicProvider(),
+  ]
 );
 const { connectors } = getDefaultWallets({
   appName: "AdSpaces",
