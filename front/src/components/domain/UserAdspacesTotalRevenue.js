@@ -3,7 +3,7 @@ import { MdBarChart } from "react-icons/md";
 import { Icon } from "@chakra-ui/react";
 import IconBox from "components/icons/IconBox";
 import { useState, useEffect } from "react";
-import deployedTables from "../../views/admin/home/variables/deployedTables.json";
+import { fetchTablelandTables ,getTableLandConfig} from "../_custom/tableLandHelpers";
 import { connect, resultsToObjects } from "@tableland/sdk";
 import { useAccount } from "wagmi";
 
@@ -11,21 +11,14 @@ export default function UserAdspacesTotalRevenue(props) {
   const { brandColor, boxBg } = props;
   const [totalRevenue, setTotalRevenue] = useState(0);
   const { address } = useAccount();
-
+  const TablelandTables = fetchTablelandTables();
   // query TableLand for all deals made with adspaces owned by the user, with end date <= now, and sum their price
-  const networkConfig = {
-    testnet: "testnet",
-    chain: "optimism-goerli",
-    chainId: "420",
-  };
+  const networkConfig = getTableLandConfig();
 
-  const dealTable = deployedTables[0][networkConfig.chainId].find(
-    (elem) => elem.prefix === "Deals"
-  ).name;
+  const dealTable = TablelandTables["Deals"]
 
-  const adspaceTable = deployedTables[0][networkConfig.chainId].find(
-    (elem) => elem.prefix === "AdSpaces"
-  ).name;
+
+  const adspaceTable = TablelandTables["AdSpaces"]
 
   async function getTotalSpent() {
     const tablelandConnection = await connect({
@@ -34,7 +27,7 @@ export default function UserAdspacesTotalRevenue(props) {
     });
 
     const queryResult = await tablelandConnection.read(
-      // AND ${dealTable}.end <= '${Date.now()}'
+      // AND ${dealTable}.end_at <= '${Date.now()}'
       `SELECT sum(${dealTable}.price) as total_spent FROM ${dealTable}
        INNER JOIN ${adspaceTable} 
        WHERE ${adspaceTable}.adspace_id = ${dealTable}.adspace_id_fk 

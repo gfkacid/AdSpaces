@@ -52,16 +52,25 @@ import SizeIcon from "components/domain/SizeIcon";
 import AdSpaceStatus from "components/domain/AdSpaceStatus";
 import VerifiedStatusIcon from "components/domain/VerifiedStatusIcon";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
-//import { InjectedConnector } from "wagmi/connectors/injected";
+import { fetchTablelandTables ,getTableLandConfig} from "../../../../components/_custom/tableLandHelpers";
+import { connect, resultsToObjects } from "@tableland/sdk";
 import abi from "../variables/AdSpaceFactory.json";
+<<<<<<< HEAD
 // here we need the AdSpace ABI + we need the DaIContract ABI
 import DAIicon from "components/domain/DAIicon";
+=======
+import DAIicon from "components/domain/DAIicon";
+import { useEffect } from "react";
+>>>>>>> d248cd1689c5815899f29cd6634b714c48260082
 
 // Assets
 export default function UserAdSpaces(props) {
-  const { columnsData, tableData } = props;
+  // Table
+  const { columnsData } = props;
+  const [tableData,setTableData] = useState([]);
 
   const columns = useMemo(() => columnsData, [columnsData]);
+  
   const data = useMemo(() => tableData, [tableData]);
 
   const tableInstance = useTable(
@@ -86,8 +95,37 @@ export default function UserAdSpaces(props) {
     initialState,
   } = tableInstance;
   initialState.pageSize = 5;
+  // load from TableLand
+  const TablelandTables = fetchTablelandTables();
+  const networkConfig = getTableLandConfig();
+  const adspaceTable = TablelandTables["AdSpaces"];
+  async function getUserAdSpaces() {
+    const tablelandConnection = await connect({
+      network: networkConfig.testnet,
+      chain: networkConfig.chain,
+    });
+
+    const totalAdSpacesQuery = await tablelandConnection.read(
+      `SELECT * FROM ${adspaceTable} WHERE ${adspaceTable}.owner = '${address}';`
+    );
+    const result = await resultsToObjects(totalAdSpacesQuery);
+    
+    return result;
+  }
+
+  useEffect(() => {
+    getUserAdSpaces()
+      .then((res) => {
+        setTableData(res);
+      })
+      .catch((e) => {
+        console.log(e.message);
+      });
+  }, []);
+  
   // modal
   const { isOpen, onOpen, onClose } = useDisclosure();
+  
   // New AdSpace form
   const {
     register,
@@ -97,10 +135,10 @@ export default function UserAdSpaces(props) {
   const [NumNFTs, setNumNFTs] = React.useState("10");
   const [price, setPrice] = React.useState("0.55");
 
-  //wagmi/web3 stuff
+  // submit New AdSpace
   const contractABI = abi.abi;
   const contractAddress = abi.address;
-  const { address: userAddress, isConnected } = useAccount();
+  const { address } = useAccount();
   const { config: newAdSpaceConfig } = usePrepareContractWrite({
     addressOrName: contractAddress,
     contractInterface: contractABI,
@@ -273,7 +311,9 @@ export default function UserAdSpaces(props) {
                 </Select>
               </FormControl>
               <FormControl isRequired mt={4}>
-                <FormLabel>Asking Price / hour - $ <DAIicon/> </FormLabel>
+                <FormLabel>
+                  Asking Price / hour - $ <DAIicon />{" "}
+                </FormLabel>
                 <NumberInput
                   {...register("price")}
                   onChange={(valueString) => setPrice(valueString)}
