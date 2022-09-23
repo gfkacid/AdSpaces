@@ -30,26 +30,28 @@ export default function MyDeals() {
       chain: networkConfig.chain,
     });
 
+    console.log(address);
     const outgoingDealsQuery = await tablelandConnection.read(
-      `SELECT 'outgoing' as type, ${adspaceTable}.name as AdSpaceName, ${dealTable}.price,${dealTable}.started_at, ${dealTable}.end_at,${campaignTable}.name as CampaignName, ${campaignTable}.cid FROM ${adspaceTable} INNER JOIN ${dealTable}  INNER JOIN ${campaignTable} WHERE adspace_id = adspace_id_fk AND campaign_id = campaign_id_fk AND ${campaignTable}.owner = '${address}';`
+      `SELECT 'outgoing' as type, ${adspaceTable}.name as AdSpaceName, ${dealTable}.price,${dealTable}.started_at, ${dealTable}.end_at,${campaignTable}.name as CampaignName, ${campaignTable}.cid FROM ${adspaceTable} INNER JOIN ${dealTable}  INNER JOIN ${campaignTable} WHERE adspace_id = adspace_id_fk AND campaign_id = campaign_id_fk AND ${campaignTable}.owner like '${address}';`
     );
     const outgoingDeals = await resultsToObjects(outgoingDealsQuery);
 
     const incomingDealsQuery = await tablelandConnection.read(
-      `SELECT 'incoming' as type, ${adspaceTable}.name as AdSpaceName, ${dealTable}.price,${dealTable}.started_at, ${dealTable}.end_at,${campaignTable}.name as CampaignName, ${campaignTable}.cid FROM ${adspaceTable} INNER JOIN ${dealTable}  INNER JOIN ${campaignTable} WHERE adspace_id = adspace_id_fk AND campaign_id = campaign_id_fk AND ${adspaceTable}.owner = '${address}';`
+      `SELECT 'incoming' as type, ${adspaceTable}.name as AdSpaceName, ${dealTable}.price,${dealTable}.started_at, ${dealTable}.end_at,${campaignTable}.name as CampaignName, ${campaignTable}.cid FROM ${adspaceTable} INNER JOIN ${dealTable}  INNER JOIN ${campaignTable} WHERE adspace_id = adspace_id_fk AND campaign_id = campaign_id_fk AND ${adspaceTable}.owner like '${address}';`
     );
 
     const incomingDeals = await resultsToObjects(incomingDealsQuery);
-    console.log(incomingDealsQuery);
+
     return {
-      incomingDeals: incomingDeals[0].incoming_deals,
-      outgoingDeals: outgoingDeals[0].outgoing_deals,
+      incomingDeals: incomingDeals[0],
+      outgoingDeals: outgoingDeals[0],
     };
   }
 
   useEffect(() => {
     getTotalDeals()
       .then((res) => {
+        console.log(res);
         setIncomingDeals(res.incomingDeals);
         setOutgoingDeals(res.outgoingDeals);
       })

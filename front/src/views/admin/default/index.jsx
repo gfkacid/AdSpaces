@@ -21,12 +21,7 @@
 */
 
 // Chakra imports
-import {
-  Box,
-  Icon,
-  SimpleGrid,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Icon, SimpleGrid, useColorModeValue } from "@chakra-ui/react";
 // Assets
 // Custom components
 import MiniStatistics from "components/card/MiniStatistics";
@@ -38,7 +33,10 @@ import {
   MdBarChart,
   MdFileCopy,
 } from "react-icons/md";
-import {userCampaignsColumns, userAdSpacesColumns} from "views/admin/default/variables/userDashboardColumns"
+import {
+  userCampaignsColumns,
+  userAdSpacesColumns,
+} from "views/admin/default/variables/userDashboardColumns";
 import tableDataUserCampaigns from "views/admin/default/variables/tableDataUserCampaigns.json";
 import tableDataUserAdSpaces from "views/admin/default/variables/tableDataUserAdSpaces.json";
 import UserCampaigns from "./components/UserCampaigns";
@@ -58,8 +56,9 @@ export default function UserReports() {
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       <SimpleGrid
         columns={{ base: 1, md: 2, lg: 3, "2xl": 6 }}
-        gap='20px'
-        mb='20px'>
+        gap="20px"
+        mb="20px"
+      >
         <UserAdspacesTotalRevenue brandColor={brandColor} boxBg={boxBg} />
         <UserTotalRevenue brandColor={brandColor} boxBg={boxBg} />
         <SpentOnAds brandColor={brandColor} boxBg={boxBg} />
@@ -68,14 +67,13 @@ export default function UserReports() {
         <MyCampaigns brandColor={brandColor} boxBg={boxBg} />
       </SimpleGrid>
 
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px' mb='20px'>
-        <UserAdSpaces 
-          columnsData={userAdSpacesColumns}
-        />
-        <UserCampaigns 
+      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
+        <UserAdSpaces columnsData={userAdSpacesColumns} />
+        <UserCampaigns
           columnsData={userCampaignsColumns}
-          tableData ={tableDataUserCampaigns}
+          tableData={tableDataUserCampaigns}
         />
+        <MyDeals />
       </SimpleGrid>
     </Box>
   );
