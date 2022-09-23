@@ -3,7 +3,7 @@ import { MdAttachMoney } from "react-icons/md";
 import { Icon } from "@chakra-ui/react";
 import IconBox from "components/icons/IconBox";
 import { useState, useEffect } from "react";
-import deployedTables from "../../views/admin/home/variables/deployedTables.json";
+import { fetchTablelandTables ,getTableLandConfig} from "../_custom/tableLandHelpers";
 import { connect, resultsToObjects } from "@tableland/sdk";
 import { useAccount } from "wagmi";
 
@@ -11,21 +11,13 @@ export default function SpentOnAds(props) {
   const { brandColor, boxBg } = props;
   const [totalSpent, setTotalSpent] = useState(0);
   const { address } = useAccount();
-
+  const TablelandTables = fetchTablelandTables();
   // query TableLand for all deals made by the user ; the assumption that an entry in deals table = funds spent holds true
-  const networkConfig = {
-    testnet: "testnet",
-    chain: "optimism-goerli",
-    chainId: "420",
-  };
+  const networkConfig = getTableLandConfig();
 
-  const dealTable = deployedTables[0][networkConfig.chainId].find(
-    (elem) => elem.prefix === "Deals"
-  ).name;
+  const dealTable = TablelandTables["Deals"]
 
-  const campaignTable = deployedTables[0][networkConfig.chainId].find(
-    (elem) => elem.prefix === "Campaigns"
-  ).name;
+  const campaignTable = TablelandTables["Campaigns"]
 
   async function getTotalSpent() {
     const tablelandConnection = await connect({

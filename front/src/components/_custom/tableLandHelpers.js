@@ -1,3 +1,11 @@
+export function getTableLandConfig(){
+  return {
+    testnet: "testnet",
+    chain: "optimism-goerli",
+    chainId: "420",
+  }
+}
+
 export function fetchTablelandTables() {
   let TablelandTables = { AdSpaces: null, Campaigns: null, Deals: null };
   const dataObject = [

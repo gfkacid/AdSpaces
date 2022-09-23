@@ -31,7 +31,7 @@ import Information from "views/admin/profile/components/Information";
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import deployedTables from "../home/variables/deployedTables.json";
+import { fetchTablelandTables ,getTableLandConfig} from "../../../components/_custom/tableLandHelpers";
 import { connect, resultsToObjects } from "@tableland/sdk";
 import { ethers, BigNumber } from "ethers";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
@@ -120,15 +120,9 @@ export default function AdSpaceListing() {
   // }
 
   // TableLand
-  const networkConfig = {
-    testnet: "testnet",
-    chain: "optimism-goerli",
-    chainId: "420",
-  };
-
-  const adspaceTable = deployedTables[0][networkConfig.chainId].find(
-    (elem) => elem.prefix === "AdSpaces"
-  ).name;
+  const TablelandTables = fetchTablelandTables();
+  const networkConfig = getTableLandConfig();
+  const adspaceTable = TablelandTables["AdSpaces"]
 
   async function fetchAdSpace() {
     const tablelandConnection = await connect({

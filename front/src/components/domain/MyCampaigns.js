@@ -3,7 +3,7 @@ import { MdFileCopy } from "react-icons/md";
 import { Icon } from "@chakra-ui/react";
 import IconBox from "components/icons/IconBox";
 import { useState, useEffect } from "react";
-import deployedTables from "../../views/admin/home/variables/deployedTables.json";
+import { fetchTablelandTables ,getTableLandConfig} from "../_custom/tableLandHelpers";
 import { connect, resultsToObjects } from "@tableland/sdk";
 import { useAccount } from "wagmi";
 

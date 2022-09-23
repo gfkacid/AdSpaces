@@ -20,7 +20,7 @@ import {
   useSortBy,
   useTable,
 } from "react-table";
-import deployedTables from "../variables/deployedTables.json";
+import { fetchTablelandTables ,getTableLandConfig} from "../../../../components/_custom/tableLandHelpers";
 import { connect, resultsToObjects } from "@tableland/sdk";
 
 
@@ -46,19 +46,10 @@ function TopAdSpacesTable(props) {
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = useColorModeValue("secondaryGray.600", "white");
 
-  const networkConfig = {
-    testnet: "testnet",
-    chain: "optimism-goerli",
-    chainId: "420",
-  };
-
-  const dealTable = deployedTables[0][networkConfig.chainId].find(
-    (elem) => elem.prefix === "Deals"
-  ).name;
-
-  const adspaceTable = deployedTables[0][networkConfig.chainId].find(
-    (elem) => elem.prefix === "AdSpaces"
-  ).name;
+  const TablelandTables = fetchTablelandTables();
+  const networkConfig = getTableLandConfig();
+  const dealTable = TablelandTables["Deals"]
+  const adspaceTable = TablelandTables["AdSpaces"]
 
   async function getTopAdSpaces() {
     const tablelandConnection = await connect({

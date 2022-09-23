@@ -27,10 +27,9 @@ import Card from "components/card/Card";
 import DAIicon from "../../../../assets/img/dai.png";
 import SizeIcon from "components/domain/SizeIcon";
 import AdSpaceStatus from "components/domain/AdSpaceStatus";
-import deployedTables from "../variables/deployedTables.json";
 import { connect, resultsToObjects } from "@tableland/sdk";
 import abi from "../../../../variables/AdSpaceFactory.json";
-import { fetchTablelandTables } from "../../../../components/_custom/fetchTableLandTables";
+import { fetchTablelandTables } from "../../../../components/_custom/tableLandHelpers";
 
 export default function TablelandTable(props) {
   const { tablePrefix } = props;
