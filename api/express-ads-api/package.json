@@ -1,0 +1,24 @@
+{
+  "name": "express-ads-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tableland/sdk": "^3.1.2",
+    "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
+    "ethers": "^5.7.1",
+    "express": "^4.18.1",
+    "helmet": "^6.0.0",
+    "mongoose": "^6.6.1",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.20",
+    "psl": "^1.9.0"
+  }
+}

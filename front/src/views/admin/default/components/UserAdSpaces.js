@@ -54,11 +54,8 @@ import VerifiedStatusIcon from "components/domain/VerifiedStatusIcon";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 //import { InjectedConnector } from "wagmi/connectors/injected";
 import abi from "../variables/AdSpaceFactory.json";
-<<<<<<< HEAD
 // here we need the AdSpace ABI + we need the DaIContract ABI
-=======
 import DAIicon from "components/domain/DAIicon";
->>>>>>> 435aa8aeacb317f7c69c055ece237fff52f8a05f
 
 // Assets
 export default function UserAdSpaces(props) {
