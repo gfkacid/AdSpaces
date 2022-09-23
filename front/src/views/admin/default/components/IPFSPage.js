@@ -30,10 +30,10 @@ export default function IPFSPage() {
 
     try {
       const created = await ipfs.add(file);
-      const url = `https://ipfs.io/ipfs/${created.path}`;
-      console.log("New file url:", url);
+      const cid = created.path;
+      console.log("New file cid:", cid );
 
-      setUrlArray((prev) => [...prev, url]);
+      setUrlArray((prev) => [...prev, cid]);
     } catch (error) {
       console.log(error.message);
     }
@@ -89,11 +89,11 @@ export default function IPFSPage() {
               Preview Files
             </Text>
               {urlArray.length !== 0 ? (
-                urlArray.map((file, i) => (
+                urlArray.map((cid, i) => (
                   <Text>
-                  <a href={file} key={i} alt="link" target="_blank">
-                    {file}
-                  </a>
+                    <a href={`https://ipfs.io/ipfs/${cid}`} key={i} alt="link" target="_blank">
+                      {cid}
+                    </a>
                   </Text>
                 ))
               ) : (
