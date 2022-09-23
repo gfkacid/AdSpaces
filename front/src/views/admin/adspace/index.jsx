@@ -31,12 +31,11 @@ import Information from "views/admin/profile/components/Information";
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import deployedTables from "../home/variables/deployedTables.json"
+import deployedTables from "../home/variables/deployedTables.json";
 import { connect, resultsToObjects } from "@tableland/sdk";
 import { ethers, BigNumber } from "ethers";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import DAIicon from "components/domain/DAIicon";
-
 
 export default function AdSpaceListing() {
   // Wagmi
@@ -45,24 +44,22 @@ export default function AdSpaceListing() {
       constant: false,
       inputs: [
         { internalType: "address", name: "spender", type: "address" },
-        { internalType: "uint256", name: "value", type: "uint256" }
+        { internalType: "uint256", name: "value", type: "uint256" },
       ],
       name: "approve",
-      outputs: [{ "internalType": "bool", "name": "", "type": "bool"  }],
+      outputs: [{ internalType: "bool", name: "", type: "bool" }],
       payable: false,
       stateMutability: "nonpayable",
       type: "function",
-    }];
+    },
+  ];
   const contractAddress = "0xA4D1cE55dEEfb9372B306Ad614B151dB14D4F605"; // adSpacecontract
   const { address: userAddress, isConnected } = useAccount();
   const { config: newAdSpaceConfig } = usePrepareContractWrite({
     addressOrName: "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
     contractInterface: contractABI,
     functionName: "approve",
-    args: [
-      contractAddress,
-      ethers.utils.parseEther("1000"),
-    ],
+    args: [contractAddress, ethers.utils.parseEther("1000")],
   });
   const {
     data: writeData,
@@ -73,11 +70,10 @@ export default function AdSpaceListing() {
   // console.log(isConnected);
   // console.log(isSuccess);
 
-
   // AdSpace
   const { adspaceId } = useParams();
   const [AdSpace, setAdSpace] = useState(null);
-  const [isAllowed, setIsAllowed] = useState(false); 
+  const [isAllowed, setIsAllowed] = useState(false);
   const adSpaceContract = "0xA4D1cE55dEEfb9372B306Ad614B151dB14D4F605";
   // modal
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -131,7 +127,7 @@ export default function AdSpaceListing() {
   };
 
   const adspaceTable = deployedTables[0][networkConfig.chainId].find(
-    (elem) => elem.prefix === 'AdSpaces'
+    (elem) => elem.prefix === "AdSpaces"
   ).name;
 
   async function fetchAdSpace() {
@@ -145,19 +141,20 @@ export default function AdSpaceListing() {
     );
     console.log(fetchAdSpaceQuery);
     const result = await resultsToObjects(fetchAdSpaceQuery);
-      console.log(result[0])
+    console.log(result[0]);
     return result[0];
   }
   useEffect(() => {
-    fetchAdSpace().then((res) => {
-      console.log(res)
-      setAdSpace(res)
-      //Here we can read DAI contract whether the user has allowed the DAI already or not for AdSpace contract
-      // If the allowance is set we can set the variable to true for example
-    })
-    .catch((e) => {
-      console.log(e.message);
-    });
+    fetchAdSpace()
+      .then((res) => {
+        console.log(res);
+        setAdSpace(res);
+        //Here we can read DAI contract whether the user has allowed the DAI already or not for AdSpace contract
+        // If the allowance is set we can set the variable to true for example
+      })
+      .catch((e) => {
+        console.log(e.message);
+      });
   }, [adspaceId]);
 
   // New Deal form
@@ -204,18 +201,18 @@ export default function AdSpaceListing() {
               value={AdSpace.status}
             />
             {/* {AdSpace?.status == "Available" && ( */}
-              <Button
-                colorScheme="brand"
-                variant="solid"
-                onClick={onOpen}
-                style={{
-                  boxSizing: "content-box",
-                  lineHeight: "2em",
-                  padding: "20px",
-                }}
-              >
-                Advertise here
-              </Button>
+            <Button
+              colorScheme="brand"
+              variant="solid"
+              onClick={onOpen}
+              style={{
+                boxSizing: "content-box",
+                lineHeight: "2em",
+                padding: "20px",
+              }}
+            >
+              Advertise here
+            </Button>
             {/* )} */}
           </SimpleGrid>
           <Modal isOpen={isOpen} onClose={onClose}>
@@ -251,7 +248,7 @@ export default function AdSpaceListing() {
                 <FormControl mt={4}>
                   <FormLabel>Total cost</FormLabel>
                   <Text>
-                    <DAIicon/> {newDealDuration * AdSpace.asking_price}
+                    <DAIicon /> {newDealDuration * AdSpace.asking_price}
                   </Text>
                   <Text fontSize="sm" as="i">
                     total cost = [duration] * [asking price]
@@ -262,8 +259,12 @@ export default function AdSpaceListing() {
                 <Button mr={3} onClick={onClose}>
                   Close
                 </Button>
-                <Button colorScheme="brand" variant="solid" onClick={() => approveDai?.()}>
-                  Approve DAI 
+                <Button
+                  colorScheme="brand"
+                  variant="solid"
+                  onClick={() => approveDai?.()}
+                >
+                  Approve DAI
                 </Button>
               </ModalFooter>
             </ModalContent>

@@ -20,8 +20,8 @@ contract AdSpaceFactory is ERC721Holder, Ownable {
     /* tba */
 
     /* Events */
-    event AdSpaceCreated(address indexed contractAddress, address indexed owner);
-    event CampaignCreated(uint256 indexed CampaignId, address indexed owner);
+    event AdSpaceCreated(address indexed contractAddress);
+    event CampaignCreated(uint256 indexed CampaignId);
     event DealCreated(
         uint256 indexed DealId,
         uint256 indexed CampaignId,
@@ -88,7 +88,7 @@ contract AdSpaceFactory is ERC721Holder, Ownable {
             "CREATE TABLE Deals",
             "_",
             Strings.toString(block.chainid),
-            " (deal_id INTEGER PRIMARY KEY, campaign_id_fk INTEGER, adspace_id_fk INTEGER, duration_deal INTEGER, price INTEGER, started_at INTEGER);"
+            " (deal_id INTEGER PRIMARY KEY, campaign_id_fk INTEGER, adspace_id_fk INTEGER, end_at INTEGER, price INTEGER, started_at INTEGER);"
         );
         _dealtableid = _createTable(sqlDeal);
         _dealTable = string.concat(
@@ -156,24 +156,24 @@ contract AdSpaceFactory is ERC721Holder, Ownable {
      * @notice after creating the deal, the Adspace Table will update on the affected row
      * @param _adspaceId id of the affected AdSpace
      * @param _price negotiated price for the deal
-     * @param _end ending timestamp (UNIX)
-     * @param campaignId id of the affected campaign
+     * @param _end_at ending timestamp (UNIX)
+     * @param _campaignId id of the affected campaign
      */
     function createDeal(
         uint256 _adspaceId,
         uint256 _price,
-        uint40 _end,
-        uint256 campaignId
-    ) external payable {
+        uint40 _end_at,
+        uint256 _campaignId
+    ) external payable returns (uint256) {
         string memory sqlCreateDeal = string.concat(
             "INSERT INTO ",
             _dealTable,
-            " (campaign_id_fk, adspace_id_fk, duration_deal, price, started_at) VALUES ('",
-            Strings.toString(campaignId),
+            " (campaign_id_fk, adspace_id_fk, end_at, price, started_at) VALUES ('",
+            Strings.toString(_campaignId),
             "','",
             Strings.toString(_adspaceId),
             "','",
-            Strings.toString(_end),
+            Strings.toString(_end_at),
             "','",
             Strings.toString(_price),
             "','",
@@ -183,7 +183,7 @@ contract AdSpaceFactory is ERC721Holder, Ownable {
 
         _runSQL(_campaigntableid, sqlCreateDeal);
         _counter_deals++;
-        emit DealCreated(_counter_deals, _counter_campaigns, _counter_adspaces);
+        emit DealCreated(_counter_deals, _campaignId, _adspaceId);
 
         ///@notice update the Adspace Tableland table
         string memory sqlUpdateAdspace = string.concat(
@@ -195,6 +195,7 @@ contract AdSpaceFactory is ERC721Holder, Ownable {
         );
         _runSQL(_adspacetableid, sqlUpdateAdspace);
         emit AdSpaceUpdated(_adspaceId);
+        return _counter_deals;
     }
 
     /**
