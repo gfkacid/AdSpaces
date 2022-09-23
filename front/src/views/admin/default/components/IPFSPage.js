@@ -2,7 +2,7 @@ import { Buffer } from "buffer";
 import * as IPFS from "ipfs-core";
 import { useState, useEffect } from "react";
 import Card from "components/card/Card";
-import { Text, Button, Flex,SimpleGrid, Box, useColorModeValue } from "@chakra-ui/react";
+import { Text, Button, Flex,SimpleGrid, Box, useColorModeValue, textDecoration } from "@chakra-ui/react";
 
 
 export default function IPFSPage() {
@@ -53,7 +53,20 @@ export default function IPFSPage() {
   return (
     <Box pt={{ base: "180px", md: "80px", xl: "80px" }}>
       {/* Main Fields */}
-      <SimpleGrid columns="2" gap="20px">
+      <SimpleGrid columns="1">
+        <Card>
+          <Text>
+            This tab runs an IPFS node which pins the uploaded files as long as the tab remains open.
+          </Text>
+          <Text as="i">
+            The files may also be cached on other IPFS servers for their caching period (avg. 2-3 days). We recommend using NFT.Storage, Web3.Storage, Pinata to pin the CIDs after uploading here.
+          </Text>
+          <Text mt="2">
+            If you decide <strong>NOT</strong> to pin the file, please <span style={{textDecoration: 'underline'}}>keep the tab open!</span>
+          </Text>
+        </Card>
+      </SimpleGrid>
+      <SimpleGrid mt="10" columns="2" gap="20px">
         <Card px="24px" mb="20px">
           <Text
             color={textColorPrimary}

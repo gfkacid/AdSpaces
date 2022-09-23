@@ -32,19 +32,19 @@ export default function MyDeals() {
 
     console.log(address);
     const outgoingDealsQuery = await tablelandConnection.read(
-      `SELECT 'outgoing' as type, ${adspaceTable}.name as AdSpaceName, ${dealTable}.price,${dealTable}.started_at, ${dealTable}.end_at,${campaignTable}.name as CampaignName, ${campaignTable}.cid FROM ${adspaceTable} INNER JOIN ${dealTable}  INNER JOIN ${campaignTable} WHERE adspace_id = adspace_id_fk AND campaign_id = campaign_id_fk AND ${campaignTable}.owner like '${address}';`
+      `SELECT count(${dealTable}.deal_id) as outgoingDeals FROM ${adspaceTable} INNER JOIN ${dealTable}  INNER JOIN ${campaignTable} WHERE adspace_id = adspace_id_fk AND campaign_id = campaign_id_fk AND ${campaignTable}.owner like '${address}';`
     );
     const outgoingDeals = await resultsToObjects(outgoingDealsQuery);
 
     const incomingDealsQuery = await tablelandConnection.read(
-      `SELECT 'incoming' as type, ${adspaceTable}.name as AdSpaceName, ${dealTable}.price,${dealTable}.started_at, ${dealTable}.end_at,${campaignTable}.name as CampaignName, ${campaignTable}.cid FROM ${adspaceTable} INNER JOIN ${dealTable}  INNER JOIN ${campaignTable} WHERE adspace_id = adspace_id_fk AND campaign_id = campaign_id_fk AND ${adspaceTable}.owner like '${address}';`
+      `SELECT count(${dealTable}.deal_id) as incomingDeals FROM ${adspaceTable} INNER JOIN ${dealTable}  INNER JOIN ${campaignTable} WHERE adspace_id = adspace_id_fk AND campaign_id = campaign_id_fk AND ${adspaceTable}.owner like '${address}';`
     );
 
     const incomingDeals = await resultsToObjects(incomingDealsQuery);
 
     return {
-      incomingDeals: incomingDeals[0],
-      outgoingDeals: outgoingDeals[0],
+      incomingDeals: incomingDeals[0].incomingDeals,
+      outgoingDeals: outgoingDeals[0].outgoingDeals,
     };
   }
 
