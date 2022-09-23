@@ -71,7 +71,6 @@ export default function UserReports() {
       <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px' mb='20px'>
         <UserAdSpaces 
           columnsData={userAdSpacesColumns}
-          tableData ={tableDataUserAdSpaces}
         />
         <UserCampaigns 
           columnsData={userCampaignsColumns}
