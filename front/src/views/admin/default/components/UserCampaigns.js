@@ -42,11 +42,17 @@ import {
 // Custom components
 import Card from "components/card/Card";
 import SizeIcon from "components/domain/SizeIcon";
+import { fetchTablelandTables ,getTableLandConfig} from "../../../../components/_custom/tableLandHelpers";
+import { connect, resultsToObjects } from "@tableland/sdk";
+import { useState, useEffect } from "react";
+import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 
 // Assets
 export default function UserCampaigns(props) {
-  const { columnsData, tableData } = props;
-
+  const { columnsData } = props;
+  const [tableData,setTableData] = useState([]);
+  const { address } = useAccount();
+  
   const columns = useMemo(() => columnsData, [columnsData]);
   const data = useMemo(() => tableData, [tableData]);
 
@@ -69,7 +75,35 @@ export default function UserCampaigns(props) {
     initialState,
   } = tableInstance;
   initialState.pageSize = 5;
+  // load from TableLand
+  const TablelandTables = fetchTablelandTables();
+  const networkConfig = getTableLandConfig();
+  const campaignTable = TablelandTables["AdSpaces"];
+  async function getUserCampaigns() {
+    const tablelandConnection = await connect({
+      network: networkConfig.testnet,
+      chain: networkConfig.chain,
+    });
 
+    const totalCampaignsQuery = await tablelandConnection.read(
+      `SELECT * FROM ${campaignTable} WHERE ${campaignTable}.owner = '${address}';`
+    );
+    const result = await resultsToObjects(totalCampaignsQuery);
+    
+    return result;
+  }
+
+  useEffect(() => {
+    getUserCampaigns()
+      .then((res) => {
+        setTableData(res);
+      })
+      .catch((e) => {
+        console.log(e.message);
+      });
+  }, []);
+  
+  // styling
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
 
