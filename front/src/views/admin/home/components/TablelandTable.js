@@ -29,6 +29,8 @@ import SizeIcon from "components/domain/SizeIcon";
 import AdSpaceStatus from "components/domain/AdSpaceStatus";
 import deployedTables from "../variables/deployedTables.json";
 import { connect, resultsToObjects } from "@tableland/sdk";
+import abi from "../../../../variables/AdSpaceFactory.json";
+import { fetchTablelandTables } from "../../../../components/_custom/fetchTableLandTables";
 
 export default function TablelandTable(props) {
   const { tablePrefix } = props;
@@ -43,11 +45,18 @@ export default function TablelandTable(props) {
     chainId: "420",
   };
 
-  const tableName = deployedTables[0][networkConfig.chainId].find(
-    (elem) => elem.prefix === tablePrefix
-  ).name;
+  const TablelandTables = fetchTablelandTables();
+
+  const tableName = TablelandTables[tablePrefix];
+
+  console.log(tableName);
+
+  const [dataObject, setDataObject] = useState(null);
 
   async function fetchTablelandTable(tableToRead) {
+    const ABI = abi.abi;
+    const ADDRESS = abi.address;
+
     const tablelandConnection = await connect({
       network: networkConfig.testnet,
       chain: networkConfig.chain,
@@ -77,10 +86,10 @@ export default function TablelandTable(props) {
         accessor: "website",
       },
       {
-         Header: "Status",
+        Header: "Status",
         accessor: "status",
       },
-    ]
+    ];
     return { columnsFixed, data };
   }
 
@@ -174,40 +183,39 @@ export default function TablelandTable(props) {
                   let align = "left";
                   if (cell.column.id === "name") {
                     data = (
-                      <Text color={textColor} fontSize='sm' fontWeight='700'>
+                      <Text color={textColor} fontSize="sm" fontWeight="700">
                         <Link
-                          href={'/#/admin/adspace/'+row.original.adspace_id}
-                          >
-                            <SearchIcon/>
+                          href={"/#/admin/adspace/" + row.original.adspace_id}
+                        >
+                          <SearchIcon />
                           {cell.value}
                         </Link>
                       </Text>
                     );
                   } else if (cell.column.id === "size") {
-                    data = (
-                      <SizeIcon size={cell.value} />
-                    );
+                    data = <SizeIcon size={cell.value} />;
                   } else if (cell.column.id === "asking_price") {
                     data = (
-                      <Text color={textColor} fontSize='sm' fontWeight='700'>
-                        <img className="coin-icon" src={DAIicon}></img> {cell.value} / hr
+                      <Text color={textColor} fontSize="sm" fontWeight="700">
+                        <img className="coin-icon" src={DAIicon}></img>{" "}
+                        {cell.value} / hr
                       </Text>
                     );
                   } else if (cell.column.id === "website") {
                     data = (
-                      <Text color={textColor} fontSize='sm' fontWeight='700'>
-                        <Link
-                          href={cell.value}
-                          target='_blank'
-                          >
+                      <Text color={textColor} fontSize="sm" fontWeight="700">
+                        <Link href={cell.value} target="_blank">
                           {cell.value}
                         </Link>
                       </Text>
                     );
-                  }else if(cell.column.id === "status") {
-                      data = (
-                        <AdSpaceStatus status={cell.value}  textColor={textColor}/>
-                      );
+                  } else if (cell.column.id === "status") {
+                    data = (
+                      <AdSpaceStatus
+                        status={cell.value}
+                        textColor={textColor}
+                      />
+                    );
                   }
                   return (
                     <Td

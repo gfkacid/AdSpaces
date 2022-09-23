@@ -23,12 +23,7 @@
 import React from "react";
 
 // Chakra imports
-import {
-  Box,
-  Flex,
-  Grid,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Flex, Grid, useColorModeValue } from "@chakra-ui/react";
 
 // Custom components
 import Banner from "views/admin/home/components/Banner";
@@ -75,7 +70,7 @@ export default function Home() {
               columnsData={tableColumnsTopAdSpaces}
             />
           </Card>
-          <LatestDeals textColor={textColor} title="Latest Deals"/>
+          <LatestDeals textColor={textColor} title="Latest Deals" />
         </Flex>
       </Grid>
     </Box>
