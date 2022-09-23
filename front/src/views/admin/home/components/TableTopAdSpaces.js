@@ -20,6 +20,9 @@ import {
   useSortBy,
   useTable,
 } from "react-table";
+import deployedTables from "../variables/deployedTables.json";
+import { connect, resultsToObjects } from "@tableland/sdk";
+
 
 function TopAdSpacesTable(props) {
   const { columnsData, tableData } = props;
@@ -43,6 +46,39 @@ function TopAdSpacesTable(props) {
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = useColorModeValue("secondaryGray.600", "white");
 
+  const networkConfig = {
+    testnet: "testnet",
+    chain: "optimism-goerli",
+    chainId: "420",
+  };
+
+  const dealTable = deployedTables[0][networkConfig.chainId].find(
+    (elem) => elem.prefix === "Deals"
+  ).name;
+
+  const adspaceTable = deployedTables[0][networkConfig.chainId].find(
+    (elem) => elem.prefix === "AdSpaces"
+  ).name;
+
+  async function getTopAdSpaces() {
+    const tablelandConnection = await connect({
+      network: networkConfig.testnet,
+      chain: networkConfig.chain,
+    });
+
+    const queryResult = await tablelandConnection.read(
+      `SELECT ${adspaceTable}.adspace_id as adspace_id, ${adspaceTable}.name as name, sum(${dealTable}.price) as total_revenue, count(${dealTable}.deal_id)
+       FROM ${dealTable}
+       INNER JOIN ${adspaceTable} 
+       WHERE ${adspaceTable}.adspace_id = ${dealTable}.adspace_id_fk 
+        GROUP BY ${dealTable}.adspace_id_fk;`
+    );
+
+    const data = await resultsToObjects(queryResult);
+    console.log(data)
+    return data ;
+  }
+
   return (
     <>
       <Flex
@@ -62,7 +98,6 @@ function TopAdSpacesTable(props) {
           <Text color={textColor} fontSize="xl" fontWeight="600">
             Top AdSpaces
           </Text>
-          <Button variant="action">See all</Button>
         </Flex>
         <Table {...getTableProps()} variant="simple" color="gray.500">
           <Thead>

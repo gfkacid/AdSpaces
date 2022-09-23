@@ -57,7 +57,6 @@ export default function TablelandTable(props) {
       `SELECT * FROM ${tableToRead} WHERE verified  = 1 ORDER BY adspace_id DESC;`
     );
 
-    console.log(readQueryResult);
     const data = await resultsToObjects(readQueryResult);
 
     const columnsFixed = [

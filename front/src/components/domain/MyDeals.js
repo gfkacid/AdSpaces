@@ -42,8 +42,7 @@ export default function MyDeals() {
     const outgoingDeals = await resultsToObjects(outgoingDealsQuery);
 
     const incomingDealsQuery = await tablelandConnection.read(
-      `SELECT * from ${dealTable}`
-      // `SELECT count(${dealTable}.deal_id) as incoming_deals FROM ${dealTable} INNER JOIN ${adspaceTable} WHERE ${adspaceTable}.adspace_id = ${dealTable}.campaign_id_fk AND ${adspaceTable}.owner = '${address}';`
+      `SELECT count(${dealTable}.deal_id) as incoming_deals FROM ${dealTable} INNER JOIN ${adspaceTable} WHERE ${adspaceTable}.adspace_id = ${dealTable}.campaign_id_fk AND ${adspaceTable}.owner = '${address}';`
     );
     
     const incomingDeals = await resultsToObjects(incomingDealsQuery);
