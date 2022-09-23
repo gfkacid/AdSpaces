@@ -26,6 +26,7 @@
     "ethers": "^5.7.0",
     "framer-motion": "^4.1.17",
     "fs": "^0.0.1-security",
+    "ipfs-core": "^0.16.1",
     "keccak": "^3.0.2",
     "moment": "^2.29.4",
     "react": "17.0.2",
