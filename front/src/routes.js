@@ -6,6 +6,7 @@ import {
   MdPerson,
   MdHome,
   MdLock,
+  MdFileUpload,
   MdOutlineShoppingCart,
 } from "react-icons/md";
 
@@ -13,7 +14,7 @@ import {
 import MainDashboard from "views/admin/default";
 import Home from "views/admin/home";
 import Profile from "views/admin/profile";
-import DataTables from "views/admin/dataTables";
+import IPFSPage from "views/admin/default/components/IPFSPage";
 import AdSpace from "views/admin/adspace"
 
 const routes = [
@@ -39,6 +40,14 @@ const routes = [
     path: "/profile",
     icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
     component: Profile,
+    display: true
+  },
+  {
+    name: "IPFS upload",
+    layout: "/admin",
+    path: "/ipfs",
+    icon: <Icon as={MdFileUpload} width="20px" height="20px" color="inherit" />,
+    component: IPFSPage,
     display: true
   },
   {

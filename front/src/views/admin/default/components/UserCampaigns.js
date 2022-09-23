@@ -140,13 +140,13 @@ export default function UserCampaigns(props) {
                   } else if (cell.column.id === "file") {
                     data = (
                       <Link
-                        href={"https://gateway.pinata.cloud/ipfs/" + cell.value}
+                        href={"https://ipfs.io/ipfs/" + cell.value}
                         target="_blank"
                       >
                         <Image
                           className="table-image"
                           src={
-                            "https://gateway.pinata.cloud/ipfs/" + cell.value
+                            "https://ipfs.io/ipfs/" + cell.value
                           }
                         />
                       </Link>
