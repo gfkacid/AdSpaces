@@ -47,6 +47,7 @@ import SpentOnAds from "components/domain/SpentOnAds";
 import MyDeals from "components/domain/MyDeals";
 import MyAdSpaces from "components/domain/MyAdSpaces";
 import MyCampaigns from "components/domain/MyCampaigns";
+import UserDeals from "./components/UserDeals";
 
 export default function UserReports() {
   // Chakra Color Mode
@@ -73,7 +74,9 @@ export default function UserReports() {
           columnsData={userCampaignsColumns}
           tableData={tableDataUserCampaigns}
         />
-        <MyDeals />
+      </SimpleGrid>
+      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
+        <UserDeals />
       </SimpleGrid>
     </Box>
   );
