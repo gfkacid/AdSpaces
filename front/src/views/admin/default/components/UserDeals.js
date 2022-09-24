@@ -30,7 +30,12 @@ import Card from "components/card/Card";
 import SizeIcon from "components/domain/SizeIcon";
 import AdSpaceStatus from "components/domain/AdSpaceStatus";
 import VerifiedStatusIcon from "components/domain/VerifiedStatusIcon";
-import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
+import {
+  useAccount,
+  useContractWrite,
+  usePrepareContractWrite,
+  useProvider,
+} from "wagmi";
 import {
   fetchTablelandTables,
   getTableLandConfig,
@@ -40,6 +45,8 @@ import abi from "../variables/AdSpaceFactory.json";
 import DAIicon from "components/domain/DAIicon";
 import { useEffect } from "react";
 import moment from "moment";
+import AdSpaceAbi from "../../../../variables/AdSpace.json";
+import { ethers } from "ethers";
 
 // Assets
 export default function UserAdSpaces(props) {
@@ -90,16 +97,21 @@ export default function UserAdSpaces(props) {
           FROM ${dealTable}
        JOIN ${adspaceTable} ON ${adspaceTable}.adspace_id = ${dealTable}.adspace_id_fk 
        JOIN ${campaignTable} ON ${campaignTable}.campaign_id = ${dealTable}.campaign_id_fk
-        WHERE ${adspaceTable}.owner = '${address}' OR ${campaignTable}.owner = '${address}';`
+        WHERE ${adspaceTable}.owner like '${address}' OR ${campaignTable}.owner like '${address}';`
     );
     // CASE (${adspaceTable}.owner
-    //   WHEN '${address}' 
+    //   WHEN '${address}'
     //     THEN 'incoming'
     //   ELSE 'outgoing')
     const userDeals = resultsToObjects(totalDealQuery);
-      console.log(userDeals)
+    console.log(userDeals);
     return userDeals;
   }
+
+  // wagmi stuff
+  const ABI_ADSPACE = AdSpaceAbi.abi;
+  const ADDRESS_ADSPACE = AdSpaceAbi.address;
+  const provider = useProvider();
 
   useEffect(() => {
     getUserDeals()
@@ -111,9 +123,9 @@ export default function UserAdSpaces(props) {
       });
   }, []);
 
-  const withdraw = async(deal_id, contract) => {
-    console.log('withdrawing deal #'+deal_id+' from AdSpace @ '+contract);
-  }
+  const withdraw = async (deal_id, contract) => {
+    console.log("withdrawing deal #" + deal_id + " from AdSpace @ " + contract);
+  };
 
   return (
     <Card
@@ -162,12 +174,14 @@ export default function UserAdSpaces(props) {
             return (
               <Tr {...row.getRowProps()} key={index}>
                 {row.cells.map((cell, index) => {
-                  console.log(cell)
+                  console.log(cell);
                   let data = "";
                   if (cell.column.id === "adspace_name") {
                     data = (
                       <Text color={textColor} fontSize="sm" fontWeight="700">
-                        <Link href={"/#/admin/adspace/" + row.original.adspace_id}>
+                        <Link
+                          href={"/#/admin/adspace/" + row.original.adspace_id}
+                        >
                           {cell.value}
                         </Link>
                       </Text>
@@ -177,13 +191,15 @@ export default function UserAdSpaces(props) {
                   } else if (cell.column.id === "deal_price") {
                     data = (
                       <Text color={textColor} fontSize="sm" fontWeight="700">
-                        <DAIicon/> {cell.value}
+                        <DAIicon /> {cell.value}
                       </Text>
                     );
                   } else if (cell.column.id === "campaign_name") {
                     data = (
                       <Text color={textColor} fontSize="sm" fontWeight="700">
-                        <Link href={"/#/admin/campaign/" + row.original.campaign_id}>
+                        <Link
+                          href={"/#/admin/campaign/" + row.original.campaign_id}
+                        >
                           {cell.value}
                         </Link>
                       </Text>
@@ -191,37 +207,66 @@ export default function UserAdSpaces(props) {
                   } else if (cell.column.id === "deal_start") {
                     data = (
                       <Text color={textColor} fontSize="sm" fontWeight="700">
-                        {moment.unix(cell.value).format('lll')}
+                        {moment.unix(cell.value).format("lll")}
                       </Text>
                     );
                   } else if (cell.column.id === "deal_end") {
                     data = (
                       <Text color={textColor} fontSize="sm" fontWeight="700">
-                        {moment.unix(cell.value).format('lll')}
+                        {moment.unix(cell.value).format("lll")}
                       </Text>
                     );
                   } else if (cell.column.id === "file") {
-                    data = <Image src={`https://ipfs.io/ipfs/${cell.value}`} className="table-image"/>;
+                    data = (
+                      <Image
+                        src={`https://ipfs.io/ipfs/${cell.value}`}
+                        className="table-image"
+                      />
+                    );
                   } else if (cell.column.id === "deal_id") {
                     // check if deal is outgoing -> user paid for this deal, so no withdraw action
-                    if(row.original.adspace_owner !== address){
-                      data =(
-                        <Text as="i" color={textColor} fontSize="sm" fontWeight="300">
+                    if (row.original.adspace_owner !== address) {
+                      data = (
+                        <Text
+                          as="i"
+                          color={textColor}
+                          fontSize="sm"
+                          fontWeight="300"
+                        >
                           Paid
                         </Text>
-                      )
-                    }else{
+                      );
+                    } else {
+                      console.log("here we are...");
+                      const AdSpace = new ethers.Contract(
+                        ADDRESS_ADSPACE,
+                        ABI_ADSPACE,
+                        provider
+                      );
+
+                      const daiValue = AdSpace.dealsDaiValue(cell.value);
+                      console.log(daiValue);
+
                       // if deal is incoming -> user gets paid for displaying ads, then we have to figure out if payout has already been triggered or not
                       // we can get that info from public mappings on AdSpace contract , check if dealsDaiValue[deal_id] is set, if yes:
                       // if(dealPaymentPending){
-                      data = 
-                      (
+                      data = (
                         <Text color={textColor} fontSize="sm" fontWeight="700">
-                          <Button onClick={() => withdraw(cell.value,row.original.adspace_contract)}> withdraw </Button>
+                          <Button
+                            onClick={() =>
+                              withdraw(
+                                cell.value,
+                                row.original.adspace_contract
+                              )
+                            }
+                          >
+                            {" "}
+                            withdraw{" "}
+                          </Button>
                         </Text>
                       );
                       //}else{
-                      //  payout received 
+                      //  payout received
                       // }
                     }
                   }
