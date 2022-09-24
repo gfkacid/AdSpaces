@@ -166,7 +166,7 @@ The members of the team for the Hackathon are:
 - [acid](https://github.com/gfkacid)
 - [mme](https://github.com/mme022)
 - [Riki]()
-- [Dyson]()
+- [Dysan](https://github.com/dysntr)
 
 Any contributions you make after 28/09/2022 are **greatly appreciated**.
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
