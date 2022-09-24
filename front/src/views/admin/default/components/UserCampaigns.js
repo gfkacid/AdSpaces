@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Flex,
   Table,
@@ -54,11 +55,7 @@ export default function UserCampaigns(props) {
   const columns = useMemo(() => columnsData, [columnsData]);
   const data = useMemo(() => tableData, [tableData]);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit } = useForm();
 
   const tableInstance = useTable(
     {
@@ -106,12 +103,7 @@ export default function UserCampaigns(props) {
     functionName: "createCampaign",
     args: ["name-not-set", "cid-not-set", "size-not-set", "link-not-set"],
   });
-  const {
-    data: writeData,
-    isLoading,
-    isSuccess,
-    write: createCampaign,
-  } = useContractWrite(newCampaignConfig);
+  const { write: createCampaign } = useContractWrite(newCampaignConfig);
 
   // submit New Campaign Form
   const onSubmit = (data) => {

@@ -28,20 +28,22 @@ import DAIicon from "../../../../assets/img/dai.png";
 import SizeIcon from "components/domain/SizeIcon";
 import AdSpaceStatus from "components/domain/AdSpaceStatus";
 import { connect, resultsToObjects } from "@tableland/sdk";
-import abi from "../../../../variables/AdSpaceFactory.json";
-import { fetchTablelandTables } from "../../../../components/_custom/tableLandHelpers";
-
+import {
+  fetchTablelandTables,
+  getTableLandConfig,
+} from "../../../../components/_custom/tableLandHelpers";
 export default function TablelandTable(props) {
   const { tablePrefix } = props;
   const [tableData, setTableData] = useState([]);
   const [tableColumns, setTableColumns] = useState([]);
   //const tableland = require("@tableland/sdk");
+
+  const networkConfigInput = getTableLandConfig();
+
   const networkConfig = {
-    testnet: "testnet",
-    // chain: "goerli",
-    // chainId: "5",
-    chain: "optimism-goerli",
-    chainId: "420",
+    testnet: networkConfigInput.testnet,
+    chain: networkConfigInput.chain,
+    chainId: networkConfigInput.chainId,
   };
 
   const TablelandTables = fetchTablelandTables();
@@ -50,19 +52,14 @@ export default function TablelandTable(props) {
 
   console.log(tableName);
 
-  const [dataObject, setDataObject] = useState(null);
-
   async function fetchTablelandTable(tableToRead) {
-    const ABI = abi.abi;
-    const ADDRESS = abi.address;
-
     const tablelandConnection = await connect({
       network: networkConfig.testnet,
       chain: networkConfig.chain,
     });
 
     const readQueryResult = await tablelandConnection.read(
-      `SELECT * FROM ${tableToRead} WHERE verified  = 1 ORDER BY adspace_id DESC;`
+      `SELECT * FROM ${tableToRead} WHERE verified  = '1' ORDER BY adspace_id DESC;`
     );
 
     const data = await resultsToObjects(readQueryResult);
