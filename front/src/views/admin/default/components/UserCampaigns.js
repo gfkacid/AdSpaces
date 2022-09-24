@@ -12,15 +12,8 @@ import {
   Button,
   FormControl,
   FormLabel,
-  FormErrorMessage,
-  FormHelperText,
   Input,
   Select,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -42,19 +35,30 @@ import {
 // Custom components
 import Card from "components/card/Card";
 import SizeIcon from "components/domain/SizeIcon";
-import { fetchTablelandTables ,getTableLandConfig} from "../../../../components/_custom/tableLandHelpers";
+import {
+  fetchTablelandTables,
+  getTableLandConfig,
+} from "../../../../components/_custom/tableLandHelpers";
 import { connect, resultsToObjects } from "@tableland/sdk";
 import { useState, useEffect } from "react";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
+import { useForm } from "react-hook-form";
+import abi from "../../../../variables/AdSpaceFactory.json";
 
 // Assets
 export default function UserCampaigns(props) {
   const { columnsData } = props;
-  const [tableData,setTableData] = useState([]);
+  const [tableData, setTableData] = useState([]);
   const { address } = useAccount();
-  
+
   const columns = useMemo(() => columnsData, [columnsData]);
   const data = useMemo(() => tableData, [tableData]);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const tableInstance = useTable(
     {
@@ -89,9 +93,32 @@ export default function UserCampaigns(props) {
       `SELECT * FROM ${campaignTable} WHERE ${campaignTable}.owner = '${address}';`
     );
     const result = await resultsToObjects(totalCampaignsQuery);
-    
+
     return result;
   }
+
+  // submit New AdSpace
+  const contractABI = abi.abi;
+  const contractAddress = abi.address;
+  const { config: newCampaignConfig } = usePrepareContractWrite({
+    addressOrName: contractAddress,
+    contractInterface: contractABI,
+    functionName: "createCampaign",
+    args: ["name-not-set", "cid-not-set", "size-not-set", "link-not-set"],
+  });
+  const {
+    data: writeData,
+    isLoading,
+    isSuccess,
+    write: createCampaign,
+  } = useContractWrite(newCampaignConfig);
+
+  // submit New Campaign Form
+  const onSubmit = (data) => {
+    createCampaign({
+      recklesslySetUnpreparedArgs: [data.name, data.cid, data.size, data.link],
+    });
+  };
 
   useEffect(() => {
     getUserCampaigns()
@@ -102,7 +129,7 @@ export default function UserCampaigns(props) {
         console.log(e.message);
       });
   }, []);
-  
+
   // styling
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
@@ -179,9 +206,7 @@ export default function UserCampaigns(props) {
                       >
                         <Image
                           className="table-image"
-                          src={
-                            "https://ipfs.io/ipfs/" + cell.value
-                          }
+                          src={"https://ipfs.io/ipfs/" + cell.value}
                         />
                       </Link>
                     );
@@ -218,35 +243,53 @@ export default function UserCampaigns(props) {
         <ModalContent>
           <ModalHeader>New Campaign</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
-            <FormControl isRequired>
-              <FormLabel>Banner Size</FormLabel>
-              <Select placeholder="Select size">
-                <option value="wide">Wide | 728 x 90 px</option>
-                <option value="skyscraper">Skyscraper | 160 x 600 px</option>
-                <option value="square">Campaign 3 | 200 x 200 px</option>
-              </Select>
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Target link</FormLabel>
-              <Input type="url" placeholder="https://myshop.com"></Input>
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Banner file CID</FormLabel>
-              <Input placeholder="IPFS CID"></Input>
-            </FormControl>
-          </ModalBody>
-          <ModalFooter>
-            <Button mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button colorScheme="brand" variant="solid">
-              Upload to IPFS
-            </Button>
-            <Button colorScheme="brand" variant="solid">
-              Create Campaign
-            </Button>
-          </ModalFooter>
+          <form>
+            <ModalBody>
+              <FormControl mt={4} isRequired>
+                <FormLabel>Campaign Name</FormLabel>
+                <Input
+                  type="name"
+                  placeholder="Hodlers Finest Campaign"
+                  {...register("name")}
+                ></Input>
+              </FormControl>
+              <FormControl isRequired>
+                <FormLabel>Banner Size</FormLabel>
+                <Select placeholder="Select size" {...register("size")}>
+                  <option value="wide">Wide | 728 x 90 px</option>
+                  <option value="skyscraper">Skyscraper | 160 x 600 px</option>
+                  <option value="square">Campaign 3 | 200 x 200 px</option>
+                </Select>
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel>Target link</FormLabel>
+                <Input
+                  type="url"
+                  placeholder="https://myshop.com"
+                  {...register("link")}
+                ></Input>
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel>Banner file CID</FormLabel>
+                <Input placeholder="IPFS CID" {...register("cid")}></Input>
+              </FormControl>
+            </ModalBody>
+            <ModalFooter>
+              <Button mr={3} onClick={onClose}>
+                Close
+              </Button>
+              <Button colorScheme="brand" variant="solid">
+                Upload to IPFS
+              </Button>
+              <Button
+                colorScheme="brand"
+                variant="solid"
+                onClick={handleSubmit(onSubmit)}
+              >
+                Create Campaign
+              </Button>
+            </ModalFooter>
+          </form>
         </ModalContent>
       </Modal>
     </Card>
