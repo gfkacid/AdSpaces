@@ -69,4 +69,8 @@ export const userDealsColumns = [
     Header: "BANNER",
     accessor: "file",
   },
+  {
+    Header: "WITHDRAW",
+    accessor: "deal_id",
+  },
 ];

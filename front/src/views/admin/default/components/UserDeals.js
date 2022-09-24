@@ -12,6 +12,7 @@ import {
   Tr,
   useColorModeValue,
   useDisclosure,
+  Button,
 } from "@chakra-ui/react";
 import React, { useMemo, useState } from "react";
 import {
@@ -45,6 +46,7 @@ export default function UserAdSpaces(props) {
   // Table
   const { columnsData } = props;
   const [tableData, setTableData] = useState([]);
+  const { address } = useAccount();
 
   const tableInstance = useTable(
     {
@@ -75,23 +77,32 @@ export default function UserAdSpaces(props) {
   const campaignTable = TablelandTables["Campaigns"];
   const dealTable = TablelandTables["Deals"];
 
-  async function getUserAdSpaces() {
+  async function getUserDeals() {
     const tablelandConnection = await connect({
       network: networkConfig.testnet,
       chain: networkConfig.chain,
     });
 
     const totalDealQuery = await tablelandConnection.read(
-      `SELECT ${adspaceTable}.adspace_id as adspace_id, ${adspaceTable}.name as adspace_name, ${dealTable}.price as deal_price,${dealTable}.started_at as deal_start, ${dealTable}.end_at as deal_end,${campaignTable}.campaign_id as campaign_id, ${campaignTable}.name as campaign_name, ${campaignTable}.cid as file FROM ${adspaceTable} INNER JOIN ${dealTable}  INNER JOIN ${campaignTable} WHERE adspace_id = adspace_id_fk AND campaign_id = campaign_id_fk;`
+      `SELECT ${adspaceTable}.adspace_id as adspace_id, ${adspaceTable}.name as adspace_name, ${dealTable}.price as deal_price,
+          ${dealTable}.started_at as deal_start, ${dealTable}.end_at as deal_end,${campaignTable}.campaign_id as campaign_id, 
+          ${campaignTable}.name as campaign_name, ${campaignTable}.cid as file, ${dealTable}.deal_id as deal_id, ${adspaceTable}.contract as adspace_contract, ${adspaceTable}.owner as adspace_owner
+          FROM ${dealTable}
+       JOIN ${adspaceTable} ON ${adspaceTable}.adspace_id = ${dealTable}.adspace_id_fk 
+       JOIN ${campaignTable} ON ${campaignTable}.campaign_id = ${dealTable}.campaign_id_fk
+        WHERE ${adspaceTable}.owner = '${address}' OR ${campaignTable}.owner = '${address}';`
     );
-
+    // CASE (${adspaceTable}.owner
+    //   WHEN '${address}' 
+    //     THEN 'incoming'
+    //   ELSE 'outgoing')
     const userDeals = resultsToObjects(totalDealQuery);
       console.log(userDeals)
     return userDeals;
   }
 
   useEffect(() => {
-    getUserAdSpaces()
+    getUserDeals()
       .then((res) => {
         setTableData(res);
       })
@@ -99,6 +110,10 @@ export default function UserAdSpaces(props) {
         console.log(e.message);
       });
   }, []);
+
+  const withdraw = async(deal_id, contract) => {
+    console.log('withdrawing deal #'+deal_id+' from AdSpace @ '+contract);
+  }
 
   return (
     <Card
@@ -187,6 +202,28 @@ export default function UserAdSpaces(props) {
                     );
                   } else if (cell.column.id === "file") {
                     data = <Image src={`https://ipfs.io/ipfs/${cell.value}`} className="table-image"/>;
+                  } else if (cell.column.id === "deal_id") {
+                    // check if deal is outgoing -> user paid for this deal, so no withdraw action
+                    if(row.original.adspace_owner !== address){
+                      data =(
+                        <Text as="i" color={textColor} fontSize="sm" fontWeight="300">
+                          Paid
+                        </Text>
+                      )
+                    }else{
+                      // if deal is incoming -> user gets paid for displaying ads, then we have to figure out if payout has already been triggered or not
+                      // we can get that info from public mappings on AdSpace contract , check if dealsDaiValue[deal_id] is set, if yes:
+                      // if(dealPaymentPending){
+                      data = 
+                      (
+                        <Text color={textColor} fontSize="sm" fontWeight="700">
+                          <Button onClick={() => withdraw(cell.value,row.original.adspace_contract)}> withdraw </Button>
+                        </Text>
+                      );
+                      //}else{
+                      //  payout received 
+                      // }
+                    }
                   }
                   return (
                     <Td
