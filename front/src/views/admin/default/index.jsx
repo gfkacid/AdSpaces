@@ -36,6 +36,7 @@ import {
 import {
   userCampaignsColumns,
   userAdSpacesColumns,
+  userDealsColumns
 } from "views/admin/default/variables/userDashboardColumns";
 import tableDataUserCampaigns from "views/admin/default/variables/tableDataUserCampaigns.json";
 import tableDataUserAdSpaces from "views/admin/default/variables/tableDataUserAdSpaces.json";
@@ -76,7 +77,7 @@ export default function UserReports() {
         />
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="20px" mb="20px">
-        <UserDeals />
+        <UserDeals columnsData={userDealsColumns} />
       </SimpleGrid>
     </Box>
   );
