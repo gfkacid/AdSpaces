@@ -229,7 +229,9 @@ export default function UserAdSpaces(props) {
                   if (cell.column.id === "name") {
                     data = (
                       <Text color={textColor} fontSize="sm" fontWeight="700">
-                        <Link href={"/#/admin/adspace/" + row.original.id}>
+                        <Link
+                          href={"/#/admin/adspace/" + row.original.adspace_id}
+                        >
                           {cell.value}
                         </Link>
                       </Text>
