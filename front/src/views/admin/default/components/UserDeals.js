@@ -225,7 +225,9 @@ export default function UserAdSpaces(props) {
                     );
                   } else if (cell.column.id === "deal_id") {
                     // check if deal is outgoing -> user paid for this deal, so no withdraw action
-                    if (row.original.adspace_owner !== address) {
+                    console.log(row.original.adspace_owner)
+                    console.log(address)
+                    if (row.original.adspace_owner !== address.toLowerCase()) {
                       data = (
                         <Text
                           as="i"
