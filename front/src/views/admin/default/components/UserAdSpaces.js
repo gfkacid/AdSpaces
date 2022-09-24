@@ -55,13 +55,9 @@ import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import { fetchTablelandTables ,getTableLandConfig} from "../../../../components/_custom/tableLandHelpers";
 import { connect, resultsToObjects } from "@tableland/sdk";
 import abi from "../variables/AdSpaceFactory.json";
-<<<<<<< HEAD
 // here we need the AdSpace ABI + we need the DaIContract ABI
 import DAIicon from "components/domain/DAIicon";
-=======
-import DAIicon from "components/domain/DAIicon";
 import { useEffect } from "react";
->>>>>>> d248cd1689c5815899f29cd6634b714c48260082
 
 // Assets
 export default function UserAdSpaces(props) {
