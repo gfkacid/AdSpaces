@@ -36,45 +36,16 @@ import { connect, resultsToObjects } from "@tableland/sdk";
 import { ethers, BigNumber } from "ethers";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import DAIicon from "components/domain/DAIicon";
+import DAItokenABI from "../../../variables/DaiTokenABI.json";
 
 export default function AdSpaceListing() {
-  // Wagmi
-  const contractABI = [
-    {
-      constant: false,
-      inputs: [
-        { internalType: "address", name: "spender", type: "address" },
-        { internalType: "uint256", name: "value", type: "uint256" },
-      ],
-      name: "approve",
-      outputs: [{ internalType: "bool", name: "", type: "bool" }],
-      payable: false,
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-  ];
-  const contractAddress = "0xA4D1cE55dEEfb9372B306Ad614B151dB14D4F605"; // adSpacecontract
-  const { address: userAddress, isConnected } = useAccount();
-  const { config: newAdSpaceConfig } = usePrepareContractWrite({
-    addressOrName: "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
-    contractInterface: contractABI,
-    functionName: "approve",
-    args: [contractAddress, ethers.utils.parseEther("1000")],
-  });
-  const {
-    data: writeData,
-    isLoading,
-    isSuccess,
-    write: approveDai,
-  } = useContractWrite(newAdSpaceConfig);
-  // console.log(isConnected);
-  // console.log(isSuccess);
-
+  
   // AdSpace
   const { adspaceId } = useParams();
   const [AdSpace, setAdSpace] = useState(null);
-  const [isAllowed, setIsAllowed] = useState(false);
-  const adSpaceContract = "0xA4D1cE55dEEfb9372B306Ad614B151dB14D4F605";
+  const [isApproved, setIsApproved] = useState(false);
+  const { address } = useAccount();
+
   // modal
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -85,6 +56,24 @@ export default function AdSpaceListing() {
     "0px 18px 40px rgba(112, 144, 176, 0.12)",
     "unset"
   );
+  
+  // Wagmi
+
+  // const { config: newAdSpaceConfig } = usePrepareContractWrite({
+  //   addressOrName: "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
+  //   contractInterface: DAItokenABI,
+  //   functionName: "approve",
+  //   args: ['', 0],
+  // });
+  // const {
+  //   data: writeData,
+  //   isLoading,
+  //   isSuccess,
+  //   write: approveDai,
+  // } = useContractWrite(newAdSpaceConfig);
+  // console.log(isConnected);
+  // console.log(isSuccess);
+
 
   // QuickNode Approve Dai function call
 
@@ -107,6 +96,7 @@ export default function AdSpaceListing() {
   //     console.log(provider);
   //     const account = new ethers.Wallet("", provider);
   //     console.log(account);
+  //     const provider = new ethers.providers.JsonRpcProvider("https://damp-tiniest-night.optimism-goerli.discover.quiknode.pro/7635709edb15d49d5a4d5bdf19649792a8805f41/");
   //     const contract = new ethers.Contract(
   //       "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
   //       abi,
@@ -123,7 +113,8 @@ export default function AdSpaceListing() {
   const TablelandTables = fetchTablelandTables();
   const networkConfig = getTableLandConfig();
   const adspaceTable = TablelandTables["AdSpaces"]
-
+  const campaignsTable = TablelandTables["Campaigns"]
+  
   async function fetchAdSpace() {
     const tablelandConnection = await connect({
       network: networkConfig.testnet,
@@ -138,21 +129,65 @@ export default function AdSpaceListing() {
     console.log(result[0]);
     return result[0];
   }
+
+  async function fetchUserCampaigns() {
+    const tablelandConnection = await connect({
+      network: networkConfig.testnet,
+      chain: networkConfig.chain,
+    });
+
+    const fetchUserCampaignsQuery = await tablelandConnection.read(
+      `SELECT * FROM ${campaignsTable} WHERE ${campaignsTable}.owner like '${address}';`
+    );
+    console.log(fetchUserCampaignsQuery);
+    const result = await resultsToObjects(fetchUserCampaignsQuery);
+    console.log('User Campaigns')
+    console.log(result);
+    return result;
+  }
+
+  async function checkDAIApproved(){
+      const provider = new ethers.providers.JsonRpcProvider("https://damp-tiniest-night.optimism-goerli.discover.quiknode.pro/7635709edb15d49d5a4d5bdf19649792a8805f41/");
+      const DAIcontract = new ethers.Contract(
+        "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
+        DAItokenABI,
+        provider
+      );
+      console.log(DAIcontract);
+      const response = await DAIcontract.functions.allowance(
+        address,AdSpace.contract
+      );
+      return (response[0].toNumber() > 0) ? true : false;
+ 
+  }
+
   useEffect(() => {
     fetchAdSpace()
       .then((res) => {
         console.log(res);
         setAdSpace(res);
+        fetchUserCampaigns().
+        then( (res) => {
+          setUserCampaigns(res);
+        }).then(
+          checkDAIApproved().then( (res) => {
+            console.log(res)
+            // setIsApproved(true)
+          })
+        )
         //Here we can read DAI contract whether the user has allowed the DAI already or not for AdSpace contract
         // If the allowance is set we can set the variable to true for example
       })
       .catch((e) => {
         console.log(e.message);
       });
+
+      
   }, [adspaceId]);
 
   // New Deal form
   const [newDealDuration, setNewDealDuration] = React.useState("1");
+  const [userCampaigns, setUserCampaigns] = useState([]);
 
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
@@ -187,7 +222,7 @@ export default function AdSpaceListing() {
               boxShadow={cardShadow}
               title="Hourly Rate"
               value={AdSpace.asking_price}
-              prependDAI={true}
+              
             />
             <Information
               boxShadow={cardShadow}
@@ -234,9 +269,9 @@ export default function AdSpaceListing() {
                 <FormControl isRequired mt={4}>
                   <FormLabel>Campaign</FormLabel>
                   <Select placeholder="Select campaign">
-                    <option value="1">Campaign 1</option>
-                    <option value="2">Campaign 2</option>
-                    <option value="3">Campaign 3</option>
+                  {userCampaigns.map((campaign, index) => {
+                    <option value={campaign.campaign_id} key={index}>{campaign.name}</option>
+                  })}
                   </Select>
                 </FormControl>
                 <FormControl mt={4}>
@@ -256,7 +291,11 @@ export default function AdSpaceListing() {
                 <Button
                   colorScheme="brand"
                   variant="solid"
-                  onClick={() => approveDai?.()}
+                  onClick={() => {}
+                  // approveDai?.
+                  //   ({recklesslySetUnpreparedArgs: [AdSpace.contract, ethers.utils.parseEther((2**256 - 1))]})
+                      // [AdSpace.contract, ethers.utils.parseEther((2**256 - 1))]
+                  }
                 >
                   Approve DAI
                 </Button>

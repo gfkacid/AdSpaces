@@ -244,30 +244,38 @@ export default function UserAdSpaces(props) {
                         provider
                       );
 
-                      const daiValue = AdSpace.dealsDaiValue(cell.value);
-                      console.log(daiValue);
+                      const paymentPending = AdSpace.dealsDaiValue(cell.value);
+                      console.log(paymentPending);
 
                       // if deal is incoming -> user gets paid for displaying ads, then we have to figure out if payout has already been triggered or not
                       // we can get that info from public mappings on AdSpace contract , check if dealsDaiValue[deal_id] is set, if yes:
-                      // if(dealPaymentPending){
-                      data = (
-                        <Text color={textColor} fontSize="sm" fontWeight="700">
-                          <Button
-                            onClick={() =>
-                              withdraw(
-                                cell.value,
-                                row.original.adspace_contract
-                              )
-                            }
+                      if(paymentPending){
+                        data = (
+                          <Text color={textColor} fontSize="sm" fontWeight="700">
+                            <Button
+                              onClick={() =>
+                                withdraw(
+                                  cell.value,
+                                  row.original.adspace_contract
+                                )
+                              }
+                            >
+                              withdraw
+                            </Button>
+                          </Text>
+                        );
+                      }else{
+                        data = (
+                          <Text
+                            as="i"
+                            color={textColor}
+                            fontSize="sm"
+                            fontWeight="300"
                           >
-                            {" "}
-                            withdraw{" "}
-                          </Button>
-                        </Text>
-                      );
-                      //}else{
-                      //  payout received
-                      // }
+                            Payout received
+                          </Text>
+                        );
+                      }
                     }
                   }
                   return (
