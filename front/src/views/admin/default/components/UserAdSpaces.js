@@ -168,7 +168,7 @@ export default function UserAdSpaces(props) {
       .catch((e) => {
         console.log(e.message);
       });
-  }, [onSubmit]);
+  }, []);
 
   const validateNumNFTs = (num) => {
     if (!isNumeric(num)) return 1;
