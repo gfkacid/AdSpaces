@@ -38,16 +38,17 @@ import { connect, resultsToObjects } from "@tableland/sdk";
 import abi from "../variables/AdSpaceFactory.json";
 import DAIicon from "components/domain/DAIicon";
 import { useEffect } from "react";
+import moment from "moment";
 
 // Assets
-export default function UserAdSpaces() {
+export default function UserAdSpaces(props) {
   // Table
-  const [columnData, setColumnData] = useState([]);
+  const { columnsData } = props;
   const [tableData, setTableData] = useState([]);
 
   const tableInstance = useTable(
     {
-      columns: columnData,
+      columns: columnsData,
       data: tableData,
     },
     useGlobalFilter,
@@ -81,30 +82,18 @@ export default function UserAdSpaces() {
     });
 
     const totalDealQuery = await tablelandConnection.read(
-      `SELECT ${adspaceTable}.name as adspacename, ${dealTable}.price,${dealTable}.started_at, ${dealTable}.end_at,${campaignTable}.name as campaignname, ${campaignTable}.cid FROM ${adspaceTable} INNER JOIN ${dealTable}  INNER JOIN ${campaignTable} WHERE adspace_id = adspace_id_fk AND campaign_id = campaign_id_fk;`
+      `SELECT ${adspaceTable}.adspace_id as adspace_id, ${adspaceTable}.name as adspace_name, ${dealTable}.price as deal_price,${dealTable}.started_at as deal_start, ${dealTable}.end_at as deal_end,${campaignTable}.campaign_id as campaign_id, ${campaignTable}.name as campaign_name, ${campaignTable}.cid as file FROM ${adspaceTable} INNER JOIN ${dealTable}  INNER JOIN ${campaignTable} WHERE adspace_id = adspace_id_fk AND campaign_id = campaign_id_fk;`
     );
 
-    const { columns: colFromQuery } = totalDealQuery;
-    const dataArr = resultsToObjects(totalDealQuery);
-
-    const colArr = [];
-
-    for (let i = 0; i < colFromQuery.length; i++) {
-      colArr.push({
-        Header: colFromQuery[i].name.toUpperCase(),
-        accessor: colFromQuery[i].name,
-      });
-    }
-    return { dataArr, colArr };
+    const userDeals = resultsToObjects(totalDealQuery);
+      console.log(userDeals)
+    return userDeals;
   }
 
   useEffect(() => {
     getUserAdSpaces()
       .then((res) => {
-        console.log(res.colArr);
-        console.log(res.dataArr);
-        setColumnData(res.colArr);
-        setTableData(res.dataArr);
+        setTableData(res);
       })
       .catch((e) => {
         console.log(e.message);
@@ -158,40 +147,46 @@ export default function UserAdSpaces() {
             return (
               <Tr {...row.getRowProps()} key={index}>
                 {row.cells.map((cell, index) => {
+                  console.log(cell)
                   let data = "";
-                  if (cell.column.id === "name") {
+                  if (cell.column.id === "adspace_name") {
                     data = (
                       <Text color={textColor} fontSize="sm" fontWeight="700">
-                        <Link href={"/#/admin/adspace/" + row.original.id}>
+                        <Link href={"/#/admin/adspace/" + row.original.adspace_id}>
                           {cell.value}
                         </Link>
                       </Text>
                     );
                   } else if (cell.column.id === "size") {
                     data = <SizeIcon size={cell.value} />;
-                  } else if (cell.column.id === "price") {
+                  } else if (cell.column.id === "deal_price") {
                     data = (
                       <Text color={textColor} fontSize="sm" fontWeight="700">
-                        ${cell.value}
+                        <DAIicon/> {cell.value}
                       </Text>
                     );
-                  } else if (cell.column.id === "website") {
+                  } else if (cell.column.id === "campaign_name") {
                     data = (
                       <Text color={textColor} fontSize="sm" fontWeight="700">
-                        <Link href={cell.value} target="_blank">
+                        <Link href={"/#/admin/campaign/" + row.original.campaign_id}>
                           {cell.value}
                         </Link>
                       </Text>
                     );
-                  } else if (cell.column.id === "status") {
+                  } else if (cell.column.id === "deal_start") {
                     data = (
-                      <AdSpaceStatus
-                        status={cell.value}
-                        textColor={textColor}
-                      />
+                      <Text color={textColor} fontSize="sm" fontWeight="700">
+                        {moment.unix(cell.value).format('lll')}
+                      </Text>
                     );
-                  } else if (cell.column.id === "verified") {
-                    data = <VerifiedStatusIcon status={cell.value} />;
+                  } else if (cell.column.id === "deal_end") {
+                    data = (
+                      <Text color={textColor} fontSize="sm" fontWeight="700">
+                        {moment.unix(cell.value).format('lll')}
+                      </Text>
+                    );
+                  } else if (cell.column.id === "file") {
+                    data = <Image src={`https://ipfs.io/ipfs/${cell.value}`} className="table-image"/>;
                   }
                   return (
                     <Td

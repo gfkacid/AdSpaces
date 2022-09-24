@@ -43,3 +43,30 @@ export const userAdSpacesColumns = [
     accessor: "verified",
   },
 ];
+
+export const userDealsColumns = [
+  {
+    Header: "ADSPACE",
+    accessor: "adspace_name",
+  },
+  {
+    Header: "CAMPAIGN",
+    accessor: "campaign_name",
+  },
+  {
+    Header: "FINAL PRICE",
+    accessor: "deal_price",
+  },
+  {
+    Header: "STARTS",
+    accessor: "deal_start",
+  },
+  {
+    Header: "ENDS",
+    accessor: "deal_end",
+  },
+  {
+    Header: "BANNER",
+    accessor: "file",
+  },
+];
