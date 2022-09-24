@@ -104,7 +104,8 @@ export default function UserCampaigns(props) {
     functionName: "createCampaign",
     args: ["name-not-set", "cid-not-set", "size-not-set", "link-not-set"],
   });
-  const { write: createCampaign } = useContractWrite(newCampaignConfig);
+  const { write: createCampaign, isLoading } =
+    useContractWrite(newCampaignConfig);
 
   // submit New Campaign Form
   const onSubmit = (data) => {
@@ -278,8 +279,9 @@ export default function UserCampaigns(props) {
                 colorScheme="brand"
                 variant="solid"
                 onClick={handleSubmit(onSubmit)}
+                disabled={isLoading}
               >
-                Create Campaign
+                {isLoading ? "Check wallet..." : "Create Campaign"}
               </Button>
             </ModalFooter>
           </form>
