@@ -79,7 +79,9 @@ export default function UserCampaigns(props) {
   // load from TableLand
   const TablelandTables = fetchTablelandTables();
   const networkConfig = getTableLandConfig();
-  const campaignTable = TablelandTables["AdSpaces"];
+  const campaignTable = TablelandTables["Campaigns"];
+
+  // get Campaigns from Tableland
   async function getUserCampaigns() {
     const tablelandConnection = await connect({
       network: networkConfig.testnet,
@@ -87,14 +89,13 @@ export default function UserCampaigns(props) {
     });
 
     const totalCampaignsQuery = await tablelandConnection.read(
-      `SELECT * FROM ${campaignTable} WHERE ${campaignTable}.owner = '${address}';`
+      `SELECT name, cid as file, size, link, owner FROM ${campaignTable} WHERE ${campaignTable}.owner like '${address}';`
     );
-    const result = await resultsToObjects(totalCampaignsQuery);
-
+    const result = resultsToObjects(totalCampaignsQuery);
     return result;
   }
 
-  // submit New AdSpace
+  // submit New Campaign
   const contractABI = abi.abi;
   const contractAddress = abi.address;
   const { config: newCampaignConfig } = usePrepareContractWrite({

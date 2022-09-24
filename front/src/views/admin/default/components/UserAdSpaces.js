@@ -115,7 +115,6 @@ export default function UserAdSpaces(props) {
   useEffect(() => {
     getUserAdSpaces()
       .then((res) => {
-        console.log(res);
         setTableData(res);
       })
       .catch((e) => {
