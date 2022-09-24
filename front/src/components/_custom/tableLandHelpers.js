@@ -34,3 +34,7 @@ export function fetchTablelandTables() {
   TablelandTables.Deals = dataObject[2].name;
   return TablelandTables;
 }
+
+export function formatPrice(price){
+  return (price / 100).toFixed(2);
+}

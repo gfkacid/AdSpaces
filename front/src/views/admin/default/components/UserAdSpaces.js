@@ -55,6 +55,7 @@ import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import {
   fetchTablelandTables,
   getTableLandConfig,
+  formatPrice
 } from "../../../../components/_custom/tableLandHelpers";
 import { connect, resultsToObjects } from "@tableland/sdk";
 import abi from "../../../../variables/AdSpaceFactory.json";
@@ -241,7 +242,7 @@ export default function UserAdSpaces(props) {
                   } else if (cell.column.id === "asking_price") {
                     data = (
                       <Text color={textColor} fontSize="sm" fontWeight="700">
-                        <DAIicon /> {cell.value}
+                        <DAIicon /> {formatPrice(cell.value)}
                       </Text>
                     );
                   } else if (cell.column.id === "website") {

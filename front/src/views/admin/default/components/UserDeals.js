@@ -39,6 +39,7 @@ import {
 import {
   fetchTablelandTables,
   getTableLandConfig,
+  formatPrice
 } from "../../../../components/_custom/tableLandHelpers";
 import { connect, resultsToObjects } from "@tableland/sdk";
 import abi from "../variables/AdSpaceFactory.json";
@@ -174,7 +175,6 @@ export default function UserAdSpaces(props) {
             return (
               <Tr {...row.getRowProps()} key={index}>
                 {row.cells.map((cell, index) => {
-                  console.log(cell);
                   let data = "";
                   if (cell.column.id === "adspace_name") {
                     data = (
@@ -191,7 +191,7 @@ export default function UserAdSpaces(props) {
                   } else if (cell.column.id === "deal_price") {
                     data = (
                       <Text color={textColor} fontSize="sm" fontWeight="700">
-                        <DAIicon /> {cell.value}
+                        <DAIicon /> {formatPrice(cell.value)}
                       </Text>
                     );
                   } else if (cell.column.id === "campaign_name") {
