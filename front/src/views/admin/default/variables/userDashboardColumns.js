@@ -28,7 +28,7 @@ export const userAdSpacesColumns = [
   },
   {
     Header: "ASKING PRICE",
-    accessor: "price",
+    accessor: "asking_price",
   },
   {
     Header: "WEBSITE",

@@ -238,10 +238,10 @@ export default function UserAdSpaces(props) {
                     );
                   } else if (cell.column.id === "size") {
                     data = <SizeIcon size={cell.value} />;
-                  } else if (cell.column.id === "price") {
+                  } else if (cell.column.id === "asking_price") {
                     data = (
                       <Text color={textColor} fontSize="sm" fontWeight="700">
-                        ${cell.value}
+                        <DAIicon /> {cell.value}
                       </Text>
                     );
                   } else if (cell.column.id === "website") {
