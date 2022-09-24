@@ -3,7 +3,10 @@ import { MdFileCopy } from "react-icons/md";
 import { Icon } from "@chakra-ui/react";
 import IconBox from "components/icons/IconBox";
 import { useState, useEffect } from "react";
-import { fetchTablelandTables ,getTableLandConfig} from "../_custom/tableLandHelpers";
+import {
+  fetchTablelandTables,
+  getTableLandConfig,
+} from "../_custom/tableLandHelpers";
 import { connect, resultsToObjects } from "@tableland/sdk";
 import { useAccount } from "wagmi";
 
@@ -13,24 +16,21 @@ export default function MyCampaigns(props) {
   const [totalCampaigns, setTotalCampaigns] = useState(0);
   const { address } = useAccount();
   // query TableLand for all deals made by the user ; the assumption that an entry in deals table = funds spent holds true
-  const networkConfig = {
-    testnet: "testnet",
-    chain: "optimism-goerli",
-    chainId: "420",
-  };
 
-  const campaignTable = "Campaigns_420_89";
+  const TablelandTables = fetchTablelandTables();
+  const networkConfig = getTableLandConfig();
+  const campaignTable = TablelandTables["Campaigns"];
 
   async function getTotalCampaigns() {
     const tablelandConnection = await connect({
       network: networkConfig.testnet,
       chain: networkConfig.chain,
     });
-    
+
     const totalCampaignsQuery = await tablelandConnection.read(
-      `SELECT count(campaign_id) as total_campaigns FROM ${campaignTable} WHERE ${campaignTable}.owner = '${address}';`
+      `SELECT count(campaign_id) as total_campaigns FROM ${campaignTable} WHERE ${campaignTable}.owner like '${address}';`
     );
-    
+
     const result = await resultsToObjects(totalCampaignsQuery);
     return result[0].total_campaigns;
   }

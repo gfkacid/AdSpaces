@@ -3,7 +3,10 @@ import { MdAddTask } from "react-icons/md";
 import { Icon } from "@chakra-ui/react";
 import IconBox from "components/icons/IconBox";
 import { useState, useEffect } from "react";
-import { fetchTablelandTables ,getTableLandConfig} from "../_custom/tableLandHelpers";
+import {
+  fetchTablelandTables,
+  getTableLandConfig,
+} from "../_custom/tableLandHelpers";
 import { connect, resultsToObjects } from "@tableland/sdk";
 import { useAccount } from "wagmi";
 
@@ -15,7 +18,7 @@ export default function MyAdSpaces() {
   // query TableLand for all deals made by the user ; the assumption that an entry in deals table = funds spent holds true
   const networkConfig = getTableLandConfig();
 
-  const adspaceTable = TablelandTables["AdSpaces"]
+  const adspaceTable = TablelandTables["AdSpaces"];
 
   async function getTotalAdSpaces() {
     const tablelandConnection = await connect({
@@ -24,10 +27,10 @@ export default function MyAdSpaces() {
     });
 
     const totalAdSpacesQuery = await tablelandConnection.read(
-      `SELECT count(adspace_id) as total_adspaces FROM ${adspaceTable} WHERE ${adspaceTable}.owner = '${address}';`
+      `SELECT count(adspace_id) as total_adspaces FROM ${adspaceTable} WHERE ${adspaceTable}.owner like '${address}';`
     );
     const result = await resultsToObjects(totalAdSpacesQuery);
-    
+
     return result[0].total_adspaces;
   }
 
