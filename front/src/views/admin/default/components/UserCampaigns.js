@@ -122,7 +122,7 @@ export default function UserCampaigns(props) {
       .catch((e) => {
         console.log(e.message);
       });
-  }, []);
+  }, [onSubmit]);
 
   // styling
   const textColor = useColorModeValue("secondaryGray.900", "white");

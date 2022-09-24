@@ -112,16 +112,6 @@ export default function UserAdSpaces(props) {
     return result;
   }
 
-  useEffect(() => {
-    getUserAdSpaces()
-      .then((res) => {
-        setTableData(res);
-      })
-      .catch((e) => {
-        console.log(e.message);
-      });
-  }, []);
-
   // modal
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -169,6 +159,16 @@ export default function UserAdSpaces(props) {
       ],
     });
   };
+
+  useEffect(() => {
+    getUserAdSpaces()
+      .then((res) => {
+        setTableData(res);
+      })
+      .catch((e) => {
+        console.log(e.message);
+      });
+  }, [onSubmit]);
 
   const validateNumNFTs = (num) => {
     if (!isNumeric(num)) return 1;
@@ -364,8 +364,9 @@ export default function UserAdSpaces(props) {
                 onClick={handleSubmit(onSubmit)}
                 colorScheme="brand"
                 variant="solid"
+                disabled={isLoading}
               >
-                Submit AdSpace
+                {isLoading ? "Check wallet..." : "Submit AdSpace"}
               </Button>
             </ModalFooter>
           </form>
