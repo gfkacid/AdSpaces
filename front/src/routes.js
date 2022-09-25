@@ -59,6 +59,7 @@ const routes = [
     component: AdSpace,
     display: false,
     withParams: true,
+    model: 'adspace'
   },
   {
     name: "Campaign",
@@ -68,6 +69,7 @@ const routes = [
     component: Campaign,
     display: false,
     withParams: true,
+    model: 'campaign'
   },
 ];
 

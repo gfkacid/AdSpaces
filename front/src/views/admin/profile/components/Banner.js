@@ -49,7 +49,7 @@ export default function Banner(props) {
             {following}
           </Text>
           <Text color={textColorSecondary} fontSize='sm' fontWeight='400'>
-            NFT Holders
+            Unique Users
           </Text>
         </Flex>
       </Flex>

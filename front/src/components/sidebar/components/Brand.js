@@ -1,10 +1,10 @@
 import React from "react";
 
 // Chakra imports
-import { Flex, useColorModeValue } from "@chakra-ui/react";
+import {Image, Flex, useColorModeValue } from "@chakra-ui/react";
 
 // Custom components
-import { AdSpacesLogo } from "components/icons/Icons";
+import AdSpacesLogo  from "../../../assets/img/layout/AdSpacesLogo.png";
 import { HSeparator } from "components/separator/Separator";
 
 export function SidebarBrand() {
@@ -13,8 +13,7 @@ export function SidebarBrand() {
 
   return (
     <Flex align='center' direction='column'>
-      {/* <AdSpacesLogo h='26px' w='175px' my='32px' color={logoColor} /> */}
-      AdSpaces
+      <Image src={AdSpacesLogo} className='adspaces-logo' />
       <HSeparator mt='20px' mb='20px' />
     </Flex>
   );

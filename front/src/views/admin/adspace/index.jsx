@@ -32,6 +32,7 @@ import {
   Thead,
   Th,
   Tbody,
+  Code,
 } from "@chakra-ui/react";
 
 import Card from "components/card/Card.js";
@@ -124,7 +125,7 @@ export default function AdSpaceListing() {
     const response = await DAIcontract.allowance(address, _contractAddress);
     const allowance = BigNumber.from(response.toString());
     const bool = allowance.gt(0);
-    console.log(bool);
+    
     return bool;
   };
 
@@ -132,7 +133,6 @@ export default function AdSpaceListing() {
   const approveDAI = async () => {
     const num = ethers.utils.parseEther("100000");
     const response = await DAIcontract.approve(AdSpace.contract, num);
-    console.log(response);
   };
 
   // Create a Deal on this AdSpace for a Campaign owned by user
@@ -146,13 +146,12 @@ export default function AdSpaceListing() {
     const amountTotal = ethers.utils.parseEther(
       (newDealDuration * AdSpace.asking_price).toString()
     );
-    //console.log(amountTotal);
     const response = await AdSpaceContract.createDeal(
       amountTotal,
       newDealDuration,
       selectedCampaign
     );
-    //console.log(response);
+    
   };
 
   const fetchTokenOwners = async () => {
@@ -186,7 +185,6 @@ export default function AdSpaceListing() {
 
         // fetch user's campaigns to populate the [ Create Deal ] Modal
         fetchUserCampaigns().then((CampaignsRes) => {
-          //console.log(CampaignsRes);
           setUserCampaigns(CampaignsRes);
         });
       })
@@ -483,6 +481,32 @@ export default function AdSpaceListing() {
           No active deals at the moment.
         </div>
       </Card>
+      {AdSpace?.owner == address.toLowerCase() && (
+        <Card
+        mb={{ base: "0px", "2xl": "20px" }}
+        mt={{ base: "20px", "2xl": "20px" }}
+      >
+        <Text
+            color={textColorPrimary}
+            fontWeight="bold"
+            fontSize="2xl"
+            mt="10px"
+            mb="4px"
+          >
+            Embed Code
+        </Text>
+        <Box>
+          <Text>
+            Paste the code below at the exact place you want your banner to load.
+            Make sure you load <Link fontWeight="bold" color="#3311DB" href="/AdSpaces.js" target="_blank">AdSpaces.js</Link> at the head of your website code.
+          </Text>
+          <Code colorScheme="blackAlpha" variant="solid" fontSize="xl">
+            {"<div id=adspace-"+AdSpace.adspace_id+"></div>"}<br></br>
+            {"<script>window.pingAdSpace("+AdSpace.adspace_id+")</script>"}
+          </Code>
+        </Box>
+      </Card>
+      )}
     </Box>
   );
 }

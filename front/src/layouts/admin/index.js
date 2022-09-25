@@ -33,7 +33,7 @@ export default function Dashboard(props) {
           return categoryActiveRoute;
         }
       } else {
-        if(routes[i]?.withParams){
+        if(routes[i]?.model && window.location.href.indexOf(routes[i].layout + '/' + routes[i].model) !== -1){
           return routes[i].name;
         }
         if (

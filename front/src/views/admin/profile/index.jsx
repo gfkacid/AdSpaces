@@ -28,17 +28,43 @@ import Banner from "views/admin/profile/components/Banner";
 import General from "views/admin/profile/components/General";
 import General2 from "views/admin/profile/components/Generaltwo";
 import General3 from "views/admin/profile/components/Generalthree";
-import Notifications from "views/admin/profile/components/Notifications";
 import Projects from "views/admin/profile/components/Projects";
-import Storage from "views/admin/profile/components/Storage";
-import Upload from "views/admin/profile/components/Upload";
 
 // Assets
 import banner from "assets/img/auth/banner.png";
 import avatar from "assets/img/avatars/avatar4.png";
 import React from "react";
+import { useState, useEffect } from "react";
 
 export default function Overview() {
+  const [totalAdSpaces,setTotalAdSpaces] = useState(0)
+  const [totalRevenue, setTotalRevenue] = useState(0)
+  const [uniqueUsers, setUniqueUsers] = useState(0)
+
+  const adspacesCountURL = 'https://testnet.tableland.network/query?s=SELECT%20count(adspace_id)%20as%20total_adspaces%20FROM%20AdSpaces_420_111';
+  const totalRevenueURL = 'https://testnet.tableland.network/query?s=SELECT%20sum(price)%20as%20total_revenue%20FROM%20Deals_420_113%20WHERE%20end_at%20%3C%201664114431';
+  const uniqueUsersURL = 'https://testnet.tableland.network/query?s=SELECT%20count(DISTINCT(AdSpaces_420_111.owner))%20as%20unique_owners%20,count(DISTINCT(Campaigns_420_112.owner))%20as%20campaign_owners%20FROM%20AdSpaces_420_111%20JOIN%20Campaigns_420_112'
+
+  useEffect(() => {
+    fetch(adspacesCountURL)
+    .then(res => res.json())
+    .then((out) => {
+      setTotalAdSpaces(out[0].total_adspaces)
+    })  
+    fetch(totalRevenueURL)
+    .then(res => res.json())
+    .then((out) => {
+      setTotalRevenue((out[0].total_revenue / 10 ** 18).toFixed(2))
+    })  
+    fetch(uniqueUsersURL)
+    .then(res => res.json())
+    .then((out) => {
+      setUniqueUsers(out[0].campaign_owners + out[0].unique_owners)
+    })  
+    
+  }, []);
+  
+
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       {/* Main Fields */}
@@ -55,10 +81,10 @@ export default function Overview() {
         <Banner
           gridArea='1 / 1 / 2 / '
           banner={banner}
-          name='Web3 Adspaces'
-          posts='125'
-          followers='6241 DAI'
-          following='66'
+          name='AdSpaces Platform Stats'
+          posts={totalAdSpaces}
+          followers={totalRevenue+' DAI'}
+          following={uniqueUsers}
         />
         <General2
           gridArea={{ base: "1 / 1 / 1 / 1", lg: "1 / 4 / 1 / 2" }}

@@ -21,7 +21,7 @@
 */
 
 import React from "react";
-
+import { useEffect } from "react";
 // Chakra imports
 import { Box, Flex, Grid, useColorModeValue } from "@chakra-ui/react";
 
@@ -43,6 +43,12 @@ export default function Home() {
   // Chakra Color Mode
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const textColorBrand = useColorModeValue("brand.500", "white");
+
+  useEffect(() => {
+    
+    window.pingAdSpace(4)
+    
+  }, []);
   return (
     <Box pt={{ base: "180px", md: "80px", xl: "80px" }}>
       {/* Main Fields */}
@@ -59,7 +65,8 @@ export default function Home() {
           <Banner />
           <Flex direction="column">
             <Flex mt="45px"></Flex>
-            <TablelandTable mt="45px" tablePrefix="AdSpaces" />
+            <TablelandTable mt="45px" mb="30px" tablePrefix="AdSpaces" />
+            <div id="adspace-4"></div>
           </Flex>
         </Flex>
         <Flex
