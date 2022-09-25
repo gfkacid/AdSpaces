@@ -31,6 +31,7 @@ import { connect, resultsToObjects } from "@tableland/sdk";
 import {
   fetchTablelandTables,
   getTableLandConfig,
+  formatPrice
 } from "../../../../components/_custom/tableLandHelpers";
 export default function TablelandTable(props) {
   const { tablePrefix } = props;
@@ -193,7 +194,7 @@ export default function TablelandTable(props) {
                     data = (
                       <Text color={textColor} fontSize="sm" fontWeight="700">
                         <img className="coin-icon" src={DAIicon}></img>{" "}
-                        {cell.value} / hr
+                        {formatPrice(cell.value)} / hr
                       </Text>
                     );
                   } else if (cell.column.id === "website") {
