@@ -25,11 +25,11 @@ import {
 import {
   fetchTablelandTables,
   getTableLandConfig,
-  formatPrice,
+  formatDealPrice,
 } from "../../../../components/_custom/tableLandHelpers";
 import DAIicon from "components/domain/DAIicon";
 import { SearchIcon } from "@chakra-ui/icons";
-
+import moment from "moment"
 import { connect, resultsToObjects } from "@tableland/sdk";
 
 export default function LatestDealsTable(props) {
@@ -166,7 +166,13 @@ export default function LatestDealsTable(props) {
                     } else if (cell.column.id === "price") {
                       data = (
                         <Text color={textColor} fontSize="sm" fontWeight="700">
-                          <DAIicon /> {formatPrice(cell.value)}
+                          <DAIicon /> {formatDealPrice(cell.value)}
+                        </Text>
+                      );
+                    } else if (cell.column.id === "started_at") {
+                      data = (
+                        <Text color={textColor} fontSize="sm" fontWeight="700">
+                          {moment(cell.value * 1000).fromNow()}
                         </Text>
                       );
                     }

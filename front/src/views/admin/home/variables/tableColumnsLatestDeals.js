@@ -11,4 +11,8 @@ export const tableColumnsLatestDeals = [
     Header: "Final price",
     accessor: "price",
   },
+  {
+    Header: "Started",
+    accessor: "started_at",
+  },
 ];
