@@ -122,11 +122,11 @@ contract AdSpace is ERC721Enumerable {
      * so the user is qualified to withdraw from an expired deal onlydealsToEndAt
      */
     function withdraw(uint256 _dealId) public NFTHolder {
-        require(dealsToEndAt[_dealId] <= block.timestamp);
-        // At the end of the deal with TableLand, the money amount will come to the contract address?
+        require(dealsToEndAt[_dealId] <= block.timestamp , "Deal is still running.");
         uint256 DAIAmount = dealsDaiValue[_dealId]; // its the value of the passed dealId in DAI
-        uint256 revenueDAIAmount = DAIAmount / 100; // This is 1% of the actually held DAI to be sent for Revenue to the RevenueAddress
-        uint256 newDaiAmount = DAIAmount - revenueDAIAmount; // This is the actual DAI amount we are going to distribute, excluding the 1% amount
+        require(DAIAmount > 0 , "No pending payout for this deal")
+        uint256 revenueDAIAmount = DAIAmount / 100; // This is 1% of total deal cost, which serves as Platform Revenue, thus sent to RevenueAddress
+        uint256 newDaiAmount = DAIAmount - revenueDAIAmount; // This is the actual DAI amount we are going to distribute, after deducting platform revenue
         daiToken.transfer(revenueAddress, revenueDAIAmount); // Distribute the Revenue to the selected address
         uint256 DAIAmountPerNft = newDaiAmount / maxSupply; // DaiAmount / Token
         // loop through each token to correctly distribure money to each NFT owners

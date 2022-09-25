@@ -57,6 +57,7 @@ export default function UserAdSpaces(props) {
   const [tableData, setTableData] = useState([]);
   const { address } = useAccount();
   const { data: signer, isError, isLoading } = useSigner();
+  const [payoutPending, setPayoutPending] = useState([]);
 
   const tableInstance = useTable(
     {
@@ -120,6 +121,17 @@ export default function UserAdSpaces(props) {
         console.log(e.message);
       });
   }, []);
+
+  useEffect(() => {
+    tableData.map((deal, index) => (
+      //isPaymentPending[deal.deal_id] = 
+      checkPaymentPending(deal.deal_id).then((bool) => {
+        let temp = payoutPending;
+        temp[deal.deal_id] = bool;
+        setPayoutPending(temp)
+      })
+    ))
+    }, [tableData]);
 
   const checkPaymentPending = async (contractAddress, deal_id) => {
     const AdSpace = new ethers.Contract(
@@ -259,12 +271,9 @@ export default function UserAdSpaces(props) {
                     } else {
                       console.log("here we are...");
                       
-                      const paymentPending = checkPaymentPending(row.original.adspace_contract, cell.value)
-                      console.log(paymentPending);
-
                       // if deal is incoming -> user gets paid for displaying ads, then we have to figure out if payout has already been triggered or not
                       // we can get that info from public mappings on AdSpace contract , check if dealsDaiValue[deal_id] is set, if yes:
-                      if(paymentPending){
+                      if(payoutPending[cell.value]){
                         data = (
                           <Text color={textColor} fontSize="sm" fontWeight="700">
                             <Button
