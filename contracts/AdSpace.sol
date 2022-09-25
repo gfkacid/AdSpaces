@@ -8,8 +8,7 @@ import "./Interfaces/DaiToken.sol";
 contract AdSpace is ERC721Enumerable {
     using Strings for uint256;
 
-    // todo @acid: pinata pin
-    string public baseURI = "https://adspaces.xyz/adspace.json";
+    string public baseURI = "https://adspaces.online/adspace.json";
     uint256 public maxSupply = 20;
     bool public paused = false;
     DaiToken public daiToken;
@@ -69,7 +68,6 @@ contract AdSpace is ERC721Enumerable {
     // this function is returning the token ids of the passed address
     // e.g. [5,7,8]
 
-    // @Riki check for array variations on sending tokens
     function walletOfOwner(address _owner)
         public
         view

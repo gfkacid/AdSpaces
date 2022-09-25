@@ -25,7 +25,7 @@ import {
 import {
   fetchTablelandTables,
   getTableLandConfig,
-  formatPrice,
+  formatDealPrice,
 } from "../../../../components/_custom/tableLandHelpers";
 import DAIicon from "components/domain/DAIicon";
 import { SearchIcon } from "@chakra-ui/icons";
@@ -151,9 +151,9 @@ export default function TopAdSpacesTable(props) {
                     } else if (cell.column.id === "count_deals") {
                       data = (
                         <Text
-                          color={textColorSecondary}
+                          color={textColor}
                           fontSize="sm"
-                          fontWeight="500"
+                          fontWeight="700"
                         >
                           {cell.value}
                         </Text>
@@ -161,7 +161,7 @@ export default function TopAdSpacesTable(props) {
                     } else if (cell.column.id === "total_revenue") {
                       data = (
                         <Text color={textColor} fontSize="sm" fontWeight="700">
-                          <DAIicon /> {formatPrice(cell.value)}
+                          <DAIicon /> {formatDealPrice(cell.value)}
                         </Text>
                       );
                     }
