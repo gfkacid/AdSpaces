@@ -166,6 +166,9 @@ export default function AdSpaceListing() {
         setIsApproved(bool);
       });
     }
+    if(AdSpace?.adspace_id){
+      window.pingAdSpace(AdSpace.adspace_id)
+    }
     
   }, [AdSpace]);
   
@@ -298,6 +301,7 @@ export default function AdSpaceListing() {
       ) : (
         <Text>AdSpace #{adspaceId} not found.</Text>
       )}
+      <div id={'adspace-'+adspaceId}></div>
     </Box>
   );
 }
