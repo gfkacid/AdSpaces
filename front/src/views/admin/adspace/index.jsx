@@ -3,14 +3,14 @@
 import {
   Box,
   Button,
+  Divider,
   SimpleGrid,
   Text,
   FormControl,
   FormLabel,
-  FormErrorMessage,
-  FormHelperText,
-  Input,
+  Image,
   Select,
+  Link,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
@@ -27,17 +27,16 @@ import {
   useDisclosure,
   Table,
   TableContainer,
-  TableCaption,
   Td,
   Tr,
   Thead,
   Th,
   Tbody,
-  Tfoot,
 } from "@chakra-ui/react";
 
 import Card from "components/card/Card.js";
 import Information from "views/admin/profile/components/Information";
+import Project from "../profile/components/Project";
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -47,7 +46,7 @@ import {
 } from "../../../components/_custom/tableLandHelpers";
 import { connect, resultsToObjects } from "@tableland/sdk";
 import { ethers, BigNumber } from "ethers";
-import { useAccount, useSigner } from "wagmi";
+import { useAccount, useSigner, useNetwork } from "wagmi";
 import DAIicon from "components/domain/DAIicon";
 import DAItokenABI from "../../../variables/DaiTokenABI.json";
 import AdSpaceJson from "../../../variables/AdSpace.json";
@@ -60,11 +59,12 @@ export default function AdSpaceListing() {
   const [isApproved, setIsApproved] = useState(false);
   const { address } = useAccount();
   const { data: signer, isError, isLoading } = useSigner();
-
+  const { chain } = useNetwork();
   const [newDealDuration, setNewDealDuration] = React.useState("1");
   const [userCampaigns, setUserCampaigns] = useState([]);
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [tokenOwners, setTokenOwners] = useState([]);
+  const [countOwnedNfts, setCountOwnedNfts] = useState(0);
 
   const DAIcontract = new ethers.Contract(
     "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
@@ -82,6 +82,7 @@ export default function AdSpaceListing() {
     "0px 18px 40px rgba(112, 144, 176, 0.12)",
     "unset"
   );
+  const bg = useColorModeValue("white", "navy.700");
 
   // TableLand
   const TablelandTables = fetchTablelandTables();
@@ -161,6 +162,7 @@ export default function AdSpaceListing() {
       signer
     );
     const tempArr = [];
+    let tempCount = 0;
     const numNFTs = await AdSpaceContract.totalSupply();
 
     for (let i = 1; i <= numNFTs; i++) {
@@ -168,8 +170,11 @@ export default function AdSpaceListing() {
       if (tempAddr) {
         tempArr.push(tempAddr);
       }
+      if (tempAddr === address) {
+        tempCount++;
+      }
     }
-    return tempArr;
+    return { tempArr, tempCount };
   };
 
   // populate this page's AdSpace
@@ -203,7 +208,8 @@ export default function AdSpaceListing() {
   useEffect(() => {
     if (AdSpace?.contract) {
       fetchTokenOwners().then((data) => {
-        setTokenOwners(data);
+        setTokenOwners(data.tempArr);
+        setCountOwnedNfts(data.tempCount);
       });
     }
   }, [AdSpace]);
@@ -356,13 +362,69 @@ export default function AdSpaceListing() {
           mt="10px"
           mb="4px"
         >
-          NFT Holders of {AdSpace?.name} (Total: {tokenOwners?.length})
+          NFT Information of {AdSpace?.name} (Total: {tokenOwners?.length})
         </Text>
-        <TableContainer>
-          <Table variant="simple">
+        <SimpleGrid columns="2" gap="20px" mb={{ base: "20px", "2xl": "20px" }}>
+          <Card bg={bg} boxShadow={cardShadow}>
+            <SimpleGrid
+              columns="2"
+              gap="20px"
+              mb={{ base: "20px", "2xl": "20px" }}
+            >
+              <Text
+                fontWeight="500"
+                color={textColorSecondary}
+                fontSize="m"
+                margin={"auto"}
+              >
+                Your share of this AdSpace
+              </Text>
+              <Text
+                fontWeight="bold"
+                fontSize="l"
+                color={"#3311DB"}
+                margin={"auto"}
+              >
+                {((countOwnedNfts / tokenOwners?.length) * 100).toFixed(2) +
+                  "%"}
+              </Text>
+            </SimpleGrid>
+          </Card>
+          <Link
+            href={
+              chain.id === 420 ? "https://testnet.qx.app/" : "https://qx.app"
+            }
+            target="_blank"
+          >
+            <Card bg={bg} boxShadow={cardShadow}>
+              <SimpleGrid
+                columns="2"
+                gap="20px"
+                mb={{ base: "20px", "2xl": "20px" }}
+              >
+                <Text
+                  fontWeight="500"
+                  color={textColorSecondary}
+                  fontSize="m"
+                  margin={"auto"}
+                >
+                  Buy/Sell equity for this AdSpace on
+                </Text>
+                <Image
+                  borderRadius={5}
+                  margin={"auto"}
+                  maxH="40px"
+                  src={require("../../../assets/img/qx.webp")}
+                />
+              </SimpleGrid>
+            </Card>
+          </Link>
+        </SimpleGrid>
+        <TableContainer boxShadow={cardShadow}>
+          <Table variant="simple" borderRadius={5}>
             <Thead>
               <Tr>
-                <Th>Address</Th>
+                <Th>Token Owners</Th>
                 <Th isNumeric>Equity</Th>
               </Tr>
             </Thead>
