@@ -52,7 +52,11 @@ import SizeIcon from "components/domain/SizeIcon";
 import AdSpaceStatus from "components/domain/AdSpaceStatus";
 import VerifiedStatusIcon from "components/domain/VerifiedStatusIcon";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
-import { fetchTablelandTables ,getTableLandConfig} from "../../../../components/_custom/tableLandHelpers";
+import {
+  fetchTablelandTables,
+  getTableLandConfig,
+  formatPrice
+} from "../../../../components/_custom/tableLandHelpers";
 import { connect, resultsToObjects } from "@tableland/sdk";
 import abi from "../variables/AdSpaceFactory.json";
 // here we need the AdSpace ABI + we need the DaIContract ABI
@@ -63,10 +67,10 @@ import { useEffect } from "react";
 export default function UserAdSpaces(props) {
   // Table
   const { columnsData } = props;
-  const [tableData,setTableData] = useState([]);
+  const [tableData, setTableData] = useState([]);
 
   const columns = useMemo(() => columnsData, [columnsData]);
-  
+
   const data = useMemo(() => tableData, [tableData]);
 
   const tableInstance = useTable(
@@ -102,26 +106,16 @@ export default function UserAdSpaces(props) {
     });
 
     const totalAdSpacesQuery = await tablelandConnection.read(
-      `SELECT * FROM ${adspaceTable} WHERE ${adspaceTable}.owner = '${address}';`
+      `SELECT * FROM ${adspaceTable} WHERE ${adspaceTable}.owner like '${address}';`
     );
     const result = await resultsToObjects(totalAdSpacesQuery);
-    
+
     return result;
   }
 
-  useEffect(() => {
-    getUserAdSpaces()
-      .then((res) => {
-        setTableData(res);
-      })
-      .catch((e) => {
-        console.log(e.message);
-      });
-  }, []);
-  
   // modal
   const { isOpen, onOpen, onClose } = useDisclosure();
-  
+
   // New AdSpace form
   const {
     register,
@@ -166,6 +160,16 @@ export default function UserAdSpaces(props) {
       ],
     });
   };
+
+  useEffect(() => {
+    getUserAdSpaces()
+      .then((res) => {
+        setTableData(res);
+      })
+      .catch((e) => {
+        console.log(e.message);
+      });
+  }, []);
 
   const validateNumNFTs = (num) => {
     if (!isNumeric(num)) return 1;
@@ -226,17 +230,19 @@ export default function UserAdSpaces(props) {
                   if (cell.column.id === "name") {
                     data = (
                       <Text color={textColor} fontSize="sm" fontWeight="700">
-                        <Link href={"/#/admin/adspace/" + row.original.id}>
+                        <Link
+                          href={"/#/admin/adspace/" + row.original.adspace_id}
+                        >
                           {cell.value}
                         </Link>
                       </Text>
                     );
                   } else if (cell.column.id === "size") {
                     data = <SizeIcon size={cell.value} />;
-                  } else if (cell.column.id === "price") {
+                  } else if (cell.column.id === "asking_price") {
                     data = (
                       <Text color={textColor} fontSize="sm" fontWeight="700">
-                        ${cell.value}
+                        <DAIicon /> {formatPrice(cell.value)}
                       </Text>
                     );
                   } else if (cell.column.id === "website") {
@@ -359,8 +365,9 @@ export default function UserAdSpaces(props) {
                 onClick={handleSubmit(onSubmit)}
                 colorScheme="brand"
                 variant="solid"
+                disabled={isLoading}
               >
-                Submit AdSpace
+                {isLoading ? "Check wallet..." : "Submit AdSpace"}
               </Button>
             </ModalFooter>
           </form>

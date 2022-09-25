@@ -119,7 +119,7 @@ contract AdSpace is ERC721Enumerable {
 
     /**
      * @notice require: we are checking if the end_at timestamp lies in the past,
-     * so the user is qualified to withdraw from end ended deal
+     * so the user is qualified to withdraw from an expired deal onlydealsToEndAt
      */
     function withdraw(uint256 _dealId) public NFTHolder {
         require(dealsToEndAt[_dealId] <= block.timestamp);
@@ -137,6 +137,8 @@ contract AdSpace is ERC721Enumerable {
             // ...and send fraction of equity to its owner
             emit RevenueWithdraw(nftOwner, _dealId, adspaceId, DAIAmountPerNft);
         }
+        delete dealsToEndAt[_dealId];
+        delete dealsDaiValue[_dealId];
     }
 
     function setBaseURI(string memory _newBaseURI) public onlyPlatform {

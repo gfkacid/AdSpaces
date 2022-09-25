@@ -12,7 +12,7 @@ export default function CustomAvatar({ address, ensImage, size }) {
     />
   ) : (
     <Image
-      src="static/media/Nft1.0fea34cca5aed6cad72b.png"
+      src={require("../../assets/img/AdSpacesIcon.png")}
       width={size}
       height={size}
       style={{ borderRadius: 999 }}

@@ -26,7 +26,8 @@ export default function SpentOnAds(props) {
     });
 
     const queryResult = await tablelandConnection.read(
-      `SELECT sum(${dealTable}.price) as total_spent FROM ${dealTable}
+      `SELECT sum(${dealTable}.price) as total_spent
+       FROM ${dealTable}
        INNER JOIN ${campaignTable} WHERE ${campaignTable}.campaign_id = ${dealTable}.campaign_id_fk
        AND ${campaignTable}.owner = '${address}';`
     );

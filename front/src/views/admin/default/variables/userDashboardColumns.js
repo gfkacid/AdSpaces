@@ -28,7 +28,7 @@ export const userAdSpacesColumns = [
   },
   {
     Header: "ASKING PRICE",
-    accessor: "price",
+    accessor: "asking_price",
   },
   {
     Header: "WEBSITE",
@@ -68,5 +68,9 @@ export const userDealsColumns = [
   {
     Header: "BANNER",
     accessor: "file",
+  },
+  {
+    Header: "WITHDRAW",
+    accessor: "deal_id",
   },
 ];
