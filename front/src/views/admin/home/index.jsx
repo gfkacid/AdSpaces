@@ -36,6 +36,8 @@ import { tableColumnsTopAdSpaces } from "views/admin/home/variables/tableColumns
 
 import TablelandTable from "./components/TablelandTable";
 import LatestDeals from "components/domain/LatestDeals";
+import TableLatestDeals from "./components/TableLatestDeals";
+import { tableColumnsLatestDeals } from "views/admin/home/variables/tableColumnsLatestDeals";
 
 export default function Home() {
   // Chakra Color Mode
@@ -65,12 +67,11 @@ export default function Home() {
           gridArea={{ xl: "1 / 3 / 2 / 4", "2xl": "1 / 2 / 2 / 3" }}
         >
           <Card px="0px" mb="20px">
-            <TableTopAdSpaces
-              tableData={tableDataTopAdSpaces}
-              columnsData={tableColumnsTopAdSpaces}
-            />
+            <TableTopAdSpaces columnsData={tableColumnsTopAdSpaces} />
           </Card>
-          <LatestDeals textColor={textColor} title="Latest Deals" />
+          <Card px="0px" mb="20px">
+            <TableLatestDeals columnsData={tableColumnsLatestDeals} />
+          </Card>
         </Flex>
       </Grid>
     </Box>

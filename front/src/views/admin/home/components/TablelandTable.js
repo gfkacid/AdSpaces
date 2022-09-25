@@ -154,7 +154,6 @@ export default function TablelandTable(props) {
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   pe="10px"
                   key={index}
-                  borderColor={borderColor}
                 >
                   <Flex
                     justify="space-between"
