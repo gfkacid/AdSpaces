@@ -40,7 +40,7 @@ import {
 import {
   fetchTablelandTables,
   getTableLandConfig,
-  formatPrice
+  formatDealPrice
 } from "../../../../components/_custom/tableLandHelpers";
 import { connect, resultsToObjects } from "@tableland/sdk";
 import abi from "../variables/AdSpaceFactory.json";
@@ -94,6 +94,7 @@ export default function UserAdSpaces(props) {
       chain: networkConfig.chain,
     });
 
+    // fetches all deals user is involved in, either as a payer or receiver of payment
     const totalDealQuery = await tablelandConnection.read(
       `SELECT ${adspaceTable}.adspace_id as adspace_id, ${adspaceTable}.name as adspace_name, ${dealTable}.price as deal_price,
           ${dealTable}.started_at as deal_start, ${dealTable}.end_at as deal_end,${campaignTable}.campaign_id as campaign_id, 
@@ -124,7 +125,6 @@ export default function UserAdSpaces(props) {
 
   useEffect(() => {
     tableData.map((deal, index) => (
-      //isPaymentPending[deal.deal_id] = 
       checkPaymentPending(deal.deal_id).then((bool) => {
         let temp = payoutPending;
         temp[deal.deal_id] = bool;
@@ -141,7 +141,6 @@ export default function UserAdSpaces(props) {
     );
 
     const response = await AdSpace.dealsDaiValue(deal_id);
-    console.log(response);
     const paymentPending = BigNumber.from(response.toString())
     const bool = paymentPending.gt(0);
     
@@ -157,7 +156,6 @@ export default function UserAdSpaces(props) {
       signer
     );
     const response = await AdSpaceContract.withdraw(deal_id);
-    console.log(response)
   };
 
   return (
@@ -223,7 +221,7 @@ export default function UserAdSpaces(props) {
                   } else if (cell.column.id === "deal_price") {
                     data = (
                       <Text color={textColor} fontSize="sm" fontWeight="700">
-                        <DAIicon /> {formatPrice(cell.value)}
+                        <DAIicon /> {formatDealPrice(cell.value)}
                       </Text>
                     );
                   } else if (cell.column.id === "campaign_name") {
@@ -269,8 +267,6 @@ export default function UserAdSpaces(props) {
                         </Text>
                       );
                     } else {
-                      console.log("here we are...");
-                      
                       // if deal is incoming -> user gets paid for displaying ads, then we have to figure out if payout has already been triggered or not
                       // we can get that info from public mappings on AdSpace contract , check if dealsDaiValue[deal_id] is set, if yes:
                       if(payoutPending[cell.value]){

@@ -38,3 +38,7 @@ img.table-image{
   display: inline-block;
   vertical-align: text-top;
 }
+
+svg.chakra-icon{
+  vertical-align: text-top;
+}
