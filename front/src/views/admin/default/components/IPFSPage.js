@@ -103,8 +103,8 @@ export default function IPFSPage() {
             </Text>
               {urlArray.length !== 0 ? (
                 urlArray.map((cid, i) => (
-                  <Text>
-                    <a href={`https://ipfs.io/ipfs/${cid}`} key={i} alt="link" target="_blank">
+                  <Text key={i}>
+                    <a href={`https://ipfs.io/ipfs/${cid}`} alt="link" target="_blank">
                       {cid}
                     </a>
                   </Text>
