@@ -7,7 +7,8 @@ import "./Interfaces/DaiToken.sol";
 
 contract AdSpace is ERC721Enumerable {
     using Strings for uint256;
-    string public baseURI = "https://adspaces.online/adspace.json";
+    string public baseURI =
+        "ipfs://QmNtrbFY2APC7fY9Avh2geMU4AufgKhPw6pjmjCHu5Lrnh";
     uint256 public maxSupply = 20;
     bool public paused = false;
     DaiToken public daiToken;
