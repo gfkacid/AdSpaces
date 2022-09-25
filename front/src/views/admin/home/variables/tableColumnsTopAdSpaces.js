@@ -5,10 +5,10 @@ export const tableColumnsTopAdSpaces = [
   },
   {
     Header: "Deals",
-    accessor: "deals",
+    accessor: "count_deals",
   },
   {
     Header: "Revenue",
-    accessor: "revenue",
+    accessor: "total_revenue",
   },
 ];
