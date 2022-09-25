@@ -184,7 +184,7 @@ export default function HeaderLinks(props) {
               _focus={{ bg: "none" }}
               borderRadius='8px'
               px='14px'>
-              <Text fontSize='sm'><a href="/#/admin/profile">Profile Settings</a></Text>
+              <Text fontSize='sm'><a href="/#/admin/faq">Profile Settings</a></Text>
             </MenuItem>
             <MenuItem
               _hover={{ bg: "none" }}

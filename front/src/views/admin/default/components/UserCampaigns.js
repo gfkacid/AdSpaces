@@ -4,6 +4,7 @@ import {
   Table,
   Image,
   Link,
+  Icon,
   Tbody,
   Td,
   Text,
@@ -25,6 +26,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
+import { MdFileUpload } from "react-icons/md";
 import React, { useMemo } from "react";
 import {
   useGlobalFilter,
@@ -267,16 +269,18 @@ export default function UserCampaigns(props) {
                 ></Input>
               </FormControl>
               <FormControl mt={4}>
-                <FormLabel>Banner file CID</FormLabel>
+                <FormLabel>Banner file CID - <Text as="i">
+                  <Link href="/#/admin/ipfs/" target="_blank">
+                    <Icon as={MdFileUpload} width="20px" height="20px" color="inherit" /> Upload to IPFS
+                    </Link>
+                  </Text>
+                </FormLabel>
                 <Input placeholder="IPFS CID" {...register("cid")}></Input>
               </FormControl>
             </ModalBody>
             <ModalFooter>
               <Button mr={3} onClick={onClose}>
                 Close
-              </Button>
-              <Button colorScheme="brand" variant="solid">
-                Upload to IPFS
               </Button>
               <Button
                 colorScheme="brand"

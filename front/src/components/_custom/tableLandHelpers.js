@@ -38,3 +38,6 @@ export function fetchTablelandTables() {
 export function formatPrice(price){
   return (price / 100).toFixed(2);
 }
+export function formatDealPrice(price){
+  return (price / 10 ** 18).toFixed(2);
+}

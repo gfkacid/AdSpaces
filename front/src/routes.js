@@ -36,9 +36,9 @@ const routes = [
     display: true,
   },
   {
-    name: "Profile",
+    name: "FAQ",
     layout: "/admin",
-    path: "/profile",
+    path: "/faq",
     icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
     component: Profile,
     display: true,
