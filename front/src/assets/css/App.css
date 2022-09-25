@@ -42,3 +42,7 @@ img.table-image{
 svg.chakra-icon{
   vertical-align: text-top;
 }
+
+td svg.chakra-icon{
+  vertical-align: middle;
+}

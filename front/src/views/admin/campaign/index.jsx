@@ -19,11 +19,14 @@ import {
   getTableLandConfig,
 } from "../../../components/_custom/tableLandHelpers";
 import { connect, resultsToObjects } from "@tableland/sdk";
+
 //import DAIicon from "components/domain/DAIicon";
 //import DAItokenABI from "../../../variables/DaiTokenABI.json";
 //import AdSpaceJson from "../../../variables/AdSpace.json";
 
 export default function CampaignListing() {
+  //network
+
   // Campaign
   const { campaignId } = useParams();
   const [Campaign, setCampaign] = useState(null);

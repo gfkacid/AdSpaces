@@ -42,9 +42,11 @@ function createAdSpaceBanner(adspaceId, size, campaign){
     
     wrapper.innerHTML = ''
     wrapper.append(adSpace)
+    wrapper.style.textAlign = 'center'
 
     adSpace.style.maxWidth = sizeDimensions[size][0]+'px'
     adSpace.style.maxHeight = sizeDimensions[size][1]+'px'
+    adSpace.style.display = 'inline-block'
 
     image.style.width = '100%'
     image.style.height = '100%'
