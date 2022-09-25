@@ -7,20 +7,15 @@ import "./Interfaces/DaiToken.sol";
 
 contract AdSpace is ERC721Enumerable {
     using Strings for uint256;
-
-    // todo @acid: pinata pin
-    string public baseURI = "https://adspaces.xyz/adspace.json";
+    string public baseURI = "https://adspaces.online/adspace.json";
     uint256 public maxSupply = 20;
     bool public paused = false;
     DaiToken public daiToken;
-
-    // owner on AdSpace open to discussion
-    //address public adspaceOwner;
     uint public adspaceId;
     mapping(uint256 => uint40) public dealsToEndAt;
     mapping(uint256 => uint256) public dealsDaiValue;
 
-    address public revenueAddress = 0x49cB5Fa951AD2ABbC4d14239BfE215754c7Df030;
+    address public revenueAddress = 0x075722506D57BE6106Be2deFB5e5C947dBBfd2f3;
 
     address public _factoryAddress;
     AdSpaceFactory public _factory;
@@ -46,30 +41,20 @@ contract AdSpace is ERC721Enumerable {
         uint8 _numNFTs
     ) ERC721(_name, _symbol) {
         adspaceId = _adspaceId;
-        //adspaceOwner = _adspaceOwner;
-        daiToken = DaiToken(0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1);
+        daiToken = DaiToken(0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1); //notice: this is the address for Optimism Goerli!
         _factoryAddress = msg.sender;
         _factory = AdSpaceFactory(_factoryAddress);
-
-        // set royalties
-        // _setRoyalties(msg.sender, 1000);
         require(_numNFTs > 0);
         maxSupply = maxSupply > _numNFTs ? _numNFTs : maxSupply;
-        // mint NFTs
         for (uint256 m = 1; m <= maxSupply; m++) {
             _safeMint(_adspaceOwner, m);
         }
     }
 
-    // internal
     function _baseURI() internal view virtual override returns (string memory) {
         return baseURI;
     }
 
-    // this function is returning the token ids of the passed address
-    // e.g. [5,7,8]
-
-    // @Riki check for array variations on sending tokens
     function walletOfOwner(address _owner)
         public
         view
@@ -122,9 +107,12 @@ contract AdSpace is ERC721Enumerable {
      * so the user is qualified to withdraw from an expired deal onlydealsToEndAt
      */
     function withdraw(uint256 _dealId) public NFTHolder {
-        require(dealsToEndAt[_dealId] <= block.timestamp , "Deal is still running.");
+        require(
+            dealsToEndAt[_dealId] <= block.timestamp,
+            "Deal is still running."
+        );
         uint256 DAIAmount = dealsDaiValue[_dealId]; // its the value of the passed dealId in DAI
-        require(DAIAmount > 0 , "No pending payout for this deal")
+        require(DAIAmount > 0, "No pending payout for this deal");
         uint256 revenueDAIAmount = DAIAmount / 100; // This is 1% of total deal cost, which serves as Platform Revenue, thus sent to RevenueAddress
         uint256 newDaiAmount = DAIAmount - revenueDAIAmount; // This is the actual DAI amount we are going to distribute, after deducting platform revenue
         daiToken.transfer(revenueAddress, revenueDAIAmount); // Distribute the Revenue to the selected address
