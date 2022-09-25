@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.10;
+pragma solidity 0.8.16;
 import "./ITablelandTables.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
