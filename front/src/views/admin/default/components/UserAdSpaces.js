@@ -58,7 +58,7 @@ import {
   formatPrice
 } from "../../../../components/_custom/tableLandHelpers";
 import { connect, resultsToObjects } from "@tableland/sdk";
-import abi from "../../../../variables/AdSpaceFactory.json";
+import abi from "../variables/AdSpaceFactory.json";
 // here we need the AdSpace ABI + we need the DaIContract ABI
 import DAIicon from "components/domain/DAIicon";
 import { useEffect } from "react";
