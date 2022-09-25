@@ -55,13 +55,14 @@ import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import {
   fetchTablelandTables,
   getTableLandConfig,
-  formatPrice
+  formatPrice,
 } from "../../../../components/_custom/tableLandHelpers";
 import { connect, resultsToObjects } from "@tableland/sdk";
 import abi from "../variables/AdSpaceFactory.json";
 // here we need the AdSpace ABI + we need the DaIContract ABI
 import DAIicon from "components/domain/DAIicon";
 import { useEffect } from "react";
+import { SearchIcon } from "@chakra-ui/icons";
 
 // Assets
 export default function UserAdSpaces(props) {
@@ -233,6 +234,7 @@ export default function UserAdSpaces(props) {
                         <Link
                           href={"/#/admin/adspace/" + row.original.adspace_id}
                         >
+                          <SearchIcon />
                           {cell.value}
                         </Link>
                       </Text>

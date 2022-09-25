@@ -15,7 +15,8 @@ import MainDashboard from "views/admin/default";
 import Home from "views/admin/home";
 import Profile from "views/admin/profile";
 import IPFSPage from "views/admin/default/components/IPFSPage";
-import AdSpace from "views/admin/adspace"
+import AdSpace from "views/admin/adspace";
+import Campaign from "views/admin/campaign";
 
 const routes = [
   {
@@ -24,7 +25,7 @@ const routes = [
     path: "/home",
     icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
     component: Home,
-    display: true
+    display: true,
   },
   {
     name: "My Dashboard",
@@ -32,7 +33,7 @@ const routes = [
     icon: <Icon as={MdBarChart} width="20px" height="20px" color="inherit" />,
     path: "/dashboard",
     component: MainDashboard,
-    display: true
+    display: true,
   },
   {
     name: "Profile",
@@ -40,7 +41,7 @@ const routes = [
     path: "/profile",
     icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
     component: Profile,
-    display: true
+    display: true,
   },
   {
     name: "IPFS upload",
@@ -48,17 +49,26 @@ const routes = [
     path: "/ipfs",
     icon: <Icon as={MdFileUpload} width="20px" height="20px" color="inherit" />,
     component: IPFSPage,
-    display: true
+    display: true,
   },
   {
     name: "AdSpace",
     layout: "/admin",
     path: "/adspace/:adspaceId",
-    icon: <Icon as={MdPerson} width='20px' height='20px' color='inherit' />,
+    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
     component: AdSpace,
     display: false,
-    withParams: true
-  }
+    withParams: true,
+  },
+  {
+    name: "Campaign",
+    layout: "/admin",
+    path: "/campaign/:campaignId",
+    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    component: Campaign,
+    display: false,
+    withParams: true,
+  },
 ];
 
 export default routes;

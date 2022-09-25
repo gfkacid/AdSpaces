@@ -32,6 +32,7 @@ import {
   useSortBy,
   useTable,
 } from "react-table";
+import { SearchIcon } from "@chakra-ui/icons";
 
 // Custom components
 import Card from "components/card/Card";
@@ -89,7 +90,7 @@ export default function UserCampaigns(props) {
     });
 
     const totalCampaignsQuery = await tablelandConnection.read(
-      `SELECT name, cid as file, size, link, owner FROM ${campaignTable} WHERE ${campaignTable}.owner like '${address}';`
+      `SELECT campaign_id, name, cid as file, size, link, owner FROM ${campaignTable} WHERE ${campaignTable}.owner like '${address}';`
     );
     const result = resultsToObjects(totalCampaignsQuery);
     return result;
@@ -185,8 +186,10 @@ export default function UserCampaigns(props) {
                   if (cell.column.id === "name") {
                     data = (
                       <Text color={textColor} fontSize="sm" fontWeight="700">
-                        <Link href={"/#/admin/campaign/" + row.original.id}>
-                          {cell.value}
+                        <Link
+                          href={"/#/admin/campaign/" + row.original.campaign_id}
+                        >
+                          <SearchIcon /> {cell.value}
                         </Link>
                       </Text>
                     );
