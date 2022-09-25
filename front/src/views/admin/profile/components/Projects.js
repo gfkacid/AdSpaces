@@ -25,19 +25,15 @@ export default function Projects(props) {
         fontSize='2xl'
         mt='10px'
         mb='4px'>
-        All projects
+        How AdSpace works?
       </Text>
       <Text color={textColorSecondary} fontSize='md' me='26px' mb='40px'>
-        Here you can find more details about your projects. Keep you user
-        engaged by providing meaningful information.
+        Here you can find the steps how you can create an AdSpace
       </Text>
       <Project
         boxShadow={cardShadow}
+        title='1. You must have a webpage you want to advertise'
         mb='20px'
-        image={Project1}
-        ranking='1'
-        link='#'
-        title='Technology behind the Blockchain'
       />
       <Project
         boxShadow={cardShadow}
@@ -45,14 +41,31 @@ export default function Projects(props) {
         image={Project2}
         ranking='2'
         link='#'
-        title='Greatest way to a good Economy'
+        title='2. You will need to verify that webspace'
       />
       <Project
         boxShadow={cardShadow}
         image={Project3}
+        mb='20px'
         ranking='3'
         link='#'
-        title='Most essential tips for Burnout'
+        title='3. Request a teal to be made for advertising'
+      />
+      <Project
+        boxShadow={cardShadow}
+        image={Project3}
+        mb='20px'
+        ranking='3'
+        link='#'
+        title='4. Wait for the deal to be approved'
+      />
+      <Project
+        boxShadow={cardShadow}
+        image={Project3}
+        mb='20px'
+        ranking='3'
+        link='#'
+        title='5. You are ready to go!'
       />
     </Card>
   );

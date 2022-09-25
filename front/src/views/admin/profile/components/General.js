@@ -23,45 +23,39 @@ export default function GeneralInformation(props) {
         fontSize='2xl'
         mt='10px'
         mb='4px'>
-        General Information
+        What is AdSpace?
       </Text>
       <Text color={textColorSecondary} fontSize='md' me='26px' mb='40px'>
-        As we live, our hearts turn colder. Cause pain is what we go through as
-        we become older. We get insulted by others, lose trust for those others.
-        We get back stabbed by friends. It becomes harder for us to give others
-        a hand. We get our heart broken by people we love, even that we give
-        them all...
+      AdSpace is a crypto-native web traffic monetization platform, honoring the principles of web3: decentralization, self-custody & composability. 
+      The platform includes a web3 dapp with as many components completely decentralized as possible, keeping rewards functionality on-chain to enable interoperability. 
+      </Text>
+      <Text color={textColorSecondary} fontSize='md' me='26px' mb='40px'>
+        Web3 Technologies in use:
       </Text>
       <SimpleGrid columns='2' gap='20px'>
         <Information
           boxShadow={cardShadow}
-          title='Education'
-          value='Stanford University'
+          value='TableLand'
         />
         <Information
           boxShadow={cardShadow}
-          title='Languages'
-          value='English, Spanish, Italian'
+          value='IPFS'
         />
         <Information
           boxShadow={cardShadow}
-          title='Department'
-          value='Product Design'
+          value='Smart Contracts'
         />
         <Information
           boxShadow={cardShadow}
-          title='Work History'
-          value='Google, Facebook'
+          value='Optimism Blockchain'
         />
         <Information
           boxShadow={cardShadow}
-          title='Organization'
-          value='Simmmple Web LLC'
+          value='QuickNode'
         />
         <Information
           boxShadow={cardShadow}
-          title='Birthday'
-          value='20 July 1986'
+          value='Ethers.js'
         />
       </SimpleGrid>
     </Card>

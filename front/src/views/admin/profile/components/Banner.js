@@ -21,15 +21,6 @@ export default function Banner(props) {
         h='131px'
         w='100%'
       />
-      <Avatar
-        mx='auto'
-        src={avatar}
-        h='87px'
-        w='87px'
-        mt='-43px'
-        border='4px solid'
-        borderColor={borderColor}
-      />
       <Text color={textColorPrimary} fontWeight='bold' fontSize='xl' mt='10px'>
         {name}
       </Text>
@@ -42,7 +33,7 @@ export default function Banner(props) {
             {posts}
           </Text>
           <Text color={textColorSecondary} fontSize='sm' fontWeight='400'>
-            Posts
+            Total AdSpaces
           </Text>
         </Flex>
         <Flex mx='auto' me='60px' align='center' direction='column'>
@@ -50,15 +41,15 @@ export default function Banner(props) {
             {followers}
           </Text>
           <Text color={textColorSecondary} fontSize='sm' fontWeight='400'>
-            Followers
+            All Revenues
           </Text>
         </Flex>
         <Flex mx='auto' align='center' direction='column'>
-          <Text color={textColorPrimary} fontSize='2xl' fontWeight='700'>
+        <Text color={textColorPrimary} fontSize='2xl' fontWeight='700'>
             {following}
           </Text>
           <Text color={textColorSecondary} fontSize='sm' fontWeight='400'>
-            Following
+            NFT Holders
           </Text>
         </Flex>
       </Flex>
