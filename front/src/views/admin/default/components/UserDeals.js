@@ -35,6 +35,7 @@ import {
   useContractWrite,
   usePrepareContractWrite,
   useProvider,
+  useSigner
 } from "wagmi";
 import {
   fetchTablelandTables,
@@ -47,7 +48,7 @@ import DAIicon from "components/domain/DAIicon";
 import { useEffect } from "react";
 import moment from "moment";
 import AdSpaceAbi from "../../../../variables/AdSpace.json";
-import { ethers } from "ethers";
+import { ethers, BigNumber } from "ethers";
 
 // Assets
 export default function UserAdSpaces(props) {
@@ -55,6 +56,7 @@ export default function UserAdSpaces(props) {
   const { columnsData } = props;
   const [tableData, setTableData] = useState([]);
   const { address } = useAccount();
+  const { data: signer, isError, isLoading } = useSigner();
 
   const tableInstance = useTable(
     {
@@ -77,7 +79,7 @@ export default function UserAdSpaces(props) {
     prepareRow,
     initialState,
   } = tableInstance;
-  initialState.pageSize = 5;
+  initialState.pageSize = 20;
   // load from TableLand
   const TablelandTables = fetchTablelandTables();
   const networkConfig = getTableLandConfig();
@@ -100,18 +102,13 @@ export default function UserAdSpaces(props) {
        JOIN ${campaignTable} ON ${campaignTable}.campaign_id = ${dealTable}.campaign_id_fk
         WHERE ${adspaceTable}.owner like '${address}' OR ${campaignTable}.owner like '${address}';`
     );
-    // CASE (${adspaceTable}.owner
-    //   WHEN '${address}'
-    //     THEN 'incoming'
-    //   ELSE 'outgoing')
+    
     const userDeals = resultsToObjects(totalDealQuery);
-    console.log(userDeals);
     return userDeals;
   }
 
-  // wagmi stuff
+  // contract call config
   const ABI_ADSPACE = AdSpaceAbi.abi;
-  const ADDRESS_ADSPACE = AdSpaceAbi.address;
   const provider = useProvider();
 
   useEffect(() => {
@@ -124,8 +121,31 @@ export default function UserAdSpaces(props) {
       });
   }, []);
 
+  const checkPaymentPending = async (contractAddress, deal_id) => {
+    const AdSpace = new ethers.Contract(
+      contractAddress,
+      ABI_ADSPACE,
+      provider
+    );
+
+    const response = await AdSpace.dealsDaiValue(deal_id);
+    console.log(response);
+    const paymentPending = BigNumber.from(response.toString())
+    const bool = paymentPending.gt(0);
+    
+    return paymentPending
+  };
+
+
   const withdraw = async (deal_id, contract) => {
     console.log("withdrawing deal #" + deal_id + " from AdSpace @ " + contract);
+    const AdSpaceContract = new ethers.Contract(
+      contract,
+      ABI_ADSPACE,
+      signer
+    );
+    const response = await AdSpaceContract.withdraw(deal_id);
+    console.log(response)
   };
 
   return (
@@ -225,8 +245,6 @@ export default function UserAdSpaces(props) {
                     );
                   } else if (cell.column.id === "deal_id") {
                     // check if deal is outgoing -> user paid for this deal, so no withdraw action
-                    console.log(row.original.adspace_owner)
-                    console.log(address)
                     if (row.original.adspace_owner !== address.toLowerCase()) {
                       data = (
                         <Text
@@ -240,13 +258,8 @@ export default function UserAdSpaces(props) {
                       );
                     } else {
                       console.log("here we are...");
-                      const AdSpace = new ethers.Contract(
-                        ADDRESS_ADSPACE,
-                        ABI_ADSPACE,
-                        provider
-                      );
-
-                      const paymentPending = AdSpace.dealsDaiValue(cell.value);
+                      
+                      const paymentPending = checkPaymentPending(row.original.adspace_contract, cell.value)
                       console.log(paymentPending);
 
                       // if deal is incoming -> user gets paid for displaying ads, then we have to figure out if payout has already been triggered or not

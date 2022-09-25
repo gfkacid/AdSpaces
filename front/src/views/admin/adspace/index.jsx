@@ -76,7 +76,8 @@ export default function AdSpaceListing() {
   const networkConfig = getTableLandConfig();
   const adspaceTable = TablelandTables["AdSpaces"];
   const campaignsTable = TablelandTables["Campaigns"];
-
+  
+  // Loads the AdSpace
   async function fetchAdSpace() {
     const tablelandConnection = await connect({
       network: networkConfig.testnet,
@@ -86,12 +87,11 @@ export default function AdSpaceListing() {
     const fetchAdSpaceQuery = await tablelandConnection.read(
       `SELECT * FROM ${adspaceTable} WHERE ${adspaceTable}.adspace_id = ${adspaceId};`
     );
-    console.log(fetchAdSpaceQuery);
     const result = await resultsToObjects(fetchAdSpaceQuery);
-    console.log(result[0]);
     return result[0];
   }
-
+  
+  // Loads user's Campaigns
   async function fetchUserCampaigns() {
     const tablelandConnection = await connect({
       network: networkConfig.testnet,
@@ -101,13 +101,12 @@ export default function AdSpaceListing() {
     const fetchUserCampaignsQuery = await tablelandConnection.read(
       `SELECT * FROM ${campaignsTable} WHERE ${campaignsTable}.owner like '${address}';`
     );
-    console.log(fetchUserCampaignsQuery);
     const result = await resultsToObjects(fetchUserCampaignsQuery);
-    console.log("User Campaigns");
-    console.log(result);
+
     return result;
   }
 
+  // Checks if user has approved this AdSpace's contract to transfer DAI on this behalf
   const checkDAIApproved = async (_contractAddress) => {
     const response = await DAIcontract.allowance(address, _contractAddress);
     const allowance = BigNumber.from(response.toString())
@@ -116,6 +115,7 @@ export default function AdSpaceListing() {
     return bool;
   };
 
+  // Prompts user to approve this AdSpace's contract to transfer DAI on this behalf
   const approveDAI = async () => {
     const num = ethers.utils.parseEther('100000');
     const response = await DAIcontract.approve(
@@ -125,6 +125,7 @@ export default function AdSpaceListing() {
     console.log(response);
   };
 
+  // Create a Deal on this AdSpace for a Campaign owned by user
   const createDeal = async () => {
     const AdSpaceContract = new ethers.Contract(
       AdSpace.contract,
@@ -134,27 +135,22 @@ export default function AdSpaceListing() {
     
     const amountTotal = ethers.utils.parseEther((newDealDuration * AdSpace.asking_price).toString()) 
     console.log(amountTotal)
-    console.log(newDealDuration)
-    console.log(selectedCampaign)
     const response = await AdSpaceContract.createDeal(amountTotal, newDealDuration, selectedCampaign);
     console.log(response)
   }
 
+  // populate this page's AdSpace
   useEffect(() => {
     fetchAdSpace()
       .then((AdSpaceRes) => {
         AdSpaceRes.asking_price = (AdSpaceRes.asking_price / 100).toFixed(2)
         setAdSpace(AdSpaceRes);
-        //Here we can read DAI contract whether the user has allowed the DAI already or not for AdSpace contract
-        console.log('before bool')
          
         // fetch user's campaigns to populate the [ Create Deal ] Modal
         fetchUserCampaigns().then((CampaignsRes) => {
           console.log(CampaignsRes)
           setUserCampaigns(CampaignsRes);
         });
-
-        // If the allowance is set we can set the variable to true for example
       })
       .catch((e) => {
         console.log(e.message);
@@ -162,6 +158,7 @@ export default function AdSpaceListing() {
   }, []);
 
 
+  //Here we can read DAI contract whether the user has allowed the AdSpace contract to spend user's DAI
   useEffect(() => {
     if(AdSpace?.contract){
       checkDAIApproved(AdSpace.contract).then( (bool) => {
@@ -171,7 +168,8 @@ export default function AdSpaceListing() {
     }
     
   }, [AdSpace]);
-  // New Deal form
+  
+  // helper for select input
   let optionTemplate = userCampaigns.map((v,index) => (
     <option value={v.campaign_id} key={index}>{v.name}</option>
   ));
