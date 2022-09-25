@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Avatar,
   Box,
   Button,
   Flex,
+  Link,
   Progress,
   Table,
   Tbody,
@@ -13,19 +15,26 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   useGlobalFilter,
   usePagination,
   useSortBy,
   useTable,
 } from "react-table";
-import { fetchTablelandTables ,getTableLandConfig} from "../../../../components/_custom/tableLandHelpers";
+import {
+  fetchTablelandTables,
+  getTableLandConfig,
+  formatPrice,
+} from "../../../../components/_custom/tableLandHelpers";
+import DAIicon from "components/domain/DAIicon";
+import { SearchIcon } from "@chakra-ui/icons";
+
 import { connect, resultsToObjects } from "@tableland/sdk";
 
-
-function TopAdSpacesTable(props) {
-  const { columnsData, tableData } = props;
+export default function TopAdSpacesTable(props) {
+  const { columnsData } = props;
+  const [tableData, setTableData] = useState([]);
 
   const columns = useMemo(() => columnsData, [columnsData]);
   const data = useMemo(() => tableData, [tableData]);
@@ -48,8 +57,8 @@ function TopAdSpacesTable(props) {
 
   const TablelandTables = fetchTablelandTables();
   const networkConfig = getTableLandConfig();
-  const dealTable = TablelandTables["Deals"]
-  const adspaceTable = TablelandTables["AdSpaces"]
+  const dealTable = TablelandTables["Deals"];
+  const adspaceTable = TablelandTables["AdSpaces"];
 
   async function getTopAdSpaces() {
     const tablelandConnection = await connect({
@@ -58,7 +67,7 @@ function TopAdSpacesTable(props) {
     });
 
     const queryResult = await tablelandConnection.read(
-      `SELECT ${adspaceTable}.adspace_id as adspace_id, ${adspaceTable}.name as name, sum(${dealTable}.price) as total_revenue, count(${dealTable}.deal_id)
+      `SELECT ${adspaceTable}.adspace_id as adspace_id, ${adspaceTable}.name as name, sum(${dealTable}.price) as total_revenue, count(${dealTable}.deal_id) as count_deals
        FROM ${dealTable}
        INNER JOIN ${adspaceTable} 
        WHERE ${adspaceTable}.adspace_id = ${dealTable}.adspace_id_fk 
@@ -66,9 +75,15 @@ function TopAdSpacesTable(props) {
     );
 
     const data = await resultsToObjects(queryResult);
-    console.log(data)
-    return data ;
+    return data;
   }
+
+  useEffect(() => {
+    getTopAdSpaces().then((data) => {
+      console.log(data);
+      setTableData(data);
+    });
+  }, []);
 
   return (
     <>
@@ -124,23 +139,16 @@ function TopAdSpacesTable(props) {
                     let data = "";
                     if (cell.column.id === "name") {
                       data = (
-                        <Flex align="center">
-                          <Avatar
-                            src={cell.value[1]}
-                            w="30px"
-                            h="30px"
-                            me="8px"
-                          />
-                          <Text
-                            color={textColor}
-                            fontSize="sm"
-                            fontWeight="600"
+                        <Text color={textColor} fontSize="sm" fontWeight="700">
+                          <Link
+                            href={"/#/admin/adspace/" + row.original.adspace_id}
                           >
-                            {cell.value[0]}
-                          </Text>
-                        </Flex>
+                            <SearchIcon />
+                            {cell.value}
+                          </Link>
+                        </Text>
                       );
-                    } else if (cell.column.id === "deals") {
+                    } else if (cell.column.id === "count_deals") {
                       data = (
                         <Text
                           color={textColorSecondary}
@@ -150,15 +158,11 @@ function TopAdSpacesTable(props) {
                           {cell.value}
                         </Text>
                       );
-                    } else if (cell.column.id === "revenue") {
+                    } else if (cell.column.id === "total_revenue") {
                       data = (
-                        <Box>
-                          <Progress
-                            variant="table"
-                            colorScheme="brandScheme"
-                            value={cell.value}
-                          />
-                        </Box>
+                        <Text color={textColor} fontSize="sm" fontWeight="700">
+                          <DAIicon /> {formatPrice(cell.value)}
+                        </Text>
                       );
                     }
                     return (
@@ -182,5 +186,3 @@ function TopAdSpacesTable(props) {
     </>
   );
 }
-
-export default TopAdSpacesTable;

@@ -35,12 +35,12 @@ import {
   useContractWrite,
   usePrepareContractWrite,
   useProvider,
-  useSigner
+  useSigner,
 } from "wagmi";
 import {
   fetchTablelandTables,
   getTableLandConfig,
-  formatDealPrice
+  formatDealPrice,
 } from "../../../../components/_custom/tableLandHelpers";
 import { connect, resultsToObjects } from "@tableland/sdk";
 import abi from "../variables/AdSpaceFactory.json";
@@ -104,7 +104,7 @@ export default function UserAdSpaces(props) {
        JOIN ${campaignTable} ON ${campaignTable}.campaign_id = ${dealTable}.campaign_id_fk
         WHERE ${adspaceTable}.owner like '${address}' OR ${campaignTable}.owner like '${address}';`
     );
-    
+
     const userDeals = resultsToObjects(totalDealQuery);
     return userDeals;
   }
@@ -124,37 +124,28 @@ export default function UserAdSpaces(props) {
   }, []);
 
   useEffect(() => {
-    tableData.map((deal, index) => (
+    tableData.map((deal, index) =>
       checkPaymentPending(deal.deal_id).then((bool) => {
         let temp = payoutPending;
         temp[deal.deal_id] = bool;
-        setPayoutPending(temp)
+        setPayoutPending(temp);
       })
-    ))
-    }, [tableData]);
+    );
+  }, [tableData]);
 
   const checkPaymentPending = async (contractAddress, deal_id) => {
-    const AdSpace = new ethers.Contract(
-      contractAddress,
-      ABI_ADSPACE,
-      provider
-    );
+    const AdSpace = new ethers.Contract(contractAddress, ABI_ADSPACE, provider);
 
     const response = await AdSpace.dealsDaiValue(deal_id);
-    const paymentPending = BigNumber.from(response.toString())
+    const paymentPending = BigNumber.from(response.toString());
     const bool = paymentPending.gt(0);
-    
-    return paymentPending
-  };
 
+    return paymentPending;
+  };
 
   const withdraw = async (deal_id, contract) => {
     console.log("withdrawing deal #" + deal_id + " from AdSpace @ " + contract);
-    const AdSpaceContract = new ethers.Contract(
-      contract,
-      ABI_ADSPACE,
-      signer
-    );
+    const AdSpaceContract = new ethers.Contract(contract, ABI_ADSPACE, signer);
     const response = await AdSpaceContract.withdraw(deal_id);
   };
 
@@ -172,7 +163,7 @@ export default function UserAdSpaces(props) {
           fontWeight="700"
           lineHeight="100%"
         >
-          DEALS
+          My Deals
         </Text>
       </Flex>
       <Table {...getTableProps()} variant="simple" color="gray.500" mb="24px">
@@ -269,9 +260,13 @@ export default function UserAdSpaces(props) {
                     } else {
                       // if deal is incoming -> user gets paid for displaying ads, then we have to figure out if payout has already been triggered or not
                       // we can get that info from public mappings on AdSpace contract , check if dealsDaiValue[deal_id] is set, if yes:
-                      if(payoutPending[cell.value]){
+                      if (payoutPending[cell.value]) {
                         data = (
-                          <Text color={textColor} fontSize="sm" fontWeight="700">
+                          <Text
+                            color={textColor}
+                            fontSize="sm"
+                            fontWeight="700"
+                          >
                             <Button
                               onClick={() =>
                                 withdraw(
@@ -284,7 +279,7 @@ export default function UserAdSpaces(props) {
                             </Button>
                           </Text>
                         );
-                      }else{
+                      } else {
                         data = (
                           <Text
                             as="i"
