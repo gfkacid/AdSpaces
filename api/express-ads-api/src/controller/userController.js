@@ -1,5 +1,5 @@
 const tableland = require("@tableland/sdk");
-const tableToRead = "AdSpaces_420_107";
+const tableToRead = "AdSpaces_420_141";
 const { ethers, network } = require("ethers");
 const { Wallet } = require("ethers");
 const { ChainName, connect, Connection } = require("@tableland/sdk");

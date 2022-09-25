@@ -55,7 +55,7 @@ function createAdSpaceBanner(adspaceId, size, campaign){
 // query api to check if verified, if so then load ads
 function pingAdSpace(adSpaceId){
     if(isNaN(adSpaceId))return;
-    let url = 'https://testnet.tableland.network/query?s=SELECT%20true%20FROM%20AdSpaces_420_88%20WHERE%20adspace_id%20=%20'+adSpaceId;
+    let url = 'https://testnet.tableland.network/query?s=SELECT%20true%20FROM%20AdSpaces_420_141%20WHERE%20adspace_id%20=%20'+adSpaceId;
     
     //Check if AdSpace is verified by querying TableLand REST API
     fetch(url)
@@ -64,7 +64,7 @@ function pingAdSpace(adSpaceId){
         console.log('Check if AdSpace is verified ', out)
         if(Array.isArray(out)){
             // AdSpace is verified, query tableLand for latest deal and show its ads
-            let latestAdsURL = 'https://testnet.tableland.network/query?s=SELECT%20AdSpaces_420_111.size,Campaigns_420_112.cid,Campaigns_420_112.link%20FROM%20Deals_420_113%20JOIN%20Campaigns_420_112%20JOIN%20AdSpaces_420_111%20WHERE%20adspace_id%20=%20adspace_id_fk%20AND%20campaign_id%20=%20campaign_id_fk%20ORDER%20BY%20Deals_420_113.started_at%20DESC%20LIMIT%201'
+            let latestAdsURL = 'https://testnet.tableland.network/query?s=SELECT%20AdSpaces_420_141.size,Campaigns_420_142.cid,Campaigns_420_142.link%20FROM%20Deals_420_143%20JOIN%20Campaigns_420_142%20JOIN%20AdSpaces_420_141%20WHERE%20adspace_id%20=%20adspace_id_fk%20AND%20campaign_id%20=%20campaign_id_fk%20ORDER%20BY%20Deals_420_143.started_at%20DESC%20LIMIT%201'
             fetch(latestAdsURL)
             .then(res => res.json())
             .then((adToLoad) => {
