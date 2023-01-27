@@ -46,7 +46,7 @@ export default function Home() {
 
   useEffect(() => {
     
-    window.pingAdSpace(4)
+    window.pingAdSpace(3)
     
   }, []);
   return (
@@ -66,7 +66,7 @@ export default function Home() {
           <Flex direction="column">
             <Flex mt="45px"></Flex>
             <TablelandTable mt="45px" mb="30px" tablePrefix="AdSpaces" />
-            <div id="adspace-4"></div>
+            <div id="adspace-3"></div>
           </Flex>
         </Flex>
         <Flex

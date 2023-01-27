@@ -41,9 +41,9 @@ export default function Overview() {
   const [totalRevenue, setTotalRevenue] = useState(0)
   const [uniqueUsers, setUniqueUsers] = useState(0)
 
-  const adspacesCountURL = 'https://testnet.tableland.network/query?s=SELECT%20count(adspace_id)%20as%20total_adspaces%20FROM%20AdSpaces_420_141';
-  const totalRevenueURL = 'https://testnet.tableland.network/query?s=SELECT%20sum(price)%20as%20total_revenue%20FROM%20Deals_420_143%20WHERE%20end_at%20%3C%201664114431';
-  const uniqueUsersURL = 'https://testnet.tableland.network/query?s=SELECT%20count(DISTINCT(AdSpaces_420_141.owner))%20as%20unique_owners%20,count(DISTINCT(Campaigns_420_142.owner))%20as%20campaign_owners%20FROM%20AdSpaces_420_141%20JOIN%20Campaigns_420_142'
+  const adspacesCountURL = 'https://testnets.tableland.network/query?s=SELECT%20count(adspace_id)%20as%20total_adspaces%20FROM%20AdSpaces_420_141';
+  const totalRevenueURL = 'https://testnets.tableland.network/query?s=SELECT%20sum(price)%20as%20total_revenue%20FROM%20Deals_420_143%20WHERE%20end_at%20%3C%201664114431';
+  const uniqueUsersURL = 'https://testnets.tableland.network/query?s=SELECT%20count(DISTINCT(AdSpaces_420_141.owner))%20as%20unique_owners%20,count(DISTINCT(Campaigns_420_142.owner))%20as%20campaign_owners%20FROM%20AdSpaces_420_141%20JOIN%20Campaigns_420_142'
 
   useEffect(() => {
     fetch(adspacesCountURL)
